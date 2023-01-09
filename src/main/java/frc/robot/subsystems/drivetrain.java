@@ -7,7 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-// import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.driveTrainConstants;;
 
@@ -24,6 +24,7 @@ public class drivetrain extends SubsystemBase{
 
     private static DifferentialDrive drive = new DifferentialDrive(frontleftMotor, frontRightMotor);
 
+    //TODO make this work once the gyro lib has updated
     // private static Gyro gyro = new AHRS(SPI.Port.kMXP);
 
     public drivetrain() {
