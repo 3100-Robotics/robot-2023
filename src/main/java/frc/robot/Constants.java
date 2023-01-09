@@ -23,4 +23,10 @@ public final class Constants {
     public static final int backLeftPort = 3;
     public static final int backRightPort = 4;
   }
+
+  public static class ArmMotorConstants{
+    public static final int armMotor1 = 5;
+    public static final int armMotor2 = 6;
+  }
+
 }
