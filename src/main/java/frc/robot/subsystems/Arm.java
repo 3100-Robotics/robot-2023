@@ -9,12 +9,11 @@ import frc.robot.Constants.ArmMotorConstants;
 
 public class Arm extends SubsystemBase{
     private CANSparkMax am1 = new CANSparkMax(ArmMotorConstants.armMotor1, MotorType.kBrushless);
-    private CANSparkMax am2 = new CANSparkMax(ArmMotorConstants.armMotor2, MotorType.kBrushless);
 
     private RelativeEncoder encoder = am1.getEncoder();
 
     public Arm() {
-        am2.follow(am1);
+        
     }
 
     public void Run(double speed) {
