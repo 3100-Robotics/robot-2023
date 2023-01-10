@@ -23,6 +23,13 @@ public final class Constants {
     public static final int frontRightPort = 2;
     public static final int backLeftPort = 3;
     public static final int backRightPort = 4;
+
+    public final static double kSensorUnitsPerRotation = 2048;
+    private final static double kGearReduction = 8.68;
+    private final static double driveWheelRadiusMeters = 0.0508;
+
+    public static double encoderScale = (1 / kGearReduction) * (kSensorUnitsPerRotation)
+        * (2 * Math.PI * driveWheelRadiusMeters);
   }
 
   public static class ArmMotorConstants{

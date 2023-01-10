@@ -39,6 +39,11 @@ public class drivetrain extends SubsystemBase{
         return (frontleftMotor.getSelectedSensorPosition(0) + frontRightMotor.getSelectedSensorPosition(0))/2;
     }
 
+    public void resetEncoders() {
+        frontleftMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
+        frontRightMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
+    }
+
     // public double getgyrox() {
     //     return gyro.
     // }
