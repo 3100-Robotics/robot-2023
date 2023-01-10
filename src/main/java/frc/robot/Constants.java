@@ -41,6 +41,12 @@ public final class Constants {
   public static class ArmMotorConstants{
     public static final int armMotor1 = 5;
     public static final int armMotor2 = 6;
+
+    public final static double kp = 0;
+    public final static double ki = 0;
+    public final static double kd = 0;
+
+    public final static double floorLength
   }
 
 }

@@ -13,9 +13,7 @@ public class DriveForward extends PIDCommand{
     public DriveForward(drivetrain Drive, double speed, double distance) {
         super(new PIDController(driveTrainConstants.kp, driveTrainConstants.ki, driveTrainConstants.kd), 
         Drive::getAverageEncoderRotation, distance, ouput -> Drive.arcadeDrive(speed, 0), Drive);
-        // this.Drive = Drive;
-        // this.distance = distance;
-        // addRequirements(Drive);
+        this.Drive = Drive;
         getController().enableContinuousInput(-180, 180);
         // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
         // setpoint before it is considered as having reached the reference

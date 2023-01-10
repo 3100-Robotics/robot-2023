@@ -7,7 +7,9 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.drivetrain;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -47,6 +49,20 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+    // m_codriverController.x().whileTrue(new PIDCommand(
+    //       new PIDController(
+    //           DriveConstants.kStabilizationP,
+    //           DriveConstants.kStabilizationI,
+    //           DriveConstants.kStabilizationD),
+    //       // Close the loop on the turn rate
+    //       m_robotDrive::getTurnRate,
+    //       // Setpoint is 0
+    //       0,
+    //       // Pipe the output to the turning controls
+    //       output -> m_robotDrive.arcadeDrive(-m_driverController.getLeftY(), output),
+    //       // Require the robot drive
+    //       m_robotDrive));
   }
 
   /**
