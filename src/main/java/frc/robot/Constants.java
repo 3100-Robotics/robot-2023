@@ -28,6 +28,12 @@ public final class Constants {
     private final static double kGearReduction = 8.68;
     private final static double driveWheelRadiusMeters = 0.0508;
 
+    public final static double kp = 0;
+    public final static double ki = 0;
+    public final static double kd = 0;
+    public final static double kDriveToleranceMeter = 0.1;
+    public final static double kDriveRateToleranceMeterPerS = 0.2;
+
     public static double encoderScale = (1 / kGearReduction) * (kSensorUnitsPerRotation)
         * (2 * Math.PI * driveWheelRadiusMeters);
   }

@@ -1,39 +1,36 @@
 package frc.robot.commands.autoCommands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.drivetrain;
 import frc.robot.Constants.driveTrainConstants;;
 
-public class DriveForward extends CommandBase{
+public class DriveForward extends PIDCommand{
     
     drivetrain Drive;
     double speed, distance;
 
     public DriveForward(drivetrain Drive, double speed, double distance) {
-        this.Drive = Drive;
-        this.speed = speed;
-        this.distance = distance * driveTrainConstants.encoderScale;
-        
-        addRequirements(Drive);
+        super(new PIDController(driveTrainConstants.kp, driveTrainConstants.ki, driveTrainConstants.kd), 
+        Drive::getAverageEncoderRotation, distance, ouput -> Drive.arcadeDrive(speed, 0), Drive);
+        // this.Drive = Drive;
+        // this.distance = distance;
+        // addRequirements(Drive);
+        getController().enableContinuousInput(-180, 180);
+        // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
+        // setpoint before it is considered as having reached the reference
+        getController()
+            .setTolerance(driveTrainConstants.kDriveToleranceMeter, driveTrainConstants.kDriveRateToleranceMeterPerS);
     }
 
+    @Override
     public void initialize() {
         Drive.resetEncoders();
     }
 
-    public void execute() {
-        Drive.arcadeDrive(speed, 0.0);
-    }
-
+    @Override
     public boolean isFinished() {
-        if (speed < 0 && -Drive.getAverageEncoderRotation() >= distance) {
-            System.out.println("done driving");
-            return true;
-        }
-        else if (Drive.getAverageEncoderRotation() >= distance) { 
-            System.out.println("done driving");
-            return true;
-        }
-        return false;
+      // End when the controller is at the reference.
+      return getController().atSetpoint();
     }
 }

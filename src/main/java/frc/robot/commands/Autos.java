@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import frc.robot.commands.autoCommands.DriveForward;
 import frc.robot.subsystems.drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -12,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public final class Autos {
   /** Example static factory for an autonomous command. */
   public static CommandBase DriveForward(drivetrain subsystem, double speed, double distance) {
-    return Commands.sequence(new DriveForward(subsystem, speed, distance));
+    return Commands.sequence(DriveForward(subsystem, speed, distance));
   }
 
   private Autos() {
