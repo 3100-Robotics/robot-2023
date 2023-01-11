@@ -44,9 +44,9 @@ public class drivetrain extends SubsystemBase{
         frontRightMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
     }
 
-    // public double getgyrox() {
-    //     return gyro.
-    // }
+    public double getgyrox() {
+        return 0;
+    }
 
     // public double getAverageEncoderVelocity() {} to be added later?
 
