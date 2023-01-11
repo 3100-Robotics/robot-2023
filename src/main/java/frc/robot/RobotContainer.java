@@ -7,14 +7,13 @@ package frc.robot;
 import frc.robot.Constants.ArmMotorConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.driveTrainConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ElevatorCommand;
-import frc.robot.commands.autoCommands.PIDBallence;
+import frc.robot.commands.driving;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -33,8 +32,8 @@ public class RobotContainer {
   private final Elevator elevator = new Elevator();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final XboxController m_driverController =
+      new XboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_codriverController =
       new CommandXboxController(OperatorConstants.kCoDriverControllerPort);
 
@@ -54,6 +53,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    drive.setDefaultCommand(new driving(drive, m_driverController));
+    arm.setDefaultCommand(new );
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -83,8 +84,6 @@ public class RobotContainer {
 
           output -> elevator.Run(output), elevator
     ));
-
-    m_codriverController.leftBumper().whileTrue(new PIDBallence(drive, 0));
 
   }
 
