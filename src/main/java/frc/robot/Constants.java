@@ -32,6 +32,7 @@ public final class Constants {
     public final static double ki = 0;
     public final static double kd = 0;
     public final static double kDriveToleranceMeter = 0.1;
+    public final static double kDriveToleranceDeg = 5;
     public final static double kDriveRateToleranceMeterPerS = 0.2;
 
     public static double encoderScale = (1 / kGearReduction) * (kSensorUnitsPerRotation)

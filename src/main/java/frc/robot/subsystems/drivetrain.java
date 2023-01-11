@@ -44,7 +44,15 @@ public class drivetrain extends SubsystemBase{
         frontRightMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
     }
 
+    public double getgyroz() {
+        return 0;
+    }
+
     public double getgyrox() {
+        return 0;
+    }
+
+    public double getgyroy() {
         return 0;
     }
 
