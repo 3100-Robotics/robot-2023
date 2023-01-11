@@ -5,9 +5,11 @@
 package frc.robot;
 
 import frc.robot.Constants.ArmMotorConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.driveTrainConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ElevatorCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
@@ -70,7 +72,20 @@ public class RobotContainer {
           output -> arm.Run(output),
           // Require the arm subsystem
           arm));
+
+    m_codriverController.y().whileTrue(new PIDCommand(
+          new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd),
+
+          elevator::GetEncoderRotation, 
+          
+          ElevatorConstants.lvl1,
+
+          output -> elevator.Run(output), elevator
+    ));
+
   }
+
+  
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -46,7 +46,7 @@ public final class Constants {
     public final static double ki = 0;
     public final static double kd = 0;
 
-    public final static double kSensorUnitsPerRotation = 2048;
+    public final static double kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 8.68;
     public final static double floorLength = 1 * (1/kGearReduction) * (1/kSensorUnitsPerRotation);
   }
@@ -58,6 +58,11 @@ public final class Constants {
     public final static double kp = 0;
     public final static double ki = 0;
     public final static double kd = 0;
+
+    public final static double kSensorUnitsPerRotation = 42;
+    private final static double kGearReduction = 8.68;
+
+    public final static double lvl1 = 1 * (1/kGearReduction) * (1/kSensorUnitsPerRotation);
   }
 
 }
