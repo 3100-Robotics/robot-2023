@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmMotorConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.driveTrainConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ElevatorCommand;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,6 +26,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final drivetrain drive = new drivetrain();
+  private final Arm arm = new Arm();
+  private final Elevator elevator = new Elevator();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -51,21 +56,20 @@ public class RobotContainer {
     // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    // m_codriverController.x().whileTrue(new PIDCommand(
-    //       new PIDController(
-    //           DriveConstants.kStabilizationP,
-    //           DriveConstants.kStabilizationI,
-    //           DriveConstants.kStabilizationD),
-    //       // Close the loop on the turn rate
-    //       m_robotDrive::getTurnRate,
-    //       // Setpoint is 0
-    //       0,
-    //       // Pipe the output to the turning controls
-    //       output -> m_robotDrive.arcadeDrive(-m_driverController.getLeftY(), output),
-    //       // Require the robot drive
-    //       m_robotDrive));
-
-    m_codriverController.y().whileTrue(new ElevatorCommand(0.6, 50, elevator))
+    // arm in
+    m_codriverController.x().whileTrue(new PIDCommand(
+          new PIDController(
+              ArmMotorConstants.kp,
+              ArmMotorConstants.ki,
+              ArmMotorConstants.kd),
+          // Close the loop on the turn rate
+          arm::GetEncoderRotation,
+          // Setpoint is 0
+          ArmMotorConstants.floorLength,
+          // Pipe the output to the run controls
+          output -> arm.Run(output),
+          // Require the arm subsystem
+          arm));
   }
 
   /**
