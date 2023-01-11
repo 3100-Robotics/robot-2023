@@ -49,4 +49,13 @@ public final class Constants {
     // public final static double floorLength
   }
 
+  public static class ElevatorConstants{
+    public static final int elevatorMotor1 = 7;
+    public static final int elevatorMotor2 = 8;
+
+    public final static double kp = 0;
+    public final static double ki = 0;
+    public final static double kd = 0;
+  }
+
 }

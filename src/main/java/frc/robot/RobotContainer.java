@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ElevatorCommand;
 import frc.robot.subsystems.drivetrain;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -63,6 +64,8 @@ public class RobotContainer {
     //       output -> m_robotDrive.arcadeDrive(-m_driverController.getLeftY(), output),
     //       // Require the robot drive
     //       m_robotDrive));
+
+    m_codriverController.y().whileTrue(new ElevatorCommand(0.6, 50, elevator))
   }
 
   /**
