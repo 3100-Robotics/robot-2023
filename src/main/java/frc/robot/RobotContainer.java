@@ -6,8 +6,11 @@ package frc.robot;
 
 import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ArmCommand;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.driving;
+import frc.robot.commands.autoCommands.PIDBallence;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
@@ -29,6 +32,10 @@ public class RobotContainer {
   private final drivetrain drive = new drivetrain();
   private final Arm arm = new Arm();
   private final Elevator elevator = new Elevator();
+  private final PIDBallence autoballence = new PIDBallence(drive, 0.6);
+
+  private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
+  private final ArmCommand armCommand = new ArmCommand(arm);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final XboxController m_driverController =
@@ -60,18 +67,22 @@ public class RobotContainer {
    */
   private void configureBindings() {
     drive.setDefaultCommand(new driving(drive, m_driverController));
-    // arm.setDefaultCommand(new );
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    arm.setDefaultCommand(armCommand);
+    elevator.setDefaultCommand(elevatorCommand);
 
     buttonY.onTrue(new InstantCommand(
-      () -> elevator.incrementcontroller(false),
+      () -> elevatorCommand.incrementcontroller(false),
     elevator));
     buttonA.onTrue(new InstantCommand(
-      () -> elevator.incrementcontroller(true),
+      () -> elevatorCommand.incrementcontroller(true),
     elevator));
+    buttonB.onTrue(new InstantCommand(
+      () -> armCommand.incrementcontroller(false),
+    elevator));
+    buttonX.onTrue(new InstantCommand(
+      () -> armCommand.incrementcontroller(true),
+    elevator));
+    buttonStart.whileTrue(autoballence);
 
   }
 

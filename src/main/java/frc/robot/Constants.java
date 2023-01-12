@@ -53,9 +53,9 @@ public final class Constants {
     public final static double kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 1;
     public final static double tick2Feet = (1/kGearReduction) * (1/kSensorUnitsPerRotation);
-    private final static double lvl1 = 1;
-    private final static double lvl2 = 2;
-    private final static double lvl3 = 3;
+    public final static double lvl1 = 1;
+    public final static double lvl2 = 2;
+    public final static double lvl3 = 3;
   }
 
   public static class ElevatorConstants{
@@ -75,5 +75,33 @@ public final class Constants {
     public final static double lvl2 = 2;
     public final static double lvl3 = 3;
   }
+
+  public static final class IOConstants {
+    // === XBOX CHANNELS === //
+    // AXES
+    public static final int leftXAxisChannel = 0;
+    public static final int leftYAxisChannel = 1;
+    public static final int leftTriggerChannel = 2;
+    public static final int rightTriggerChannel = 3;
+    public static final int rightXAxisChannel = 4;
+    public static final int rightYAxisChannel = 5;
+
+    // BUTTONS
+    public static final int aButtonChannel = 1;
+    public static final int bButtonChannel = 2;
+    public static final int xButtonChannel = 3;
+    public static final int yButtonChannel = 4;
+
+    public static final int leftBumperChannel = 5;
+    public static final int rightBumperChannel = 6;
+
+    public static final int backButtonChannel = 7;
+    public static final int startButtonChannel = 8;
+
+    public static final int POVU = 0;
+    public static final int POVR = 90;
+    public static final int POVD = 180;
+    public static final int POVL = 270;
+ }
 
 }
