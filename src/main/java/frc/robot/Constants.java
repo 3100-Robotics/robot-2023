@@ -76,6 +76,11 @@ public final class Constants {
     public final static double lvl3 = 3;
   }
 
+  public static class endAffectorConstants{
+    public static final int leftMotor = 9;
+    public static final int rightMotor = 10;
+  }
+
   public static final class IOConstants {
     // === XBOX CHANNELS === //
     // AXES
