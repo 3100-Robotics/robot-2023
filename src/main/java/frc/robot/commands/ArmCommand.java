@@ -2,13 +2,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.ArmMotorConstants;
 import frc.robot.subsystems.Arm;
 
 public class ArmCommand extends CommandBase{
     Arm arm;
-    PIDController controller1;
+    PIDController controller1, controller2, controller3;
     double speed;
     double distance;
 
@@ -18,6 +17,7 @@ public class ArmCommand extends CommandBase{
 
     public ArmCommand(double speed, double distance, Arm arm){
         controller1 = new PIDController(ArmMotorConstants.kp, ArmMotorConstants.ki, ArmMotorConstants.kd);
+        controller1.setSetpoint(ArmMotorConstants.lvl1);
         this.speed = speed;
         this.distance = distance;
     }

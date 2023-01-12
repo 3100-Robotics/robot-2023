@@ -53,9 +53,9 @@ public final class Constants {
     public final static double kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 1;
     public final static double tick2Feet = (1/kGearReduction) * (1/kSensorUnitsPerRotation);
-    private final static double lvl1 = 1;
-    private final static double lvl2 = 2;
-    private final static double lvl3 = 3;
+    public final static double lvl1 = 1;
+    public final static double lvl2 = 2;
+    public final static double lvl3 = 3;
   }
 
   public static class ElevatorConstants{
