@@ -23,4 +23,9 @@ public final class Constants {
     public static final int backLeftPort = 3;
     public static final int backRightPort = 4;
   }
+
+  public static class elevatorConstants {
+    public static final int elevator1port = 7;
+    public static final int elevator2port = 8;
+  }
 }
