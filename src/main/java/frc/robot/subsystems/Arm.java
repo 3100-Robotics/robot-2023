@@ -27,4 +27,8 @@ public class Arm extends SubsystemBase{
     public double GetEncoderRotation(){
         return encoder.getPosition();
     }
+
+    public void resetEncoders() {
+        encoder.setPosition(0);
+    }
 }

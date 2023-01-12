@@ -47,6 +47,9 @@ public final class Constants {
     public final static double ki = 0;
     public final static double kd = 0;
 
+    public final static double kArmToleranceMeter = 0.1;
+    public final static double kArmRateToleranceMeterPerS = 0.2;
+
     public final static double kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 8.68;
     public final static double floorLength = 1 * (1/kGearReduction) * (1/kSensorUnitsPerRotation);

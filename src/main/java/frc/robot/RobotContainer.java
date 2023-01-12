@@ -54,7 +54,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     drive.setDefaultCommand(new driving(drive, m_driverController));
-    arm.setDefaultCommand(new );
+    // arm.setDefaultCommand(new );
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
