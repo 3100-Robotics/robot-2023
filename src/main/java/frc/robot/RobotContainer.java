@@ -4,19 +4,18 @@
 
 package frc.robot;
 
-import frc.robot.Constants.ArmMotorConstants;
-import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.driving;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -34,8 +33,15 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final XboxController m_driverController =
       new XboxController(OperatorConstants.kDriverControllerPort);
-  private final CommandXboxController m_codriverController =
-      new CommandXboxController(OperatorConstants.kCoDriverControllerPort);
+  private final XboxController m_codriverController =
+      new XboxController(OperatorConstants.kCoDriverControllerPort);
+
+  private JoystickButton buttonX = new JoystickButton(m_codriverController, IOConstants.xButtonChannel);
+  private JoystickButton buttonY = new JoystickButton(m_codriverController, IOConstants.yButtonChannel);
+  private JoystickButton buttonA = new JoystickButton(m_codriverController, IOConstants.aButtonChannel);
+  private JoystickButton buttonB = new JoystickButton(m_codriverController, IOConstants.bButtonChannel);
+  private JoystickButton buttonStart = new JoystickButton(m_codriverController, IOConstants.startButtonChannel);
+  private JoystickButton buttonSelect = new JoystickButton(m_codriverController, IOConstants.startButtonChannel);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -60,30 +66,12 @@ public class RobotContainer {
     // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    // arm in
-    m_codriverController.x().whileTrue(new PIDCommand(
-          new PIDController(
-              ArmMotorConstants.kp,
-              ArmMotorConstants.ki,
-              ArmMotorConstants.kd),
-          // Close the loop on the turn rate
-          arm::GetEncoderRotation,
-          // Setpoint is 0
-          ArmMotorConstants.tick2Feet,
-          // Pipe the output to the run controls
-          output -> arm.Run(output),
-          // Require the arm subsystem
-          arm));
-
-    m_codriverController.y().whileTrue(new PIDCommand(
-          new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd),
-
-          elevator::GetEncoderRotation, 
-          
-          ElevatorConstants.lvl1,
-
-          output -> elevator.Run(output), elevator
-    ));
+    buttonY.onTrue(new InstantCommand(
+      () -> elevator.incrementcontroller(false),
+    elevator));
+    buttonA.onTrue(new InstantCommand(
+      () -> elevator.incrementcontroller(true),
+    elevator));
 
   }
 
