@@ -69,7 +69,7 @@ public class RobotContainer {
           // Close the loop on the turn rate
           arm::GetEncoderRotation,
           // Setpoint is 0
-          ArmMotorConstants.floorLength,
+          ArmMotorConstants.tick2Feet,
           // Pipe the output to the run controls
           output -> arm.Run(output),
           // Require the arm subsystem
