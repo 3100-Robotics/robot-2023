@@ -49,11 +49,11 @@ public class drivetrain extends SubsystemBase{
     }
 
     public double getgyrox() {
-        return 0;
+        return gyro.getRawGyroX();
     }
 
     public double getgyroy() {
-        return 0;
+        return gyro.getRawGyroY();
     }
 
     // public double getAverageEncoderVelocity() {} to be added later?
