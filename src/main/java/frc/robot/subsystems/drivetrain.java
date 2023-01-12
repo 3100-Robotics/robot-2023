@@ -3,13 +3,13 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-// import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.driveTrainConstants;;
+import frc.robot.Constants.driveTrainConstants;
 
 public class drivetrain extends SubsystemBase{
 
@@ -25,7 +25,7 @@ public class drivetrain extends SubsystemBase{
     private static DifferentialDrive drive = new DifferentialDrive(frontleftMotor, frontRightMotor);
 
     //TODO make this work once the gyro lib has updated
-    // private static Gyro gyro = new AHRS(SPI.Port.kMXP);
+    private static AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     public drivetrain() {
         configureMotors();
@@ -45,7 +45,7 @@ public class drivetrain extends SubsystemBase{
     }
 
     public double getgyroz() {
-        return 0;
+        return gyro.getRawGyroZ();
     }
 
     public double getgyrox() {
