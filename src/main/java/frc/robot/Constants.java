@@ -52,7 +52,7 @@ public final class Constants {
 
     public final static double kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 8.68;
-    public final static double floorLength = 1 * (1/kGearReduction) * (1/kSensorUnitsPerRotation);
+    public final static double tick2Feet = (1/kGearReduction) * (1/kSensorUnitsPerRotation);
   }
 
   public static class ElevatorConstants{

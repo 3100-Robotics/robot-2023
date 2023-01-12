@@ -16,6 +16,10 @@ public class Arm extends SubsystemBase{
         
     }
 
+    void Initialize(){
+        resetEncoders();
+    }
+
     public void Run(double speed) {
         am1.set(speed);
     }
