@@ -31,6 +31,10 @@ public class ElevatorCommand extends CommandBase{
         }
     }
 
+    public boolean atSetpoint() {
+        return controller.atSetpoint();
+    }
+
     @Override
     public void execute() {
         EncoderReading = elevator.GetEncoderRotation();

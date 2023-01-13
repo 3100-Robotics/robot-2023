@@ -31,6 +31,10 @@ public class ArmCommand extends CommandBase{
         }
     }
 
+    public boolean atSetpoint() {
+        return controller.atSetpoint();
+    }
+
     @Override
     public void execute() {
         EncoderReading = arm.GetEncoderRotation();

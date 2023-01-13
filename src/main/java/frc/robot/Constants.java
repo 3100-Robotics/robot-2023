@@ -79,6 +79,17 @@ public final class Constants {
   public static class endAffectorConstants{
     public static final int leftMotor = 9;
     public static final int rightMotor = 10;
+
+    public final static double kp = 0;
+    public final static double ki = 0;
+    public final static double kd = 0;
+
+    public final static double kSensorUnitsPerRotation = 42;
+    private final static double kGearReduction = 1;
+    private final static double tick2Feet = (1/kGearReduction) * (1/kSensorUnitsPerRotation);
+
+    public final static double kAffectorToleranceMeter = 0.1;
+    public final static double kAffectorRateToleranceMeterPerS = 0.2;
   }
 
   public static final class IOConstants {
