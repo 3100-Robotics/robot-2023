@@ -10,13 +10,16 @@ import frc.robot.commands.ArmCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.driving;
+import frc.robot.commands.endAffectorController;
 import frc.robot.commands.autoCommands.PIDBallence;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
+import frc.robot.subsystems.endAffector;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -32,6 +35,7 @@ public class RobotContainer {
   private final drivetrain drive = new drivetrain();
   private final Arm arm = new Arm();
   private final Elevator elevator = new Elevator();
+  private final endAffector endAffector = new endAffector();
   private final PIDBallence autoballence = new PIDBallence(drive, 0.6);
 
   private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
@@ -49,6 +53,8 @@ public class RobotContainer {
   private JoystickButton buttonB = new JoystickButton(m_codriverController, IOConstants.bButtonChannel);
   private JoystickButton buttonStart = new JoystickButton(m_codriverController, IOConstants.startButtonChannel);
   private JoystickButton buttonSelect = new JoystickButton(m_codriverController, IOConstants.startButtonChannel);
+  private JoystickButton buttonlb = new JoystickButton(m_codriverController, IOConstants.leftBumperChannel);
+  private JoystickButton buttonrb = new JoystickButton(m_codriverController, IOConstants.rightBumperChannel);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -69,20 +75,35 @@ public class RobotContainer {
     drive.setDefaultCommand(new driving(drive, m_driverController));
     arm.setDefaultCommand(armCommand);
     elevator.setDefaultCommand(elevatorCommand);
+    endAffector.setDefaultCommand(new endAffectorController(m_codriverController));
 
     buttonY.onTrue(new InstantCommand(
       () -> elevatorCommand.incrementcontroller(false),
     elevator));
+
     buttonA.onTrue(new InstantCommand(
       () -> elevatorCommand.incrementcontroller(true),
     elevator));
+
     buttonB.onTrue(new InstantCommand(
       () -> armCommand.incrementcontroller(false),
     elevator));
+
     buttonX.onTrue(new InstantCommand(
       () -> armCommand.incrementcontroller(true),
     elevator));
+
     buttonStart.whileTrue(autoballence);
+    
+    buttonlb.whileTrue(new StartEndCommand(
+      () -> endAffector.runBothLeft(.5),
+      () -> endAffector.stopBoth(),
+    endAffector));
+    
+    buttonrb.whileTrue(new StartEndCommand(
+      () -> endAffector.runBothRight(.5),
+      () -> endAffector.stopBoth(),
+    endAffector));
 
   }
 
