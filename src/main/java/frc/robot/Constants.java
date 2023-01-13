@@ -28,9 +28,9 @@ public final class Constants {
     private final static double kGearReduction = 8.68;
     private final static double driveWheelRadiusMeters = 0.0508;
 
-    public final static double kp = 0;
-    public final static double ki = 0;
-    public final static double kd = 0;
+    public final static double kp = 1;
+    public final static double ki = 1;
+    public final static double kd = 1;
     public final static double kDriveToleranceMeter = 0.1;
     public final static double kDriveToleranceDeg = 5;
     public final static double kDriveRateToleranceMeterPerS = 0.2;
@@ -62,9 +62,9 @@ public final class Constants {
     public static final int elevatorMotor1 = 7;
     public static final int elevatorMotor2 = 8;
 
-    public final static double kp = 0;
-    public final static double ki = 0;
-    public final static double kd = 0;
+    public final static double kp = 1;
+    public final static double ki = 1;
+    public final static double kd = 1;
 
     public final static double kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 1;
@@ -80,9 +80,9 @@ public final class Constants {
     public static final int leftMotor = 9;
     public static final int rightMotor = 10;
 
-    public final static double kp = 0;
-    public final static double ki = 0;
-    public final static double kd = 0;
+    public final static double kp = 1;
+    public final static double ki = 1;
+    public final static double kd = 1;
 
     public final static double kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 1;
