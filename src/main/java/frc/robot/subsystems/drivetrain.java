@@ -3,13 +3,12 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-// import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-// import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.driveTrainConstants;;
+import frc.robot.Constants.driveTrainConstants;
 
 public class drivetrain extends SubsystemBase{
 
@@ -24,7 +23,8 @@ public class drivetrain extends SubsystemBase{
 
     private static DifferentialDrive drive = new DifferentialDrive(frontleftMotor, frontRightMotor);
 
-    // private static Gyro gyro = new AHRS(SPI.Port.kMXP);
+    //TODO make this work once the gyro lib has updated
+    private static AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     public drivetrain() {
         configureMotors();
@@ -38,9 +38,22 @@ public class drivetrain extends SubsystemBase{
         return (frontleftMotor.getSelectedSensorPosition(0) + frontRightMotor.getSelectedSensorPosition(0))/2;
     }
 
-    // public double getgyrox() {
-    //     return gyro.
-    // }
+    public void resetEncoders() {
+        frontleftMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
+        frontRightMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
+    }
+
+    public double getgyroz() {
+        return gyro.getRawGyroZ();
+    }
+
+    public double getgyrox() {
+        return gyro.getRawGyroX();
+    }
+
+    public double getgyroy() {
+        return gyro.getRawGyroY();
+    }
 
     // public double getAverageEncoderVelocity() {} to be added later?
 

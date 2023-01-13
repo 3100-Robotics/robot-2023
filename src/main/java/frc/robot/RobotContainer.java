@@ -4,12 +4,21 @@
 
 package frc.robot;
 
+import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ArmCommand;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.driving;
+import frc.robot.commands.autoCommands.PIDBallence;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.drivetrain;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -20,11 +29,26 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final drivetrain drive = new drivetrain();
+  private final Arm arm = new Arm();
+  private final Elevator elevator = new Elevator();
+  private final PIDBallence autoballence = new PIDBallence(drive, 0.6);
+
+  private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
+  private final ArmCommand armCommand = new ArmCommand(arm);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final XboxController m_driverController =
+      new XboxController(OperatorConstants.kDriverControllerPort);
+  private final XboxController m_codriverController =
+      new XboxController(OperatorConstants.kCoDriverControllerPort);
+
+  private JoystickButton buttonX = new JoystickButton(m_codriverController, IOConstants.xButtonChannel);
+  private JoystickButton buttonY = new JoystickButton(m_codriverController, IOConstants.yButtonChannel);
+  private JoystickButton buttonA = new JoystickButton(m_codriverController, IOConstants.aButtonChannel);
+  private JoystickButton buttonB = new JoystickButton(m_codriverController, IOConstants.bButtonChannel);
+  private JoystickButton buttonStart = new JoystickButton(m_codriverController, IOConstants.startButtonChannel);
+  private JoystickButton buttonSelect = new JoystickButton(m_codriverController, IOConstants.startButtonChannel);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -42,14 +66,27 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    drive.setDefaultCommand(new driving(drive, m_driverController));
+    arm.setDefaultCommand(armCommand);
+    elevator.setDefaultCommand(elevatorCommand);
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    buttonY.onTrue(new InstantCommand(
+      () -> elevatorCommand.incrementcontroller(false),
+    elevator));
+    buttonA.onTrue(new InstantCommand(
+      () -> elevatorCommand.incrementcontroller(true),
+    elevator));
+    buttonB.onTrue(new InstantCommand(
+      () -> armCommand.incrementcontroller(false),
+    elevator));
+    buttonX.onTrue(new InstantCommand(
+      () -> armCommand.incrementcontroller(true),
+    elevator));
+    buttonStart.whileTrue(autoballence);
+
   }
+
+  
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -58,6 +95,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return Autos.DriveForward(drive, 0.5, 1);
   }
 }
