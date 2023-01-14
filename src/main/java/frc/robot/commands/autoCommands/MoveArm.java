@@ -7,9 +7,9 @@ public class MoveArm extends CommandBase{
     ArmCommand armcommand;
     boolean down;
 
-    public MoveArm(ArmCommand armcommand, boolean isDown) {
+    public MoveArm(ArmCommand armcommand, boolean isBack) {
         this.armcommand = armcommand;
-        this.down = isDown;
+        this.down = isBack;
     }
 
     @Override
