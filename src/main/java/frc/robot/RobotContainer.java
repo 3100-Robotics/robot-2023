@@ -8,9 +8,9 @@ import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArmCommand;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ClampLimit;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.driving;
-import frc.robot.commands.endAffectorController;
 import frc.robot.commands.autoCommands.PIDBallence;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
@@ -75,7 +75,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new driving(drive, m_driverController));
     arm.setDefaultCommand(armCommand);
     elevator.setDefaultCommand(elevatorCommand);
-    endAffector.setDefaultCommand(new endAffectorController(m_codriverController));
+    endAffector.setDefaultCommand(new ClampLimit(endAffector, m_codriverController));
 
     buttonY.onTrue(new InstantCommand(
       () -> elevatorCommand.incrementcontroller(false),
@@ -105,9 +105,14 @@ public class RobotContainer {
       () -> endAffector.stopBoth(),
     endAffector));
 
+    buttonSelect.onTrue(new InstantCommand(
+      () -> ClampLimit.open(),
+      endAffector
+    ));
+
   }
 
-  
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
