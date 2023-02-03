@@ -28,9 +28,9 @@ public final class Constants {
     private final static double kGearReduction = 8.68;
     private final static double driveWheelRadiusMeters = 0.0508;
 
-    public final static double kp = 1;
-    public final static double ki = 1;
-    public final static double kd = 1;
+    public final static double kp = 0;
+    public final static double ki = 0;
+    public final static double kd = 0;
     public final static double kDriveToleranceMeter = 0.1;
     public final static double kDriveToleranceDeg = 5;
     public final static double kDriveRateToleranceMeterPerS = 0.2;
@@ -50,21 +50,26 @@ public final class Constants {
     public final static double kArmToleranceMeter = 0.1;
     public final static double kArmRateToleranceMeterPerS = 0.2;
 
-    public final static double kSensorUnitsPerRotation = 42;
+    public final static double kSensorUnitsPerRotation = 8192;
     private final static double kGearReduction = 1;
-    public final static double tick2Feet = (1/kGearReduction) * (1/kSensorUnitsPerRotation);
-    public final static double lvl1 = 1;
-    public final static double lvl2 = 2;
-    public final static double lvl3 = 3;
+    private final static double kWinchRadious = 1;
+    private final static double kCircumference = 2 * Math.PI * kWinchRadious;
+    private final static double kInches2Rads = 0;
+    public final static double tick2Feet = (1/kGearReduction) * (1/kSensorUnitsPerRotation) * (1);
+
+    // levels in ticks
+    public final static double lvl1 = 1 * tick2Feet;
+    public final static double lvl2 = 2 * tick2Feet;
+    public final static double lvl3 = 3 * tick2Feet;
   }
 
   public static class ElevatorConstants{
     public static final int elevatorMotor1 = 7;
     public static final int elevatorMotor2 = 8;
 
-    public final static double kp = 1;
-    public final static double ki = 1;
-    public final static double kd = 1;
+    public final static double kp = 0;
+    public final static double ki = 0;
+    public final static double kd = 0;
 
     public final static double kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 1;
@@ -80,9 +85,9 @@ public final class Constants {
     public static final int leftMotor = 9;
     public static final int rightMotor = 10;
 
-    public final static double kp = 1;
-    public final static double ki = 1;
-    public final static double kd = 1;
+    public final static double kp = 0;
+    public final static double ki = 0;
+    public final static double kd = 0;
 
     public final static double kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 1;

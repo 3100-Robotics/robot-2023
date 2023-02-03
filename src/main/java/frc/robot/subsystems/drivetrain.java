@@ -7,6 +7,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.driveTrainConstants;
 
@@ -23,11 +24,11 @@ public class drivetrain extends SubsystemBase{
 
     private static DifferentialDrive drive = new DifferentialDrive(frontleftMotor, frontRightMotor);
 
-    //TODO make this work once the gyro lib has updated
     private static AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     public drivetrain() {
         configureMotors();
+        resetEncoders();
     }
 
     public void arcadeDrive(double speed, double rotation) {
@@ -55,32 +56,50 @@ public class drivetrain extends SubsystemBase{
         return gyro.getRawGyroY();
     }
 
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("left speed", frontleftMotor.getSensorCollection().getIntegratedSensorVelocity());
+        SmartDashboard.putNumber("right speed", frontRightMotor.getSensorCollection().getIntegratedSensorVelocity());
+    }
+
     // public double getAverageEncoderVelocity() {} to be added later?
 
     private void configureMotors() {
+
+        System.out.println("configuration");
 
         frontleftMotor.configFactoryDefault();
         frontRightMotor.configFactoryDefault();
         backLeftMotor.configFactoryDefault();
         backRightMotor.configFactoryDefault();
 
+        System.out.println("factory default");
+
         frontleftMotor.setNeutralMode(NeutralMode.Brake);
         frontRightMotor.setNeutralMode(NeutralMode.Brake);
         backLeftMotor.setNeutralMode(NeutralMode.Brake);
         backRightMotor.setNeutralMode(NeutralMode.Brake);
+
+        System.out.println("brake mode");
 
         frontleftMotor.setInverted(false);
         frontRightMotor.setInverted(false);
         backLeftMotor.setInverted(true);
         backRightMotor.setInverted(true);
 
+        System.out.println("inversion");
+
         frontleftMotor.setSafetyEnabled(true);
         frontRightMotor.setSafetyEnabled(true);
         backLeftMotor.setSafetyEnabled(true);
         backRightMotor.setSafetyEnabled(true);
 
+        System.out.println("safety");
+
         backLeftMotor.follow(frontleftMotor);
         backRightMotor.follow(frontRightMotor);
+
+        System.out.println("following");
 
         frontleftMotor.configPeakOutputForward(1.0);
         frontRightMotor.configPeakOutputForward(1.0);
@@ -88,8 +107,12 @@ public class drivetrain extends SubsystemBase{
         frontleftMotor.configPeakOutputReverse(-1.0);
         frontRightMotor.configPeakOutputReverse(-1.0);
 
+        System.out.println("max outputs");
+
         frontleftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         frontRightMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+
+        System.out.println("fedback device");
     }
     
 }

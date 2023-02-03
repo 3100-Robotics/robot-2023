@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
@@ -27,6 +28,13 @@ public class Elevator extends SubsystemBase{
 
     public double GetEncoderRotation(){
         return encoder.getPosition();
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("motor 1 voltage", em1.getBusVoltage());
+        SmartDashboard.putNumber("motor 2 voltage", em1.getBusVoltage());
+        SmartDashboard.putNumber("motor speeds", encoder.getVelocity());
     }
 }
 

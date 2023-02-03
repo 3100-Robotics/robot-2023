@@ -33,13 +33,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final drivetrain drive = new drivetrain();
-  private final Arm arm = new Arm();
-  private final Elevator elevator = new Elevator();
-  private final endAffector endAffector = new endAffector();
+  // private final Arm arm = new Arm();
+  // private final Elevator elevator = new Elevator();
+  // private final endAffector endAffector = new endAffector();
   private final PIDBallence autoballence = new PIDBallence(drive, 0.6);
 
-  private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
-  private final ArmCommand armCommand = new ArmCommand(arm);
+  // private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
+  // private final ArmCommand armCommand = new ArmCommand(arm);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final XboxController m_driverController =
@@ -73,37 +73,37 @@ public class RobotContainer {
    */
   private void configureBindings() {
     drive.setDefaultCommand(new driving(drive, m_driverController));
-    arm.setDefaultCommand(armCommand);
-    elevator.setDefaultCommand(elevatorCommand);
-    endAffector.setDefaultCommand(new endAffectorController(m_codriverController));
+    // arm.setDefaultCommand(armCommand);
+    // elevator.setDefaultCommand(elevatorCommand);
+    // endAffector.setDefaultCommand(new endAffectorController(m_codriverController));
 
-    buttonY.onTrue(new InstantCommand(
-      () -> elevatorCommand.incrementcontroller(false),
-    elevator));
+    // buttonY.onTrue(new InstantCommand(
+    //   () -> elevatorCommand.incrementcontroller(false),
+    // elevator));
 
-    buttonA.onTrue(new InstantCommand(
-      () -> elevatorCommand.incrementcontroller(true),
-    elevator));
+    // buttonA.onTrue(new InstantCommand(
+    //   () -> elevatorCommand.incrementcontroller(true),
+    // elevator));
 
-    buttonB.onTrue(new InstantCommand(
-      () -> armCommand.incrementcontroller(false),
-    elevator));
+    // buttonB.onTrue(new InstantCommand(
+    //   () -> armCommand.incrementcontroller(false),
+    // arm));
 
-    buttonX.onTrue(new InstantCommand(
-      () -> armCommand.incrementcontroller(true),
-    elevator));
+    // buttonX.onTrue(new InstantCommand(
+    //   () -> armCommand.incrementcontroller(true),
+    // arm));
 
     buttonStart.whileTrue(autoballence);
     
-    buttonlb.whileTrue(new StartEndCommand(
-      () -> endAffector.runBothLeft(.5),
-      () -> endAffector.stopBoth(),
-    endAffector));
+    // buttonlb.whileTrue(new StartEndCommand(
+    //   () -> endAffector.runBothLeft(.5),
+    //   () -> endAffector.stopBoth(),
+    // endAffector));
     
-    buttonrb.whileTrue(new StartEndCommand(
-      () -> endAffector.runBothRight(.5),
-      () -> endAffector.stopBoth(),
-    endAffector));
+    // buttonrb.whileTrue(new StartEndCommand(
+    //   () -> endAffector.runBothRight(.5),
+    //   () -> endAffector.stopBoth(),
+    // endAffector));
 
   }
 

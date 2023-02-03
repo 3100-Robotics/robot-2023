@@ -13,9 +13,19 @@ public class endAffectorController extends CommandBase{
         this.controller = controller;
     }
 
+    private double limit(double value) {
+        if (value >= +0.1)
+          return value;
+    
+        if (value <= -0.1)
+          return value;
+        
+        return 0;
+      }
+
     public void execute(){
-        ea.runLeft(controller.getLeftX());
-        ea.runRight(controller.getRightX());
+        ea.runLeft(limit(controller.getLeftX()));
+        ea.runRight(limit(controller.getRightX()));
     }
 
 }
