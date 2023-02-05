@@ -43,11 +43,6 @@ public class endAffector extends SubsystemBase{
         rightAffector.set(speed);
     }
 
-    public void runBothOppicite(double speed) {
-        leftAffector.set(speed);
-        rightAffector.set(speed);
-    }
-
     public void stopBoth() {
         leftAffector.stopMotor();
         rightAffector.stopMotor();
@@ -60,4 +55,5 @@ public class endAffector extends SubsystemBase{
     public double getRightEncoder() {
         return righEncoder.getPosition();
     }
+
 }

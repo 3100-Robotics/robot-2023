@@ -8,7 +8,6 @@ import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArmCommand;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ClampLimit;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.driving;
 import frc.robot.commands.autoCommands.PIDBallence;
@@ -121,11 +120,6 @@ public class RobotContainer {
     //   () -> endAffector.runBothRight(0.3),
     //   () -> endAffector.stopBoth(),
     // endAffector));
-
-    buttonSelect.onTrue(new InstantCommand(
-      () -> ClampLimit.open(),
-      endAffector
-    ));
 
   }
 
