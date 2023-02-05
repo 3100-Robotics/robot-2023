@@ -24,10 +24,6 @@ public final class Constants {
     public static final int backLeftPort = 3;
     public static final int backRightPort = 4;
 
-    public final static double kSensorUnitsPerRotation = 2048;
-    private final static double kGearReduction = 8.68;
-    private final static double driveWheelRadiusMeters = 0.0508;
-
     public final static double kp = 0;
     public final static double ki = 0;
     public final static double kd = 0;
@@ -35,8 +31,11 @@ public final class Constants {
     public final static double kDriveToleranceDeg = 5;
     public final static double kDriveRateToleranceMeterPerS = 0.2;
 
-    public static double encoderScale = (1 / kGearReduction) * (kSensorUnitsPerRotation)
-        * (2 * Math.PI * driveWheelRadiusMeters);
+    public final static int kSensorUnitsPerRotation = 2048;
+    private final static double kGearReduction = 5.51;
+    private final static double kWheelRadious = 3;
+    private final static double kRads2inches = 2 * Math.PI * kWheelRadious;
+    public final static double tick2Feet = (1 / kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
   }
 
   public static class ArmMotorConstants{
@@ -50,12 +49,11 @@ public final class Constants {
     public final static double kArmToleranceMeter = 0.1;
     public final static double kArmRateToleranceMeterPerS = 0.2;
 
-    public final static double kSensorUnitsPerRotation = 8192;
+    public final static int kSensorUnitsPerRotation = 8192;
     private final static double kGearReduction = 1;
     private final static double kWinchRadious = 1;
-    private final static double kCircumference = 2 * Math.PI * kWinchRadious;
-    private final static double kInches2Rads = 0;
-    public final static double tick2Feet = (1/kGearReduction) * (1/kSensorUnitsPerRotation) * (1);
+    private final static double kRads2inches = 2 * Math.PI * kWinchRadious;
+    public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
 
     // levels in ticks
     public final static double lvl1 = 1 * tick2Feet;
@@ -71,9 +69,11 @@ public final class Constants {
     public final static double ki = 0;
     public final static double kd = 0;
 
-    public final static double kSensorUnitsPerRotation = 42;
+    public final static int kSensorUnitsPerRotation = 8192;
     private final static double kGearReduction = 1;
-    private final static double tick2Feet = (1/kGearReduction) * (1/kSensorUnitsPerRotation);
+    private final static double kWinchRadious = 1;
+    private final static double kRads2inches = 2 * Math.PI * kWinchRadious;
+    public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
 
     // setpoints in feet
     public final static double lvl1 = 1;
@@ -89,9 +89,11 @@ public final class Constants {
     public final static double ki = 0;
     public final static double kd = 0;
 
-    public final static double kSensorUnitsPerRotation = 42;
+    public final static int kSensorUnitsPerRotation = 8192;
     private final static double kGearReduction = 1;
-    private final static double tick2Feet = (1/kGearReduction) * (1/kSensorUnitsPerRotation);
+    private final static double kWinchRadious = 1.128 / 2.0;
+    private final static double kRads2inches = 2 * Math.PI * kWinchRadious;
+    public final static double tick2Feet = (kGearReduction) * (kSensorUnitsPerRotation) * (kRads2inches);
 
     public final static double kAffectorToleranceMeter = 0.1;
     public final static double kAffectorRateToleranceMeterPerS = 0.2;

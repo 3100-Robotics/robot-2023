@@ -16,7 +16,9 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
 import frc.robot.subsystems.endAffector;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -31,22 +33,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final drivetrain drive = new drivetrain();
-  // private final Arm arm = new Arm();
-  // private final Elevator elevator = new Elevator();
-  // private final endAffector endAffector = new endAffector();
-  private final PIDBallence autoballence = new PIDBallence(drive, 0.6);
 
-  // private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
-  // private final ArmCommand armCommand = new ArmCommand(arm);
-
-  // Replace with CommandPS4Controller or CommandJoystick if needed
   private final XboxController m_driverController =
       new XboxController(OperatorConstants.kDriverControllerPort);
   private final XboxController m_codriverController =
       new XboxController(OperatorConstants.kCoDriverControllerPort);
 
+  private JoystickButton driverButtonStart = new JoystickButton(m_driverController, IOConstants.startButtonChannel);
   private JoystickButton buttonX = new JoystickButton(m_codriverController, IOConstants.xButtonChannel);
   private JoystickButton buttonY = new JoystickButton(m_codriverController, IOConstants.yButtonChannel);
   private JoystickButton buttonA = new JoystickButton(m_codriverController, IOConstants.aButtonChannel);
@@ -56,8 +49,24 @@ public class RobotContainer {
   private JoystickButton buttonlb = new JoystickButton(m_codriverController, IOConstants.leftBumperChannel);
   private JoystickButton buttonrb = new JoystickButton(m_codriverController, IOConstants.rightBumperChannel);
 
+  // The robot's subsystems and commands are defined here...
+  private final drivetrain drive = new drivetrain();
+  // private final Arm arm = new Arm();
+  // private final Elevator elevator = new Elevator();
+  // private final endAffector endAffector = new endAffector();
+  private final PIDBallence autoballence = new PIDBallence(drive);
+
+  
+  
+  private final driving driveCommand = new driving(drive, m_driverController);
+  // private final endAffectorController endAffectorCommand = new endAffectorController(m_codriverController, endAffector);
+  // private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
+  // private final ArmCommand armCommand = new ArmCommand(arm);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    CameraServer.startAutomaticCapture();
     // Configure the trigger bindings
     configureBindings();
   }
@@ -72,10 +81,12 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    drive.setDefaultCommand(new driving(drive, m_driverController));
+    drive.setDefaultCommand(driveCommand);
+
+    driverButtonStart.onTrue(new InstantCommand(() -> drive.ToggleSlowMode(), drive));
     // arm.setDefaultCommand(armCommand);
     // elevator.setDefaultCommand(elevatorCommand);
-    // endAffector.setDefaultCommand(new endAffectorController(m_codriverController));
+    // endAffector.setDefaultCommand(endAffectorCommand);
 
     // buttonY.onTrue(new InstantCommand(
     //   () -> elevatorCommand.incrementcontroller(false),
@@ -94,14 +105,20 @@ public class RobotContainer {
     // arm));
 
     buttonStart.whileTrue(autoballence);
+
+    // driverButtonStart.onTrue(new InstantCommand(() -> driveCommand.ToggleSlowMode(), driveCommand));
     
+    // end affector controls
+
+    // buttonSelect.onTrue(new InstantCommand(() -> endAffectorCommand.toggleEndAffectorLock(), endAffectorCommand));
+
     // buttonlb.whileTrue(new StartEndCommand(
-    //   () -> endAffector.runBothLeft(.5),
+    //   () -> endAffector.runBothLeft(0.3),
     //   () -> endAffector.stopBoth(),
     // endAffector));
     
     // buttonrb.whileTrue(new StartEndCommand(
-    //   () -> endAffector.runBothRight(.5),
+    //   () -> endAffector.runBothRight(0.3),
     //   () -> endAffector.stopBoth(),
     // endAffector));
 

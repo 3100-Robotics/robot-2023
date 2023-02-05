@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -25,10 +26,16 @@ public class drivetrain extends SubsystemBase{
     private static DifferentialDrive drive = new DifferentialDrive(frontleftMotor, frontRightMotor);
 
     private static AHRS gyro = new AHRS(SPI.Port.kMXP);
+    
+    public Boolean slowmode;
 
     public drivetrain() {
         configureMotors();
         resetEncoders();
+    }
+
+    public void ToggleSlowMode() {
+        slowmode = !slowmode;
     }
 
     public void arcadeDrive(double speed, double rotation) {
@@ -45,15 +52,15 @@ public class drivetrain extends SubsystemBase{
     }
 
     public double getgyroz() {
-        return gyro.getRawGyroZ();
+        return gyro.getPitch();
     }
 
     public double getgyrox() {
-        return gyro.getRawGyroX();
+        return gyro.getYaw();
     }
 
     public double getgyroy() {
-        return gyro.getRawGyroY();
+        return gyro.getRoll();
     }
 
     @Override
@@ -66,53 +73,112 @@ public class drivetrain extends SubsystemBase{
 
     private void configureMotors() {
 
-        System.out.println("configuration");
+        TalonFXConfiguration configs = new TalonFXConfiguration();
 
-        frontleftMotor.configFactoryDefault();
-        frontRightMotor.configFactoryDefault();
-        backLeftMotor.configFactoryDefault();
-        backRightMotor.configFactoryDefault();
+    frontleftMotor.configFactoryDefault();
+    backLeftMotor.configFactoryDefault();
+    frontRightMotor.configFactoryDefault();
+    backRightMotor.configFactoryDefault();
 
-        System.out.println("factory default");
+    frontleftMotor.setSafetyEnabled(false);
+    backLeftMotor.setSafetyEnabled(false);
+    frontRightMotor.setSafetyEnabled(false);
+    backRightMotor.setSafetyEnabled(false);
+    
 
-        frontleftMotor.setNeutralMode(NeutralMode.Brake);
-        frontRightMotor.setNeutralMode(NeutralMode.Brake);
-        backLeftMotor.setNeutralMode(NeutralMode.Brake);
-        backRightMotor.setNeutralMode(NeutralMode.Brake);
+    // _leftConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
+    // _rightConfig.remoteFilter0.remoteSensorDeviceID = frontLeft.getDeviceID(); // Device ID of Remote Source
+    // _rightConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.TalonFX_SelectedSensor; // Remote Source Type
 
-        System.out.println("brake mode");
+    // setRobotDistanceConfigs(_rightInvert, _rightConfig);
+    // configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
 
-        frontleftMotor.setInverted(false);
-        frontRightMotor.setInverted(false);
-        backLeftMotor.setInverted(true);
-        backRightMotor.setInverted(true);
+    // frontLeft.configAllSettings(configs);
+    // frontRight.configAllSettings(configs);
 
-        System.out.println("inversion");
+    // Determines which motors will be inverted
 
-        frontleftMotor.setSafetyEnabled(true);
-        frontRightMotor.setSafetyEnabled(true);
-        backLeftMotor.setSafetyEnabled(true);
-        backRightMotor.setSafetyEnabled(true);
+    frontleftMotor.setInverted(false);
+    backLeftMotor.setInverted(false);
+    frontRightMotor.setInverted(true);
+    backRightMotor.setInverted(true);
 
-        System.out.println("safety");
+    // Sets the motors to brake mode
+    frontleftMotor.setNeutralMode(NeutralMode.Brake);
+    backLeftMotor.setNeutralMode(NeutralMode.Brake);
+    frontRightMotor.setNeutralMode(NeutralMode.Brake);
+    backRightMotor.setNeutralMode(NeutralMode.Brake);
 
-        backLeftMotor.follow(frontleftMotor);
-        backRightMotor.follow(frontRightMotor);
+    backLeftMotor.follow(frontleftMotor);
+    backRightMotor.follow(frontRightMotor);
 
-        System.out.println("following");
+    frontleftMotor.configPeakOutputForward(1.0);
+    frontleftMotor.configPeakOutputReverse(-1.0);
 
-        frontleftMotor.configPeakOutputForward(1.0);
-        frontRightMotor.configPeakOutputForward(1.0);
+    frontRightMotor.configPeakOutputForward(1.0);
+    frontRightMotor.configPeakOutputReverse(-1.0);
 
-        frontleftMotor.configPeakOutputReverse(-1.0);
-        frontRightMotor.configPeakOutputReverse(-1.0);
+    frontleftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    frontRightMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
-        System.out.println("max outputs");
+    // _rightConfig.slot2.kF = Constants.kGains_Velocit.kF;
+    // _rightConfig.slot2.kP = Constants.kGains_Velocit.kP;
+    // _rightConfig.slot2.kI = Constants.kGains_Velocit.kI;
+    // _rightConfig.slot2.kD = Constants.kGains_Velocit.kD;
+    // _rightConfig.slot2.integralZone = Constants.kGains_Velocit.kIzone;
+    // _rightConfig.slot2.closedLoopPeakOutput = Constants.kGains_Velocit.kPeakOutput;
 
-        frontleftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        frontRightMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    // /* Config the neutral deadband. */
+    // _leftConfig.neutralDeadband = Constants.kNeutralDeadband;
+    // _rightConfig.neutralDeadband = Constants.kNeutralDeadband;
 
-        System.out.println("fedback device");
+    // int closedLoopTimeMs = 1;
+    // _rightConfig.slot0.closedLoopPeriod = closedLoopTimeMs;
+    // _rightConfig.slot1.closedLoopPeriod = closedLoopTimeMs;
+    // _rightConfig.slot2.closedLoopPeriod = closedLoopTimeMs;
+    // _rightConfig.slot3.closedLoopPeriod = closedLoopTimeMs;
+
+    // /* Motion Magic Configs */
+    // _rightConfig.motionAcceleration = 2000; // (distance units per 100 ms) per second
+    // _rightConfig.motionCruiseVelocity = 2000; // distance units per 100 ms
+
+    // /* APPLY the config settings */
+    // frontLeft.configAllSettings(_leftConfig);
+    // frontRight.configAllSettings(_rightConfig);
+
+    // /* Set status frame periods to ensure we don't have stale data */
+    // frontRight.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Constants.kTimeoutMs);
+    // frontRight.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Constants.kTimeoutMs);
+    // frontLeft.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, Constants.kTimeoutMs);
+
+
+  
+
+    //leftMotorLeader.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, currentThreshold, currentThresholdTime));
+    //rightMotorLeader.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, currentThreshold, currentThresholdTime));
+
+    //Might break
+    // frontLeft.setSensorPhase(true);
+    // frontRight.setSensorPhase(true);
+
+    // frontLeft.setSelectedSensorPosition(0);
+    // frontRight.setSelectedSensorPosition(0);
+
+    // Add PID constants
+    // frontLeft.config_kP(0, 0);
+    // frontLeft.config_kI(0, 0);
+    // frontLeft.config_kD(0, 0);
+    // frontLeft.config_kF(0, 0);
+    // // leftMotorLeader.configMaxIntegralAccumulator(0, 400);
+
+    // frontRight.config_kP(0, 0);
+    // frontRight.config_kI(0, 0);
+    // frontRight.config_kD(0, 0);
+    // frontRight.config_kF(0, 0);
+    // // rightMotorLeader.configMaxIntegralAccumulator(0, 400);
+ 
+    // frontLeft.setIntegralAccumulator(0);
+    // frontRight.setIntegralAccumulator(0);
     }
     
 }

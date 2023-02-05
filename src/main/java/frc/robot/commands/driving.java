@@ -26,9 +26,19 @@ public class driving extends CommandBase{
 
     @Override
     public void execute() {
-        double xSpeed = -m_controller.getLeftY();
-        double zRotation = m_controller.getRightX();
+      double xSpeed;
+      double zRotation;
+      if (m_drive.slowmode) {
+        xSpeed = Math.pow(limit(m_controller.getLeftY()), 2)*0.5;
+        zRotation = Math.pow(limit(m_controller.getRightX()), 2)*0.5;
+      }
+      else {
+        xSpeed = Math.pow(limit(m_controller.getLeftY()), 2);
+        zRotation = Math.pow(limit(m_controller.getRightX()), 2);
+      }
 
-        m_drive.arcadeDrive(limit(xSpeed), limit(zRotation));
+
+
+        m_drive.arcadeDrive(xSpeed, zRotation);
     }
 }

@@ -9,9 +9,9 @@ public class openAffector extends PIDCommand{
     endAffector affector;
     double speed, distance;
 
-    public openAffector(endAffector affector, double speed, double distance) {
+    public openAffector(endAffector affector, double distance) {
         super(new PIDController(endAffectorConstants.kp, endAffectorConstants.ki, endAffectorConstants.kd), 
-        affector::getAverageEncoders, distance, ouput -> affector.runBothOppicite(speed), affector);
+        affector::getLeftEncoder, distance, output -> affector.runBothOppicite(output), affector);
         this.affector = affector;
         getController().enableContinuousInput(-180, 180);
         // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
@@ -21,9 +21,7 @@ public class openAffector extends PIDCommand{
     }
 
     @Override
-    public void initialize() {
-        affector.resetEncoders();
-    }
+    public void initialize() {}
 
     @Override
     public boolean isFinished() {

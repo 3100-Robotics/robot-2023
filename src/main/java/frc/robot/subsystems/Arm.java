@@ -1,8 +1,9 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmMotorConstants;
@@ -10,15 +11,13 @@ import frc.robot.Constants.ArmMotorConstants;
 public class Arm extends SubsystemBase{
     private CANSparkMax am1 = new CANSparkMax(ArmMotorConstants.armMotor1, MotorType.kBrushless);
 
-    private RelativeEncoder encoder = am1.getEncoder();
+    private AbsoluteEncoder encoder = am1.getAbsoluteEncoder(Type.kDutyCycle);
 
     public Arm() {
         
     }
 
-    void Initialize(){
-        resetEncoders();
-    }
+    void Initialize(){}
 
     public void Run(double speed) {
         am1.set(speed);
@@ -30,9 +29,5 @@ public class Arm extends SubsystemBase{
 
     public double GetEncoderRotation(){
         return encoder.getPosition();
-    }
-
-    public void resetEncoders() {
-        encoder.setPosition(0);
     }
 }

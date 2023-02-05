@@ -8,9 +8,16 @@ public class endAffectorController extends CommandBase{
     
     endAffector ea;
     XboxController controller;
+    Boolean endAffectorLock;
 
-    public endAffectorController(XboxController controller) {
+    public endAffectorController(XboxController controller, endAffector affector) {
         this.controller = controller;
+        ea = affector;
+        addRequirements(affector);
+    }
+
+    public void toggleEndAffectorLock() {
+      endAffectorLock = !endAffectorLock;
     }
 
     private double limit(double value) {
@@ -24,8 +31,10 @@ public class endAffectorController extends CommandBase{
       }
 
     public void execute(){
+      if (!endAffectorLock) {
         ea.runLeft(limit(controller.getLeftX()));
         ea.runRight(limit(controller.getRightX()));
+      }
     }
 
 }

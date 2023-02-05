@@ -8,9 +8,9 @@ import frc.robot.subsystems.drivetrain;
 public class DriveTurn extends PIDCommand{
     drivetrain Drive;
 
-    public DriveTurn(drivetrain Drive, double speed, double rotation) {
+    public DriveTurn(drivetrain Drive, double rotation) {
         super(new PIDController(driveTrainConstants.kp, driveTrainConstants.ki, driveTrainConstants.kd), 
-        Drive::getgyroz, rotation, ouput -> Drive.arcadeDrive(0, speed), Drive);
+        Drive::getgyroz, rotation, output -> Drive.arcadeDrive(0, output), Drive);
         this.Drive = Drive;
         getController().enableContinuousInput(-180, 180);
         // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the

@@ -1,33 +1,42 @@
 package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.driveTrainConstants;
 import frc.robot.subsystems.drivetrain;
 
-public class PIDBallence extends PIDCommand{
-    drivetrain Drive;
+public class PIDBallence extends CommandBase{
+    PIDController controller = new PIDController(driveTrainConstants.kp, driveTrainConstants.ki, driveTrainConstants.kd);
+    drivetrain drive;
+    double gyroReading, speed;
 
-    public PIDBallence(drivetrain Drive, double speed) {
-        super(new PIDController(driveTrainConstants.kp, driveTrainConstants.ki, driveTrainConstants.kd), 
-        Drive::getgyroy, 0, ouput -> Drive.arcadeDrive(speed, 0), Drive);
-        this.Drive = Drive;
-        getController().enableContinuousInput(-180, 180);
-        // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
-        // setpoint before it is considered as having reached the reference
-        getController()
-            .setTolerance(driveTrainConstants.kDriveToleranceDeg, driveTrainConstants.kDriveRateToleranceMeterPerS);
+    public PIDBallence(drivetrain drive) {
+        this.drive = drive;
+        controller.setSetpoint(0);
+        controller.setTolerance(0.5, 1);
     }
 
     @Override
-    public void initialize() {
-        Drive.resetEncoders();
-    }
+    public void execute() {
+        gyroReading = drive.getgyroy();
+        speed = controller.calculate(gyroReading);
+        // Limit the max power
+        if (Math.abs(speed) > 0.6) {
+            speed = Math.copySign(0.6, speed);
+        }
+        // if (speed > 0) {
+        //     speed *= 1.1;
+        //   }
+        drive.arcadeDrive(speed, 0);
+
+        // System.out.println("Current Angle: " + gyroReading);
+        // System.out.println("Error " + (0-gyroReading));
+        // System.out.println("Drive Power: " + speed);
+    }  
 
     @Override
     public boolean isFinished() {
-      // End when the controller is at the reference.
-      return getController().atSetpoint();
+        return false;
     }
     
 }

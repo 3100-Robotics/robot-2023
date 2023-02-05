@@ -1,8 +1,9 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,7 +13,8 @@ public class Elevator extends SubsystemBase{
     private CANSparkMax em1 = new CANSparkMax(ElevatorConstants.elevatorMotor1, MotorType.kBrushless);
     private CANSparkMax em2 = new CANSparkMax(ElevatorConstants.elevatorMotor2, MotorType.kBrushless);
 
-    private RelativeEncoder encoder = em1.getEncoder();
+    private AbsoluteEncoder encoder = em1.getAbsoluteEncoder(Type.kDutyCycle);
+
 
     public Elevator(){
         em2.follow(em1);

@@ -19,22 +19,22 @@ public final class Autos {
     return Commands.sequence(DriveForward(subsystem, speed, distance));
   }
 
-  public static CommandBase score(ElevatorCommand elevator, ArmCommand arm, endAffector ea) {
+  public static CommandBase score(ElevatorCommand elevator, ArmCommand arm, endAffector affector) {
     return Commands.sequence(new MoveElevator(elevator, false), new MoveElevator(elevator, false),
-                             new MoveArm(arm, false), new MoveArm(arm, false), new openAffector(ea, 1, 1));
+                             new MoveArm(arm, false), new MoveArm(arm, false), new openAffector(affector, 1));
   }
 
 
-  public static CommandBase scoreleave(drivetrain dt, ArmCommand arm, ElevatorCommand elevator, endAffector ea){
+  public static CommandBase scoreleave(drivetrain drive, ArmCommand arm, ElevatorCommand elevator, endAffector affector){
     return Commands.sequence(new MoveElevator(elevator, false), new MoveElevator(elevator, false),
                             new MoveArm(arm, false), new MoveArm(arm, false),
-                            new openAffector(ea, 1, 1), DriveForward(dt, -0.5, 5));
+                            new openAffector(affector, 1), DriveForward(drive, -0.5, 5));
   }
 
-  public static CommandBase scoreballance(drivetrain dt, ArmCommand arm, ElevatorCommand elevator, endAffector ea, PIDBallence balance) {
+  public static CommandBase scoreballance(drivetrain drive, ArmCommand arm, ElevatorCommand elevator, endAffector ea, PIDBallence balance) {
     return Commands.sequence(new MoveElevator(elevator, false), new MoveElevator(elevator, false),
                             new MoveArm(arm, false), new MoveArm(arm, false),
-                            new openAffector(ea, 1, 1), DriveForward(dt, -0.5, 5), new PIDBallence(dt, 0.3));
+                            new openAffector(ea, 1), DriveForward(drive, -0.5, 5), new PIDBallence(drive));
   }
 
   private Autos() {
