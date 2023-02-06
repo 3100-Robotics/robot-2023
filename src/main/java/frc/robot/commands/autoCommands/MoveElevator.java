@@ -1,24 +1,24 @@
 package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.ElevatorCommand;
+import frc.robot.subsystems.Elevator;
 
 public class MoveElevator extends CommandBase{
-    ElevatorCommand elevatorcommand;
+    Elevator elevator;
     boolean down;
 
-    public MoveElevator(ElevatorCommand elevatorcommand, boolean isDown) {
-        this.elevatorcommand = elevatorcommand;
+    public MoveElevator(Elevator elevator, boolean isDown) {
+        this.elevator = elevator;
         this.down = isDown;
     }
 
     @Override
     public void initialize() {
-        elevatorcommand.incrementcontroller(down);
+        elevator.incrementSetpoint(down);
     }
 
     @Override
     public boolean isFinished() {
-        return elevatorcommand.atSetpoint();
+        return elevator.atSetpoint();
     }
 }

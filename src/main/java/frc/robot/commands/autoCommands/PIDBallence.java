@@ -20,18 +20,10 @@ public class PIDBallence extends CommandBase{
     public void execute() {
         gyroReading = drive.getgyroy();
         speed = controller.calculate(gyroReading);
-        // Limit the max power
         if (Math.abs(speed) > 0.6) {
             speed = Math.copySign(0.6, speed);
         }
-        // if (speed > 0) {
-        //     speed *= 1.1;
-        //   }
         drive.arcadeDrive(speed, 0);
-
-        // System.out.println("Current Angle: " + gyroReading);
-        // System.out.println("Error " + (0-gyroReading));
-        // System.out.println("Drive Power: " + speed);
     }  
 
     @Override

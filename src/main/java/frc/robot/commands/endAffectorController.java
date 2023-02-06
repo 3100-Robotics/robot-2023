@@ -6,18 +6,13 @@ import frc.robot.subsystems.endAffector;
 
 public class endAffectorController extends CommandBase{
     
-    endAffector ea;
+    endAffector affector;
     XboxController controller;
-    Boolean endAffectorLock;
 
     public endAffectorController(XboxController controller, endAffector affector) {
         this.controller = controller;
-        ea = affector;
-        addRequirements(affector);
-    }
-
-    public void toggleEndAffectorLock() {
-      endAffectorLock = !endAffectorLock;
+        this.affector = affector;
+        addRequirements(this.affector);
     }
 
     private double limit(double value) {
@@ -31,9 +26,9 @@ public class endAffectorController extends CommandBase{
       }
 
     public void execute(){
-      if (!endAffectorLock) {
-        ea.runLeft(limit(controller.getLeftX()));
-        ea.runRight(limit(controller.getRightX()));
+      if (!affector.endAffectorLock) {
+        affector.runLeft(limit(controller.getLeftX()));
+        affector.runRight(limit(controller.getRightX()));
       }
     }
 

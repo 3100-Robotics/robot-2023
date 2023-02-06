@@ -15,7 +15,13 @@ public class endAffector extends SubsystemBase{
     private AbsoluteEncoder LeftEncoder = leftAffector.getAbsoluteEncoder(Type.kDutyCycle);
     private AbsoluteEncoder righEncoder = rightAffector.getAbsoluteEncoder(Type.kDutyCycle);
 
+    public Boolean endAffectorLock;
+
     public endAffector() {}
+
+    public void toggleEndAffectorLock() {
+        endAffectorLock = !endAffectorLock;
+    }
 
     public void runLeft(double speed) {
         leftAffector.set(speed);

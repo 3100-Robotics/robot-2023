@@ -55,61 +55,46 @@ public class RobotContainer {
   // private final endAffector endAffector = new endAffector();
   private final PIDBallence autoballence = new PIDBallence(drive);
 
-  
-  
-  private final driving driveCommand = new driving(drive, m_driverController);
-  // private final endAffectorController endAffectorCommand = new endAffectorController(m_codriverController, endAffector);
-  // private final ElevatorCommand elevatorCommand = new ElevatorCommand(elevator);
-  // private final ArmCommand armCommand = new ArmCommand(arm);
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
     CameraServer.startAutomaticCapture();
+
+    drive.setDefaultCommand(new driving(drive, m_driverController));
+    // arm.setDefaultCommand(new ArmCommand(arm));
+    // elevator.setDefaultCommand(new ElevatorCommand(elevator));
+    // endAffector.setDefaultCommand(endAffectorCommand);
+
     // Configure the trigger bindings
     configureBindings();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureBindings() {
-    drive.setDefaultCommand(driveCommand);
-
     driverButtonStart.onTrue(new InstantCommand(() -> drive.ToggleSlowMode(), drive));
-    // arm.setDefaultCommand(armCommand);
-    // elevator.setDefaultCommand(elevatorCommand);
-    // endAffector.setDefaultCommand(endAffectorCommand);
+    buttonStart.whileTrue(autoballence);
+
+    // elevator controls
 
     // buttonY.onTrue(new InstantCommand(
-    //   () -> elevatorCommand.incrementcontroller(false),
+    //   () -> elevator.incrementSetpoint(false),
     // elevator));
 
     // buttonA.onTrue(new InstantCommand(
-    //   () -> elevatorCommand.incrementcontroller(true),
+    //   () -> elevator.incrementSetpoint(true),
     // elevator));
 
+    // arm controls
+
     // buttonB.onTrue(new InstantCommand(
-    //   () -> armCommand.incrementcontroller(false),
+    //   () -> arm.incrementSetpoint(false),
     // arm));
 
     // buttonX.onTrue(new InstantCommand(
-    //   () -> armCommand.incrementcontroller(true),
+    //   () -> arm.incrementSetpoint(true),
     // arm));
-
-    buttonStart.whileTrue(autoballence);
-
-    // driverButtonStart.onTrue(new InstantCommand(() -> driveCommand.ToggleSlowMode(), driveCommand));
     
     // end affector controls
 
-    // buttonSelect.onTrue(new InstantCommand(() -> endAffectorCommand.toggleEndAffectorLock(), endAffectorCommand));
+    // buttonSelect.onTrue(new InstantCommand(() -> endAffector.toggleEndAffectorLock(), endAffector));
 
     // buttonlb.whileTrue(new StartEndCommand(
     //   () -> endAffector.runBothLeft(0.3),
@@ -123,13 +108,6 @@ public class RobotContainer {
 
   }
 
-
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.DriveForward(drive, 0.5, 1);

@@ -56,9 +56,10 @@ public final class Constants {
     public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
 
     // levels in ticks
-    public final static double lvl1 = 1 * tick2Feet;
-    public final static double lvl2 = 2 * tick2Feet;
-    public final static double lvl3 = 3 * tick2Feet;
+    public final static double shelflvl1 = 1 * tick2Feet;
+    public final static double shelflvl2 = 2 * tick2Feet;
+    public final static double shelflvl3 = 3 * tick2Feet;
+    public final static int numLevels = 3;
   }
 
   public static class ElevatorConstants{
@@ -76,9 +77,10 @@ public final class Constants {
     public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
 
     // setpoints in feet
-    public final static double lvl1 = 1;
-    public final static double lvl2 = 2;
-    public final static double lvl3 = 3;
+    public final static double shelflvl1 = 1;
+    public final static double shelflvl2 = 2;
+    public final static double shelflvl3 = 3;
+    public final static int numLevels = 3;
   }
 
   public static class endAffectorConstants{

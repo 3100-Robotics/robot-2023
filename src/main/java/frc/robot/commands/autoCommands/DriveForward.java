@@ -17,8 +17,8 @@ public class DriveForward extends PIDCommand{
         getController().enableContinuousInput(-180, 180);
         // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
         // setpoint before it is considered as having reached the reference
-        getController()
-            .setTolerance(driveTrainConstants.kDriveToleranceMeter, driveTrainConstants.kDriveRateToleranceMeterPerS);
+        getController().setTolerance(driveTrainConstants.kDriveToleranceMeter,
+            driveTrainConstants.kDriveRateToleranceMeterPerS);
     }
 
     @Override

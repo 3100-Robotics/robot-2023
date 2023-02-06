@@ -5,27 +5,59 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase{
-    private CANSparkMax em1 = new CANSparkMax(ElevatorConstants.elevatorMotor1, MotorType.kBrushless);
-    private CANSparkMax em2 = new CANSparkMax(ElevatorConstants.elevatorMotor2, MotorType.kBrushless);
+    private CANSparkMax elevatorMotor1 = new CANSparkMax(ElevatorConstants.elevatorMotor1, MotorType.kBrushless);
+    private CANSparkMax elevatorMotor2 = new CANSparkMax(ElevatorConstants.elevatorMotor2, MotorType.kBrushless);
 
-    private AbsoluteEncoder encoder = em1.getAbsoluteEncoder(Type.kDutyCycle);
+    private AbsoluteEncoder encoder = elevatorMotor1.getAbsoluteEncoder(Type.kDutyCycle);
 
+    public PIDController controller;
+    int setpointNum;
 
     public Elevator(){
-        em2.follow(em1);
+        setpointNum = 1;
+        controller = new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd);
+        elevatorMotor2.follow(elevatorMotor1);
+    }
+
+    public void incrementSetpoint(boolean negative) {
+        if (negative) {
+            if (setpointNum != 1) {
+                setpointNum -= 1;
+            }
+        }
+        else {
+            if (setpointNum != ElevatorConstants.numLevels){
+                setpointNum += 1;
+            }
+        }
+
+        if (setpointNum == 1) {
+            controller.setSetpoint(ElevatorConstants.shelflvl1);
+        }
+        else if (setpointNum == 2) {
+            controller.setSetpoint(ElevatorConstants.shelflvl2);
+        }
+        else {
+            controller.setSetpoint(ElevatorConstants.shelflvl3);
+        }
+    }
+
+    public boolean atSetpoint() {
+        return controller.atSetpoint();
     }
 
     public void Run(double speed) {
-        em1.set(speed);
+        elevatorMotor1.set(speed);
     }
 
     public void Stop(){
-        em1.stopMotor();
+        elevatorMotor1.stopMotor();
     }
 
     public double GetEncoderRotation(){
@@ -34,8 +66,8 @@ public class Elevator extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("motor 1 voltage", em1.getBusVoltage());
-        SmartDashboard.putNumber("motor 2 voltage", em1.getBusVoltage());
+        SmartDashboard.putNumber("motor 1 voltage", elevatorMotor1.getBusVoltage());
+        SmartDashboard.putNumber("motor 2 voltage", elevatorMotor1.getBusVoltage());
         SmartDashboard.putNumber("motor speeds", encoder.getVelocity());
     }
 }

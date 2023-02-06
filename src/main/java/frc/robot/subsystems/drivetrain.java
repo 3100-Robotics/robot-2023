@@ -27,7 +27,7 @@ public class drivetrain extends SubsystemBase{
 
     private static AHRS gyro = new AHRS(SPI.Port.kMXP);
     
-    public Boolean slowmode;
+    public Boolean slowmode = false;
 
     public drivetrain() {
         configureMotors();
@@ -72,113 +72,41 @@ public class drivetrain extends SubsystemBase{
     // public double getAverageEncoderVelocity() {} to be added later?
 
     private void configureMotors() {
-
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
-    frontleftMotor.configFactoryDefault();
-    backLeftMotor.configFactoryDefault();
-    frontRightMotor.configFactoryDefault();
-    backRightMotor.configFactoryDefault();
+        frontleftMotor.configFactoryDefault();
+        backLeftMotor.configFactoryDefault();
+        frontRightMotor.configFactoryDefault();
+        backRightMotor.configFactoryDefault();
 
-    frontleftMotor.setSafetyEnabled(false);
-    backLeftMotor.setSafetyEnabled(false);
-    frontRightMotor.setSafetyEnabled(false);
-    backRightMotor.setSafetyEnabled(false);
-    
+        frontleftMotor.setSafetyEnabled(false);
+        backLeftMotor.setSafetyEnabled(false);
+        frontRightMotor.setSafetyEnabled(false);
+        backRightMotor.setSafetyEnabled(false);
 
-    // _leftConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
-    // _rightConfig.remoteFilter0.remoteSensorDeviceID = frontLeft.getDeviceID(); // Device ID of Remote Source
-    // _rightConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.TalonFX_SelectedSensor; // Remote Source Type
+        // Determines which motors will be inverted
 
-    // setRobotDistanceConfigs(_rightInvert, _rightConfig);
-    // configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
+        frontleftMotor.setInverted(false);
+        backLeftMotor.setInverted(false);
+        frontRightMotor.setInverted(true);
+        backRightMotor.setInverted(true);
 
-    // frontLeft.configAllSettings(configs);
-    // frontRight.configAllSettings(configs);
+        // Sets the motors to brake mode
+        frontleftMotor.setNeutralMode(NeutralMode.Brake);
+        backLeftMotor.setNeutralMode(NeutralMode.Brake);
+        frontRightMotor.setNeutralMode(NeutralMode.Brake);
+        backRightMotor.setNeutralMode(NeutralMode.Brake);
 
-    // Determines which motors will be inverted
+        backLeftMotor.follow(frontleftMotor);
+        backRightMotor.follow(frontRightMotor);
 
-    frontleftMotor.setInverted(false);
-    backLeftMotor.setInverted(false);
-    frontRightMotor.setInverted(true);
-    backRightMotor.setInverted(true);
+        frontleftMotor.configPeakOutputForward(1.0);
+        frontleftMotor.configPeakOutputReverse(-1.0);
 
-    // Sets the motors to brake mode
-    frontleftMotor.setNeutralMode(NeutralMode.Brake);
-    backLeftMotor.setNeutralMode(NeutralMode.Brake);
-    frontRightMotor.setNeutralMode(NeutralMode.Brake);
-    backRightMotor.setNeutralMode(NeutralMode.Brake);
+        frontRightMotor.configPeakOutputForward(1.0);
+        frontRightMotor.configPeakOutputReverse(-1.0);
 
-    backLeftMotor.follow(frontleftMotor);
-    backRightMotor.follow(frontRightMotor);
-
-    frontleftMotor.configPeakOutputForward(1.0);
-    frontleftMotor.configPeakOutputReverse(-1.0);
-
-    frontRightMotor.configPeakOutputForward(1.0);
-    frontRightMotor.configPeakOutputReverse(-1.0);
-
-    frontleftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    frontRightMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-
-    // _rightConfig.slot2.kF = Constants.kGains_Velocit.kF;
-    // _rightConfig.slot2.kP = Constants.kGains_Velocit.kP;
-    // _rightConfig.slot2.kI = Constants.kGains_Velocit.kI;
-    // _rightConfig.slot2.kD = Constants.kGains_Velocit.kD;
-    // _rightConfig.slot2.integralZone = Constants.kGains_Velocit.kIzone;
-    // _rightConfig.slot2.closedLoopPeakOutput = Constants.kGains_Velocit.kPeakOutput;
-
-    // /* Config the neutral deadband. */
-    // _leftConfig.neutralDeadband = Constants.kNeutralDeadband;
-    // _rightConfig.neutralDeadband = Constants.kNeutralDeadband;
-
-    // int closedLoopTimeMs = 1;
-    // _rightConfig.slot0.closedLoopPeriod = closedLoopTimeMs;
-    // _rightConfig.slot1.closedLoopPeriod = closedLoopTimeMs;
-    // _rightConfig.slot2.closedLoopPeriod = closedLoopTimeMs;
-    // _rightConfig.slot3.closedLoopPeriod = closedLoopTimeMs;
-
-    // /* Motion Magic Configs */
-    // _rightConfig.motionAcceleration = 2000; // (distance units per 100 ms) per second
-    // _rightConfig.motionCruiseVelocity = 2000; // distance units per 100 ms
-
-    // /* APPLY the config settings */
-    // frontLeft.configAllSettings(_leftConfig);
-    // frontRight.configAllSettings(_rightConfig);
-
-    // /* Set status frame periods to ensure we don't have stale data */
-    // frontRight.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Constants.kTimeoutMs);
-    // frontRight.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Constants.kTimeoutMs);
-    // frontLeft.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, Constants.kTimeoutMs);
-
-
-  
-
-    //leftMotorLeader.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, currentThreshold, currentThresholdTime));
-    //rightMotorLeader.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, currentThreshold, currentThresholdTime));
-
-    //Might break
-    // frontLeft.setSensorPhase(true);
-    // frontRight.setSensorPhase(true);
-
-    // frontLeft.setSelectedSensorPosition(0);
-    // frontRight.setSelectedSensorPosition(0);
-
-    // Add PID constants
-    // frontLeft.config_kP(0, 0);
-    // frontLeft.config_kI(0, 0);
-    // frontLeft.config_kD(0, 0);
-    // frontLeft.config_kF(0, 0);
-    // // leftMotorLeader.configMaxIntegralAccumulator(0, 400);
-
-    // frontRight.config_kP(0, 0);
-    // frontRight.config_kI(0, 0);
-    // frontRight.config_kD(0, 0);
-    // frontRight.config_kF(0, 0);
-    // // rightMotorLeader.configMaxIntegralAccumulator(0, 400);
- 
-    // frontLeft.setIntegralAccumulator(0);
-    // frontRight.setIntegralAccumulator(0);
+        frontleftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        frontRightMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     }
-    
 }

@@ -7,7 +7,7 @@ import frc.robot.subsystems.endAffector;
 
 public class openAffector extends PIDCommand{
     endAffector affector;
-    double speed, distance;
+    double distance;
 
     public openAffector(endAffector affector, double distance) {
         super(new PIDController(endAffectorConstants.kp, endAffectorConstants.ki, endAffectorConstants.kd), 
@@ -16,12 +16,9 @@ public class openAffector extends PIDCommand{
         getController().enableContinuousInput(-180, 180);
         // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
         // setpoint before it is considered as having reached the reference
-        getController()
-            .setTolerance(endAffectorConstants.kAffectorToleranceMeter, endAffectorConstants.kAffectorRateToleranceMeterPerS);
+        getController().setTolerance(endAffectorConstants.kAffectorToleranceMeter,
+          endAffectorConstants.kAffectorRateToleranceMeterPerS);
     }
-
-    @Override
-    public void initialize() {}
 
     @Override
     public boolean isFinished() {

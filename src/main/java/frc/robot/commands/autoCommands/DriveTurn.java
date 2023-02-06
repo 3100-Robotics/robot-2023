@@ -10,18 +10,13 @@ public class DriveTurn extends PIDCommand{
 
     public DriveTurn(drivetrain Drive, double rotation) {
         super(new PIDController(driveTrainConstants.kp, driveTrainConstants.ki, driveTrainConstants.kd), 
-        Drive::getgyroz, rotation, output -> Drive.arcadeDrive(0, output), Drive);
+        Drive::getgyroz, Drive.getgyroz()+rotation, output -> Drive.arcadeDrive(0, output), Drive);
         this.Drive = Drive;
         getController().enableContinuousInput(-180, 180);
         // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
         // setpoint before it is considered as having reached the reference
-        getController()
-            .setTolerance(driveTrainConstants.kDriveToleranceDeg, driveTrainConstants.kDriveRateToleranceMeterPerS);
-    }
-
-    @Override
-    public void initialize() {
-        Drive.resetEncoders();
+        getController().setTolerance(driveTrainConstants.kDriveToleranceDeg,
+            driveTrainConstants.kDriveRateToleranceMeterPerS);
     }
 
     @Override
