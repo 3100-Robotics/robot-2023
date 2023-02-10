@@ -18,8 +18,9 @@ public class Arm extends SubsystemBase{
     int setpointNum;
 
     public Arm() {
-        controller = new PIDController(ArmMotorConstants.kp, ArmMotorConstants.ki, ArmMotorConstants.kd);
         setpointNum = 1;
+        controller = new PIDController(ArmMotorConstants.kp, ArmMotorConstants.ki, ArmMotorConstants.kd);
+        controller.setSetpoint(ArmMotorConstants.armLevels[setpointNum - 1]);
     }
 
     public void incrementSetpoint(boolean negative) {
@@ -29,19 +30,11 @@ public class Arm extends SubsystemBase{
             }
         }
         else {
-            if (setpointNum != ArmMotorConstants.numLevels){
+            if (setpointNum != ArmMotorConstants.armLevels.length){
                 setpointNum += 1;
             }
         }
-        if (setpointNum == 1) {
-            controller.setSetpoint(ArmMotorConstants.shelflvl1);
-        }
-        else if (setpointNum == 2) {
-            controller.setSetpoint(ArmMotorConstants.shelflvl2);
-        }
-        else {
-            controller.setSetpoint(ArmMotorConstants.shelflvl3);
-        }
+        controller.setSetpoint(ArmMotorConstants.armLevels[setpointNum - 1]);
     }
 
     public boolean atSetpoint() {

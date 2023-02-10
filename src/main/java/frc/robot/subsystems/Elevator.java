@@ -22,6 +22,7 @@ public class Elevator extends SubsystemBase{
     public Elevator(){
         setpointNum = 1;
         controller = new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd);
+        controller.setSetpoint(ElevatorConstants.elevatorLevels[setpointNum - 1]);
         elevatorMotor2.follow(elevatorMotor1);
     }
 
@@ -32,20 +33,12 @@ public class Elevator extends SubsystemBase{
             }
         }
         else {
-            if (setpointNum != ElevatorConstants.numLevels){
+            if (setpointNum != ElevatorConstants.elevatorLevels.length){
                 setpointNum += 1;
             }
         }
 
-        if (setpointNum == 1) {
-            controller.setSetpoint(ElevatorConstants.shelflvl1);
-        }
-        else if (setpointNum == 2) {
-            controller.setSetpoint(ElevatorConstants.shelflvl2);
-        }
-        else {
-            controller.setSetpoint(ElevatorConstants.shelflvl3);
-        }
+        controller.setSetpoint(ElevatorConstants.elevatorLevels[setpointNum - 1]);
     }
 
     public boolean atSetpoint() {

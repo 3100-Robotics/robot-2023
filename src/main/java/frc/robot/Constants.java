@@ -38,6 +38,7 @@ public final class Constants {
     public final static double tick2Feet = (1 / kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
   }
 
+  
   public static class ArmMotorConstants{
     public static final int armMotor1 = 5;
     public static final int armMotor2 = 6;
@@ -56,12 +57,16 @@ public final class Constants {
     public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
 
     // levels in ticks
-    public final static double shelflvl1 = 1 * tick2Feet;
-    public final static double shelflvl2 = 2 * tick2Feet;
-    public final static double shelflvl3 = 3 * tick2Feet;
-    public final static int numLevels = 3;
+    public static double[] armLevels = new double[3]; {
+      armLevels[0] = 1;
+      armLevels[1] = 2;
+      armLevels[2] = 3;
+      for (int i = 0; i < armLevels.length; ++i) {
+        armLevels[i] *= tick2Feet;
+      }
+    }
   }
-
+  
   public static class ElevatorConstants{
     public static final int elevatorMotor1 = 7;
     public static final int elevatorMotor2 = 8;
@@ -77,10 +82,17 @@ public final class Constants {
     public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
 
     // setpoints in feet
-    public final static double shelflvl1 = 1;
-    public final static double shelflvl2 = 2;
-    public final static double shelflvl3 = 3;
-    public final static int numLevels = 3;
+    public static double[] elevatorLevels = new double[5]; {
+      elevatorLevels[0] = 1;
+      elevatorLevels[1] = 2;
+      elevatorLevels[2] = 3;
+      elevatorLevels[3] = 4;
+      elevatorLevels[4] = 5;
+
+      for (int i = 0; i < elevatorLevels.length; ++i) {
+        elevatorLevels[i] *= tick2Feet;
+      }
+    }
   }
 
   public static class endAffectorConstants{
@@ -128,5 +140,4 @@ public final class Constants {
     public static final int POVD = 180;
     public static final int POVL = 270;
  }
-
 }
