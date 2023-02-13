@@ -57,10 +57,7 @@ public final class Constants {
     public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
 
     // levels in ticks
-    public static double[] armLevels = new double[3]; {
-      armLevels[0] = 1;
-      armLevels[1] = 2;
-      armLevels[2] = 3;
+    public static double[] armLevels = {1, 2, 3}; {
       for (int i = 0; i < armLevels.length; ++i) {
         armLevels[i] *= tick2Feet;
       }
@@ -82,13 +79,7 @@ public final class Constants {
     public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
 
     // setpoints in feet
-    public static double[] elevatorLevels = new double[5]; {
-      elevatorLevels[0] = 1;
-      elevatorLevels[1] = 2;
-      elevatorLevels[2] = 3;
-      elevatorLevels[3] = 4;
-      elevatorLevels[4] = 5;
-
+    public static double[] elevatorLevels = {1.0, 2.0, 3.0, 4.0, 5.0}; {
       for (int i = 0; i < elevatorLevels.length; ++i) {
         elevatorLevels[i] *= tick2Feet;
       }
