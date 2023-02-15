@@ -49,6 +49,7 @@ public class RobotContainer {
   private JoystickButton buttonrb = new JoystickButton(m_codriverController, IOConstants.rightBumperChannel);
 
   // The robot's subsystems and commands are defined here...
+  // will uncomment things later as they get added to the robot
   private final drivetrain drive = new drivetrain();
   // private final Arm arm = new Arm();
   // private final Elevator elevator = new Elevator();
