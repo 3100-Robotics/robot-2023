@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase{
-    private CANSparkMax elevatorMotor1 = new CANSparkMax(ElevatorConstants.elevatorMotor1, MotorType.kBrushless);
-    private CANSparkMax elevatorMotor2 = new CANSparkMax(ElevatorConstants.elevatorMotor2, MotorType.kBrushless);
+    private CANSparkMax LeftElevatorMotor = new CANSparkMax(ElevatorConstants.elevatorMotor1, MotorType.kBrushless);
+    private CANSparkMax RightElevatorMotor = new CANSparkMax(ElevatorConstants.elevatorMotor2, MotorType.kBrushless);
 
-    private AbsoluteEncoder encoder = elevatorMotor1.getAbsoluteEncoder(Type.kDutyCycle);
+    private AbsoluteEncoder encoder = LeftElevatorMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
     public PIDController controller;
     int setpointNum;
@@ -23,7 +23,7 @@ public class Elevator extends SubsystemBase{
         setpointNum = 1;
         controller = new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd);
         controller.setSetpoint(ElevatorConstants.elevatorLevels[setpointNum - 1]);
-        elevatorMotor2.follow(elevatorMotor1);
+        LeftElevatorMotor.follow(RightElevatorMotor);
     }
 
     public void incrementSetpoint(boolean negative) {
@@ -46,11 +46,11 @@ public class Elevator extends SubsystemBase{
     }
 
     public void Run(double speed) {
-        elevatorMotor1.set(speed);
+        LeftElevatorMotor.set(speed);
     }
 
     public void Stop(){
-        elevatorMotor1.stopMotor();
+        LeftElevatorMotor.stopMotor();
     }
 
     public double GetEncoderRotation(){
@@ -59,9 +59,9 @@ public class Elevator extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("motor 1 voltage", elevatorMotor1.getBusVoltage());
-        SmartDashboard.putNumber("motor 2 voltage", elevatorMotor1.getBusVoltage());
-        SmartDashboard.putNumber("motor speeds", encoder.getVelocity());
+        SmartDashboard.putNumber("motor 1 voltage", LeftElevatorMotor.getBusVoltage());
+        SmartDashboard.putNumber("motor 2 voltage", LeftElevatorMotor.getBusVoltage());
+        SmartDashboard.putNumber("elevator pos", encoder.getPosition());
     }
 }
 
