@@ -10,6 +10,7 @@ public class ElevatorCommand extends CommandBase{
 
     public ElevatorCommand(Elevator elevator) {
         this.elevator = elevator;
+        addRequirements(this.elevator);
     }
 
     @Override

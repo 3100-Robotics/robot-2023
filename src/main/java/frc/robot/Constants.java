@@ -40,8 +40,7 @@ public final class Constants {
 
   
   public static class ArmMotorConstants{
-    public static final int armMotor1 = 5;
-    public static final int armMotor2 = 6;
+    public static final int armMotor = 5;
 
     public final static double kp = 0;
     public final static double ki = 0;
@@ -65,8 +64,8 @@ public final class Constants {
   }
   
   public static class ElevatorConstants{
-    public static final int elevatorMotor1 = 7;
-    public static final int elevatorMotor2 = 8;
+    public static final int LeftElevatorMotor = 6;
+    public static final int RightElevatorMotor = 7;
 
     public final static double kp = 0;
     public final static double ki = 0;
@@ -87,8 +86,8 @@ public final class Constants {
   }
 
   public static class endAffectorConstants{
-    public static final int leftMotor = 9;
-    public static final int rightMotor = 10;
+    public static final int leftMotor = 8;
+    public static final int rightMotor = 9;
 
     public final static double kp = 0;
     public final static double ki = 0;

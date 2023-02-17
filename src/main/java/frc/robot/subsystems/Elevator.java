@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
@@ -11,19 +12,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase{
-    private CANSparkMax LeftElevatorMotor = new CANSparkMax(ElevatorConstants.elevatorMotor1, MotorType.kBrushless);
-    private CANSparkMax RightElevatorMotor = new CANSparkMax(ElevatorConstants.elevatorMotor2, MotorType.kBrushless);
+    private CANSparkMax LeftElevatorMotor = new CANSparkMax(ElevatorConstants.LeftElevatorMotor, MotorType.kBrushless);
+    private CANSparkMax RightElevatorMotor = new CANSparkMax(ElevatorConstants.RightElevatorMotor, MotorType.kBrushless);
 
     private AbsoluteEncoder encoder = LeftElevatorMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
     public PIDController controller;
     int setpointNum;
+    double speed;
 
     public Elevator(){
         setpointNum = 1;
         controller = new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd);
         controller.setSetpoint(ElevatorConstants.elevatorLevels[setpointNum - 1]);
-        LeftElevatorMotor.follow(RightElevatorMotor);
+        LeftElevatorMotor.setIdleMode(IdleMode.kBrake);
+        RightElevatorMotor.setIdleMode(IdleMode.kBrake);
+        RightElevatorMotor.follow(LeftElevatorMotor, true);
+        // LeftElevatorMotor.setInverted(false);
+        // // RightElevatorMotor.setInverted(false);
+        // System.out.println("initializing stuff");
     }
 
     public void incrementSetpoint(boolean negative) {
@@ -62,6 +69,7 @@ public class Elevator extends SubsystemBase{
         SmartDashboard.putNumber("motor 1 voltage", LeftElevatorMotor.getBusVoltage());
         SmartDashboard.putNumber("motor 2 voltage", LeftElevatorMotor.getBusVoltage());
         SmartDashboard.putNumber("elevator pos", encoder.getPosition());
+        SmartDashboard.putNumber("elevator Speed", speed);
     }
 }
 

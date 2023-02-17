@@ -10,6 +10,7 @@ public class ArmCommand extends CommandBase{
 
     public ArmCommand(Arm arm) {
         this.arm = arm;
+        addRequirements(this.arm);
     }
 
     @Override

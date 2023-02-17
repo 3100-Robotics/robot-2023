@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmMotorConstants;
 
 public class Arm extends SubsystemBase{
-    private CANSparkMax armMotor = new CANSparkMax(ArmMotorConstants.armMotor1, MotorType.kBrushless);
+    private CANSparkMax armMotor = new CANSparkMax(ArmMotorConstants.armMotor, MotorType.kBrushless);
 
     private AbsoluteEncoder encoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
 

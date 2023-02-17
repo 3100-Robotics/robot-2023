@@ -2,9 +2,11 @@ package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.endAffectorConstants;
 
@@ -15,9 +17,17 @@ public class endAffector extends SubsystemBase{
     private AbsoluteEncoder LeftEncoder = leftAffector.getAbsoluteEncoder(Type.kDutyCycle);
     private AbsoluteEncoder righEncoder = rightAffector.getAbsoluteEncoder(Type.kDutyCycle);
 
-    public Boolean endAffectorLock;
+    public Boolean endAffectorLock = false;
 
-    public endAffector() {}
+    public endAffector() {
+        leftAffector.setIdleMode(IdleMode.kBrake);
+        rightAffector.setIdleMode(IdleMode.kBrake);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putBoolean("end affector locked", endAffectorLock);
+    }
 
     public void toggleEndAffectorLock() {
         endAffectorLock = !endAffectorLock;
