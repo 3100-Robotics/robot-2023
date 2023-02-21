@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -26,8 +27,11 @@ public class drivetrain extends SubsystemBase{
 
     private static DifferentialDrive drive = new DifferentialDrive(frontleftMotor, frontRightMotor);
 
-    SlewRateLimiter speedLimiter = new SlewRateLimiter(10);
-    SlewRateLimiter turnLimiter = new SlewRateLimiter(10);
+    private SlewRateLimiter speedLimiter = new SlewRateLimiter(driveTrainConstants.driveSlewRate);
+    private SlewRateLimiter turnLimiter = new SlewRateLimiter(driveTrainConstants.turnSlewRate);
+
+    private PIDController driveController = new PIDController(
+        driveTrainConstants.k_driveP, driveTrainConstants.k_driveI, driveTrainConstants.k_driveD);
 
     private static AHRS gyro = new AHRS(SPI.Port.kMXP);
     
@@ -35,6 +39,9 @@ public class drivetrain extends SubsystemBase{
 
     public drivetrain() {
         drive.setDeadband(0.09);
+        driveController.enableContinuousInput(-180, 180);
+        driveController.setTolerance(driveTrainConstants.kDriveToleranceMeter,
+            driveTrainConstants.kDriveRateToleranceMeterPerS);
         configureMotors();
         resetEncoders();
     }
@@ -68,13 +75,23 @@ public class drivetrain extends SubsystemBase{
         return gyro.getRoll();
     }
 
+    public void setSetpoint(double setpoint) {
+        driveController.setSetpoint(setpoint);
+    }
+
+    public boolean atSetpoint() {
+        return driveController.atSetpoint();
+    }
+
+    public double driveCalculate(double measurement) {
+        return driveController.calculate(measurement);
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("left speed", frontleftMotor.getSensorCollection().getIntegratedSensorVelocity());
         SmartDashboard.putNumber("right speed", frontRightMotor.getSensorCollection().getIntegratedSensorVelocity());
     }
-
-    // public double getAverageEncoderVelocity() {} to be added later?
 
     private void configureMotors() {
         TalonFXConfiguration configs = new TalonFXConfiguration();

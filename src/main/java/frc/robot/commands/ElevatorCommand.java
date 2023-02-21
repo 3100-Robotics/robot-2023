@@ -6,7 +6,7 @@ import frc.robot.subsystems.Elevator;
 public class ElevatorCommand extends CommandBase{
 
     Elevator elevator;
-    double EncoderReading, speed;
+    double EncoderReading;
 
     public ElevatorCommand(Elevator elevator) {
         this.elevator = elevator;
@@ -16,13 +16,13 @@ public class ElevatorCommand extends CommandBase{
     @Override
     public void execute() {
         EncoderReading = elevator.GetEncoderRotation();
-        speed = elevator.controller.calculate(EncoderReading);
+        double speed = elevator.calculate(EncoderReading);
         elevator.Run(speed);
     }
 
     @Override
     public boolean isFinished() {
-        return elevator.controller.atSetpoint();
+        return elevator.atSetpoint();
     }
     
 }

@@ -6,7 +6,8 @@ import frc.robot.Constants.driveTrainConstants;
 import frc.robot.subsystems.drivetrain;
 
 public class PIDBallence extends CommandBase{
-    PIDController controller = new PIDController(driveTrainConstants.kp, driveTrainConstants.ki, driveTrainConstants.kd);
+    PIDController controller = new PIDController(
+        driveTrainConstants.k_balenceP, driveTrainConstants.k_balenceI, driveTrainConstants.k_balenceD);
     drivetrain drive;
     double gyroReading, speed;
 

@@ -49,6 +49,10 @@ public class Elevator extends SubsystemBase{
         return controller.atSetpoint();
     }
 
+    public double calculate(double measurement) {
+        return controller.calculate(measurement);
+    }
+
     public void Run(double speed) {
         LeftElevatorMotor.set(speed);
     }
