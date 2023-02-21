@@ -22,6 +22,7 @@ public class endAffector extends SubsystemBase{
     public endAffector() {
         leftAffector.setIdleMode(IdleMode.kBrake);
         rightAffector.setIdleMode(IdleMode.kBrake);
+        
     }
 
     @Override

@@ -28,9 +28,6 @@ public class Elevator extends SubsystemBase{
         LeftElevatorMotor.setIdleMode(IdleMode.kBrake);
         RightElevatorMotor.setIdleMode(IdleMode.kBrake);
         RightElevatorMotor.follow(LeftElevatorMotor, true);
-        // LeftElevatorMotor.setInverted(false);
-        // // RightElevatorMotor.setInverted(false);
-        // System.out.println("initializing stuff");
     }
 
     public void incrementSetpoint(boolean negative) {

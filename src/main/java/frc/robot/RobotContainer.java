@@ -54,9 +54,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // will uncomment things later as they get added to the robot
   private final drivetrain drive = new drivetrain();
-  private final Arm arm = new Arm();
+  // private final Arm arm = new Arm();
   private final Elevator elevator = new Elevator();
-  private final endAffector claw = new endAffector();
+  // private final endAffector claw = new endAffector();
   private final PIDBallence autoballence = new PIDBallence(drive);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -66,7 +66,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new driving(drive, m_driverController));
     // arm.setDefaultCommand(new ArmCommand(arm));
     // elevator.setDefaultCommand(new ElevatorCommand(elevator));
-    claw.setDefaultCommand(new endAffectorController(m_codriverController, claw));
+    // claw.setDefaultCommand(new endAffectorController(m_codriverController, claw));
 
     // Configure the trigger bindings
     configureBindings();
@@ -106,29 +106,29 @@ public class RobotContainer {
     //   () -> arm.incrementSetpoint(true),
     // arm));
 
-    buttonB.whileTrue(new StartEndCommand(
-      () -> arm.Run(0.5), 
-      () -> arm.Run(0), 
-    arm));
+    // buttonB.whileTrue(new StartEndCommand(
+    //   () -> arm.Run(0.5), 
+    //   () -> arm.Run(0), 
+    // arm));
 
-    buttonX.whileTrue(new StartEndCommand(
-      () -> arm.Run(-0.5), 
-      () -> arm.Run(0), 
-    arm));
+    // buttonX.whileTrue(new StartEndCommand(
+    //   () -> arm.Run(-0.5), 
+    //   () -> arm.Run(0), 
+    // arm));
     
     // end affector controls
 
-    buttonSelect.onTrue(new InstantCommand(() -> claw.toggleEndAffectorLock(), claw));
+    // buttonSelect.onTrue(new InstantCommand(() -> claw.toggleEndAffectorLock(), claw));
 
-    buttonlb.whileTrue(new StartEndCommand(
-      () -> claw.runBothLeft(0.3),
-      () -> claw.stopBoth(),
-    claw));
+    // buttonlb.whileTrue(new StartEndCommand(
+    //   () -> claw.runBothLeft(0.3),
+    //   () -> claw.stopBoth(),
+    // claw));
     
-    buttonrb.whileTrue(new StartEndCommand(
-      () -> claw.runBothRight(0.3),
-      () -> claw.stopBoth(),
-    claw));
+    // buttonrb.whileTrue(new StartEndCommand(
+    //   () -> claw.runBothRight(0.3),
+    //   () -> claw.stopBoth(),
+    // claw));
 
 
 

@@ -14,34 +14,10 @@ public class driving extends CommandBase{
         addRequirements(m_drive);
     }
 
-    private double limit(double value) {
-        if (value >= +0.1)
-          return value;
-    
-        if (value <= -0.1)
-          return value;
-        
-        return 0;
-    }
-
     @Override
     public void execute() {
-      double xSpeed = limit(m_controller.getLeftY());
-      double zRotation = limit(m_controller.getRightX());
-
-      if (xSpeed > 0) {
-        xSpeed = Math.pow(xSpeed, 2);
-      }
-      else {
-        xSpeed = Math.pow(xSpeed, 2) * -1;
-      }
-
-      if (zRotation > 0) {
-        zRotation = Math.pow(zRotation, 2);
-      }
-      else {
-        zRotation = Math.pow(zRotation, 2) * -1;
-      }
+      double xSpeed = m_controller.getLeftY();
+      double zRotation = m_controller.getRightX();
 
       if (m_drive.slowmode) {
         xSpeed *= 0.5;

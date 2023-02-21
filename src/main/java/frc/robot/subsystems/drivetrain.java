@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,11 +26,15 @@ public class drivetrain extends SubsystemBase{
 
     private static DifferentialDrive drive = new DifferentialDrive(frontleftMotor, frontRightMotor);
 
+    SlewRateLimiter speedLimiter = new SlewRateLimiter(10);
+    SlewRateLimiter turnLimiter = new SlewRateLimiter(10);
+
     private static AHRS gyro = new AHRS(SPI.Port.kMXP);
     
     public Boolean slowmode = false;
 
     public drivetrain() {
+        drive.setDeadband(0.09);
         configureMotors();
         resetEncoders();
     }
@@ -39,7 +44,7 @@ public class drivetrain extends SubsystemBase{
     }
 
     public void arcadeDrive(double speed, double rotation) {
-        drive.arcadeDrive(speed, rotation);
+        drive.arcadeDrive(speedLimiter.calculate(speed), turnLimiter.calculate(rotation), true);
     }
 
     public double getAverageEncoderRotation() {
