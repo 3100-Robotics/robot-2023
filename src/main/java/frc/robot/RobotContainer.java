@@ -68,7 +68,7 @@ public class RobotContainer {
 
     drive.setDefaultCommand(new driving(drive, m_driverController));
     // arm.setDefaultCommand(new ArmCommand(arm));
-    // elevator.setDefaultCommand(new ElevatorCommand(elevator));
+    elevator.setDefaultCommand(new ElevatorCommand(elevator));
     // claw.setDefaultCommand(new endAffectorController(m_codriverController, claw));
     // m_Vision.setDefaultCommand(new visionController(m_codriverController, m_Vision, claw));
 
@@ -92,12 +92,12 @@ public class RobotContainer {
 
     buttonY.whileTrue(new StartEndCommand(
       () -> elevator.Run(0.3), 
-      () -> elevator.Stop(),
+      () -> elevator.setSetpoint(elevator.GetEncoderRotation()),
     elevator));
 
     buttonA.whileTrue(new StartEndCommand(
       () -> elevator.Run(-0.1), 
-      () -> elevator.Stop(), 
+      () -> elevator.setSetpoint(elevator.GetEncoderRotation()), 
     elevator));
 
     // arm controls

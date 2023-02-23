@@ -49,6 +49,10 @@ public class Elevator extends SubsystemBase{
         return controller.atSetpoint();
     }
 
+    public void setSetpoint(double setpoint) {
+        controller.setSetpoint(setpoint);
+    }
+
     public double calculate(double measurement) {
         return controller.calculate(measurement);
     }
