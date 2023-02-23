@@ -10,12 +10,13 @@ import frc.robot.commands.ArmCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.driving;
 import frc.robot.commands.endAffectorController;
+import frc.robot.commands.visionController;
 import frc.robot.commands.autoCommands.PIDBallence;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
 import frc.robot.subsystems.endAffector;
-import edu.wpi.first.cameraserver.CameraServer;
+import frc.robot.subsystems.vision;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,12 +41,13 @@ public class RobotContainer {
   EventLoop povLoop = new EventLoop();
 
   private JoystickButton driverButtonStart = new JoystickButton(m_driverController, IOConstants.startButtonChannel);
+  private JoystickButton driverButtonSelect = new JoystickButton(m_driverController, IOConstants.backButtonChannel);
   private JoystickButton buttonX = new JoystickButton(m_codriverController, IOConstants.xButtonChannel);
   private JoystickButton buttonY = new JoystickButton(m_codriverController, IOConstants.yButtonChannel);
   private JoystickButton buttonA = new JoystickButton(m_codriverController, IOConstants.aButtonChannel);
   private JoystickButton buttonB = new JoystickButton(m_codriverController, IOConstants.bButtonChannel);
   private JoystickButton buttonStart = new JoystickButton(m_codriverController, IOConstants.startButtonChannel);
-  private JoystickButton buttonSelect = new JoystickButton(m_codriverController, IOConstants.startButtonChannel);
+  private JoystickButton buttonSelect = new JoystickButton(m_codriverController, IOConstants.backButtonChannel);
   private JoystickButton buttonlb = new JoystickButton(m_codriverController, IOConstants.leftBumperChannel);
   private JoystickButton buttonrb = new JoystickButton(m_codriverController, IOConstants.rightBumperChannel);
   private Trigger buttonDUp = new Trigger(m_codriverController.pov(IOConstants.POVU, povLoop));
@@ -58,6 +60,7 @@ public class RobotContainer {
   private final Elevator elevator = new Elevator();
   // private final endAffector claw = new endAffector();
   private final PIDBallence autoballence = new PIDBallence(drive);
+  private final vision m_Vision = new vision();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -67,6 +70,7 @@ public class RobotContainer {
     // arm.setDefaultCommand(new ArmCommand(arm));
     // elevator.setDefaultCommand(new ElevatorCommand(elevator));
     // claw.setDefaultCommand(new endAffectorController(m_codriverController, claw));
+    // m_Vision.setDefaultCommand(new visionController(m_codriverController, m_Vision, claw));
 
     // Configure the trigger bindings
     configureBindings();
@@ -74,7 +78,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     driverButtonStart.onTrue(new InstantCommand(() -> drive.ToggleSlowMode(), drive));
-    buttonStart.whileTrue(autoballence);
+    driverButtonSelect.whileTrue(autoballence);
 
     // elevator controls
 
@@ -121,12 +125,12 @@ public class RobotContainer {
     // buttonSelect.onTrue(new InstantCommand(() -> claw.toggleEndAffectorLock(), claw));
 
     // buttonlb.whileTrue(new StartEndCommand(
-    //   () -> claw.runBothLeft(0.3),
+    //   () -> claw.runBoth(0.3),
     //   () -> claw.stopBoth(),
     // claw));
     
     // buttonrb.whileTrue(new StartEndCommand(
-    //   () -> claw.runBothRight(0.3),
+    //   () -> claw.runBoth(-0.3),
     //   () -> claw.stopBoth(),
     // claw));
 

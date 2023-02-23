@@ -28,7 +28,7 @@ public class drivetrain extends SubsystemBase{
     private static DifferentialDrive drive = new DifferentialDrive(frontleftMotor, frontRightMotor);
 
     private SlewRateLimiter speedLimiter = new SlewRateLimiter(driveTrainConstants.driveSlewRate);
-    private SlewRateLimiter turnLimiter = new SlewRateLimiter(driveTrainConstants.turnSlewRate);
+    // private SlewRateLimiter turnLimiter = new SlewRateLimiter(driveTrainConstants.turnSlewRate);
 
     private PIDController driveController = new PIDController(
         driveTrainConstants.k_driveP, driveTrainConstants.k_driveI, driveTrainConstants.k_driveD);
@@ -38,7 +38,7 @@ public class drivetrain extends SubsystemBase{
     public Boolean slowmode = false;
 
     public drivetrain() {
-        drive.setDeadband(0.09);
+        drive.setDeadband(0.05);
         driveController.enableContinuousInput(-180, 180);
         driveController.setTolerance(driveTrainConstants.kDriveToleranceMeter,
             driveTrainConstants.kDriveRateToleranceMeterPerS);
@@ -51,7 +51,7 @@ public class drivetrain extends SubsystemBase{
     }
 
     public void arcadeDrive(double speed, double rotation) {
-        drive.arcadeDrive(speedLimiter.calculate(speed), turnLimiter.calculate(rotation), true);
+        drive.arcadeDrive(speedLimiter.calculate(speed), rotation, true);
     }
 
     public double getAverageEncoderRotation() {
@@ -91,6 +91,8 @@ public class drivetrain extends SubsystemBase{
     public void periodic() {
         SmartDashboard.putNumber("left speed", frontleftMotor.getSensorCollection().getIntegratedSensorVelocity());
         SmartDashboard.putNumber("right speed", frontRightMotor.getSensorCollection().getIntegratedSensorVelocity());
+        SmartDashboard.putData(drive);
+        SmartDashboard.putData(gyro);
     }
 
     private void configureMotors() {

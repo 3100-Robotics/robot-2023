@@ -32,8 +32,7 @@ public final class Constants {
     public final static double k_driveI = 0;
     public final static double k_driveD = 0;
 
-    public final static double driveSlewRate = 10;
-    public final static double turnSlewRate = 10;
+    public final static double driveSlewRate = 5;
 
     public final static double kDriveToleranceMeter = 0.1;
     public final static double kDriveToleranceDeg = 5;
