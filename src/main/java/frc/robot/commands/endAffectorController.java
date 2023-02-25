@@ -6,30 +6,35 @@ import frc.robot.subsystems.endAffector;
 
 public class endAffectorController extends CommandBase{
     
-    endAffector affector;
-    XboxController controller;
+  // var setup
+  endAffector affector;
+  XboxController controller;
 
-    public endAffectorController(XboxController controller, endAffector affector) {
-        this.controller = controller;
-        this.affector = affector;
-        addRequirements(this.affector);
+  public endAffectorController(XboxController controller, endAffector affector) {
+    // typical stuff
+    this.controller = controller;
+    this.affector = affector;
+    addRequirements(this.affector);
+  }
+
+  private double limit(double value) {
+    // deadband
+    if (value >= 0.05){
+      return value;
     }
 
-    private double limit(double value) {
-        if (value >= +0.1)
-          return value;
+    if (value <= -0.05) {
+      return value;
+    }
     
-        if (value <= -0.1)
-          return value;
-        
-        return 0;
-      }
+    return 0;
+  }
 
-    public void execute(){
-      if (!affector.endAffectorLock) {
-        affector.runLeft(limit(controller.getLeftX()));
-        affector.runRight(limit(controller.getRightX()));
-      }
+  public void execute(){
+    // as long as joysticks aren't locked move them according to the input
+    if (!affector.endAffectorLock) {
+      affector.runLeft(limit(controller.getLeftX()));
+      affector.runRight(limit(controller.getRightX()));
     }
-
+  }
 }

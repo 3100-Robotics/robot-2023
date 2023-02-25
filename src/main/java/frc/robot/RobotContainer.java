@@ -17,6 +17,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
 import frc.robot.subsystems.endAffector;
 import frc.robot.subsystems.vision;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,13 +34,16 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
+  // contrillers
   private final XboxController m_driverController =
       new XboxController(OperatorConstants.kDriverControllerPort);
   private final XboxController m_codriverController =
       new XboxController(OperatorConstants.kCoDriverControllerPort);
 
+  // event loop neeed to use dpad (Pretty sure this is actually neeed)
   EventLoop povLoop = new EventLoop();
 
+  // buttons for commands
   private JoystickButton driverButtonStart = new JoystickButton(m_driverController, IOConstants.startButtonChannel);
   private JoystickButton driverButtonSelect = new JoystickButton(m_driverController, IOConstants.backButtonChannel);
   private JoystickButton buttonX = new JoystickButton(m_codriverController, IOConstants.xButtonChannel);
@@ -53,8 +57,7 @@ public class RobotContainer {
   private Trigger buttonDUp = new Trigger(m_codriverController.pov(IOConstants.POVU, povLoop));
   private Trigger buttonDDown = new Trigger(m_codriverController.pov(IOConstants.POVD, povLoop));
 
-  // The robot's subsystems and commands are defined here...
-  // will uncomment things later as they get added to the robot
+  // subsystems
   private final drivetrain drive = new drivetrain();
   // private final Arm arm = new Arm();
   private final Elevator elevator = new Elevator();
@@ -64,8 +67,10 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // CameraServer.startAutomaticCapture();
+    // get them cameras
+    CameraServer.startAutomaticCapture();
 
+    // default commands
     drive.setDefaultCommand(new driving(drive, m_driverController));
     // arm.setDefaultCommand(new ArmCommand(arm));
     elevator.setDefaultCommand(new ElevatorCommand(elevator));
@@ -77,11 +82,13 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    // drivetrain commands
     driverButtonStart.onTrue(new InstantCommand(() -> drive.ToggleSlowMode(), drive));
     driverButtonSelect.whileTrue(autoballence);
 
-    // elevator controls
+    // elevator commands
 
+    // too fancy enable if I have time
     // buttonY.onTrue(new InstantCommand(
     //   () -> elevator.incrementSetpoint(false),
     // elevator));
@@ -100,8 +107,9 @@ public class RobotContainer {
       () -> elevator.setSetpoint(elevator.GetEncoderRotation()), 
     elevator));
 
-    // arm controls
+    // arm commands
 
+    // too fancy enable if I have time
     // buttonB.onTrue(new InstantCommand(
     //   () -> arm.incrementSetpoint(false),
     // arm));
@@ -112,18 +120,20 @@ public class RobotContainer {
 
     // buttonB.whileTrue(new StartEndCommand(
     //   () -> arm.Run(0.5), 
-    //   () -> arm.Run(0), 
+    //   () -> arm.setSetpoint(arm.GetEncoderRotation()), 
     // arm));
 
     // buttonX.whileTrue(new StartEndCommand(
     //   () -> arm.Run(-0.5), 
-    //   () -> arm.Run(0), 
+    //   () -> arm.setSetpoint(arm.GetEncoderRotation()), 
     // arm));
     
-    // end affector controls
+    // end affector commands
 
+    // lock claw joystick movements
     // buttonSelect.onTrue(new InstantCommand(() -> claw.toggleEndAffectorLock(), claw));
 
+    // run both the claws at once
     // buttonlb.whileTrue(new StartEndCommand(
     //   () -> claw.runBoth(0.3),
     //   () -> claw.stopBoth(),
@@ -133,9 +143,6 @@ public class RobotContainer {
     //   () -> claw.runBoth(-0.3),
     //   () -> claw.stopBoth(),
     // claw));
-
-
-
   }
 
   public Command getAutonomousCommand() {

@@ -17,23 +17,26 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 public final class Autos {
-  /** Example static factory for an autonomous command. */
+
+  // drive forward
   public static CommandBase driveForward(drivetrain subsystem, double distance) {
     return Commands.sequence(new DriveForward(subsystem, distance));
   }
 
+  // score something
   public static CommandBase score(Elevator elevator, Arm arm, endAffector affector) {
     return Commands.sequence(new MoveElevator(elevator, false), new MoveElevator(elevator, false),
                              new MoveArm(arm, false), new MoveArm(arm, false), new openAffector(affector, 1));
   }
 
-
+  // score something and leave
   public static CommandBase scoreleave(drivetrain drive, Arm arm, Elevator elevator, endAffector affector){
     return Commands.sequence(new MoveElevator(elevator, false), new MoveElevator(elevator, false),
                             new MoveArm(arm, false), new MoveArm(arm, false),
                             new openAffector(affector, 1), new DriveForward(drive, -5));
   }
 
+  // score and ballance
   public static CommandBase scoreballance(drivetrain drive, Arm arm, Elevator elevator, endAffector ea, PIDBallence balance) {
     return Commands.sequence(new MoveElevator(elevator, false), new MoveElevator(elevator, false),
                             new MoveArm(arm, false), new MoveArm(arm, false),
@@ -45,6 +48,7 @@ public final class Autos {
   }
 
   private Autos() {
+    // not meant to be defiend
     throw new UnsupportedOperationException("This is a utility class!");
   }
 }
