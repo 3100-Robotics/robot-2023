@@ -32,7 +32,7 @@ public class Elevator extends SubsystemBase{
         // motor config
         LeftElevatorMotor.setIdleMode(IdleMode.kBrake);
         RightElevatorMotor.setIdleMode(IdleMode.kBrake);
-        RightElevatorMotor.follow(LeftElevatorMotor, true);
+        // RightElevatorMotor.follow(LeftElevatorMotor, true);
     }
 
     public void incrementSetpoint(boolean negative) {
@@ -64,6 +64,10 @@ public class Elevator extends SubsystemBase{
     public double calculate(double measurement) {
         // use the pid to get speed
         return controller.calculate(measurement);
+    }
+
+    public double getSetpoint() {
+        return controller.getSetpoint();
     }
 
     public void Run(double speed) {

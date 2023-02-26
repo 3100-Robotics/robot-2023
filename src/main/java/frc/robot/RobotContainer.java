@@ -72,8 +72,8 @@ public class RobotContainer {
 
     // default commands
     drive.setDefaultCommand(new driving(drive, m_driverController));
-    arm.setDefaultCommand(new ArmCommand(arm));
-    elevator.setDefaultCommand(new ElevatorCommand(elevator));
+    // arm.setDefaultCommand(new ArmCommand(arm));
+    // elevator.setDefaultCommand(new ElevatorCommand(elevator));
     claw.setDefaultCommand(new endAffectorController(m_codriverController, claw));
     // m_Vision.setDefaultCommand(new visionController(m_codriverController, m_Vision, claw));
 
@@ -98,13 +98,13 @@ public class RobotContainer {
     // elevator));
 
     buttonY.whileTrue(new StartEndCommand(
-      () -> elevator.Run(0.3), 
-      () -> elevator.setSetpoint(elevator.GetEncoderRotation()),
+      () -> elevator.Run(0.6), 
+      () -> elevator.Run(0.03),
     elevator));
 
     buttonA.whileTrue(new StartEndCommand(
-      () -> elevator.Run(-0.1), 
-      () -> elevator.setSetpoint(elevator.GetEncoderRotation()), 
+      () -> elevator.Run(-0.5), 
+      () -> elevator.Run(0.03), 
     elevator));
 
     // arm commands
@@ -118,25 +118,25 @@ public class RobotContainer {
     //   () -> arm.incrementSetpoint(true),
     // arm));
 
-    // buttonB.whileTrue(new StartEndCommand(
-    //   () -> arm.Run(0.25), 
-    //   () -> arm.setSetpoint(arm.GetEncoderRotation()), 
-    // arm));
-
-    // buttonX.whileTrue(new StartEndCommand(
-    //   () -> arm.Run(-0.1), 
-    //   () -> arm.setSetpoint(arm.GetEncoderRotation()), 
-    // arm));
-
     buttonB.whileTrue(new StartEndCommand(
       () -> arm.Run(0.25), 
-      () -> arm.Stop(), 
+      () -> arm.Run(0.03), 
     arm));
 
     buttonX.whileTrue(new StartEndCommand(
       () -> arm.Run(-0.1), 
-      () -> arm.Stop(), 
+      () -> arm.Run(0.03), 
     arm));
+
+    // buttonB.whileTrue(new StartEndCommand(
+    //   () -> arm.Run(0.25), 
+    //   () -> arm.Stop(), 
+    // arm));
+
+    // buttonX.whileTrue(new StartEndCommand(
+    //   () -> arm.Run(-0.1), 
+    //   () -> arm.Stop(), 
+    // arm));
     
     // end affector commands
 

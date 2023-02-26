@@ -2,9 +2,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,8 +17,8 @@ public class Arm extends SubsystemBase{
     private CANSparkMax armMotor = new CANSparkMax(ArmMotorConstants.armMotor, MotorType.kBrushless);
 
     // thorugh bore encoder
-    private AbsoluteEncoder encoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
-
+    // private AbsoluteEncoder encoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    private RelativeEncoder encoder = armMotor.getEncoder();
     // pid
     public PIDController controller;
     int setpointNum;
@@ -28,6 +29,13 @@ public class Arm extends SubsystemBase{
         controller = new PIDController(ArmMotorConstants.kp, ArmMotorConstants.ki, ArmMotorConstants.kd);
         controller.setSetpoint(ArmMotorConstants.armLevels[setpointNum - 1]);
 
+        // encoder.setPositionConversionFactor(ArmMotorConstants.encoderPosFactor);
+
+        armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmMotorConstants.encoderPosFactor);
+        armMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+
         // motor config
         armMotor.setIdleMode(IdleMode.kBrake);
     }
@@ -35,6 +43,7 @@ public class Arm extends SubsystemBase{
     @Override
     public void periodic() {
         SmartDashboard.putNumber("arm pos", encoder.getPosition());
+        SmartDashboard.putBoolean("at setpoint", atSetpoint());
     }
 
     public void incrementSetpoint(boolean negative) {

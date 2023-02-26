@@ -4,6 +4,7 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
@@ -17,10 +18,10 @@ public class endAffector extends SubsystemBase{
     private CANSparkMax rightAffector = new CANSparkMax(endAffectorConstants.rightMotor, MotorType.kBrushless);
 
     // encoders for motors change to absolute when they exist
-    // private AbsoluteEncoder LeftEncoder = leftAffector.getAbsoluteEncoder(Type.kDutyCycle);
-    // private AbsoluteEncoder righEncoder = rightAffector.getAbsoluteEncoder(Type.kDutyCycle);
-    private RelativeEncoder LefEncoder = leftAffector.getEncoder();
-    private RelativeEncoder RighEncoder = rightAffector.getEncoder();
+    private AbsoluteEncoder LeftEncoder = leftAffector.getAbsoluteEncoder(Type.kDutyCycle);
+    private AbsoluteEncoder righEncoder = rightAffector.getAbsoluteEncoder(Type.kDutyCycle);
+    // private RelativeEncoder LefEncoder = leftAffector.getEncoder();
+    // private RelativeEncoder RighEncoder = rightAffector.getEncoder();
 
     // are the joystick controlls locked?
     public Boolean endAffectorLock = false;
@@ -30,6 +31,18 @@ public class endAffector extends SubsystemBase{
         leftAffector.setIdleMode(IdleMode.kBrake);
         rightAffector.setIdleMode(IdleMode.kBrake);
         
+        LeftEncoder.setPositionConversionFactor(endAffectorConstants.encoderPosFactor);
+        righEncoder.setPositionConversionFactor(endAffectorConstants.encoderPosFactor);
+
+        leftAffector.setSoftLimit(SoftLimitDirection.kForward, endAffectorConstants.encoderPosFactor);
+        leftAffector.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        leftAffector.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        leftAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
+
+        rightAffector.setSoftLimit(SoftLimitDirection.kReverse, endAffectorConstants.encoderPosFactor);
+        rightAffector.setSoftLimit(SoftLimitDirection.kForward, 0);
+        rightAffector.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        rightAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
     }
 
     @Override
@@ -78,17 +91,17 @@ public class endAffector extends SubsystemBase{
 
     public double getLeftEncoder() {
         // get the left encoder pos
-        return LefEncoder.getPosition();
+        return LeftEncoder.getPosition();
     }
 
     public double getRightEncoder() {
         // get the right encoder pos
-        return RighEncoder.getPosition();
+        return righEncoder.getPosition();
     }
 
     public double getCenterPos() {
         // get the center point between the claws
-        return (LefEncoder.getPosition() + RighEncoder.getPosition())/2;
+        return (LeftEncoder.getPosition() + righEncoder.getPosition())/2;
     }
 
 }

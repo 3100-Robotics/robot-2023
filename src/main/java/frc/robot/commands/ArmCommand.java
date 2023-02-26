@@ -26,6 +26,7 @@ public class ArmCommand extends CommandBase{
     @Override
     public boolean isFinished() {
         // am I finished?
-        return arm.controller.atSetpoint();
+        // return arm.controller.atSetpoint();
+        return false;
     }
 }
