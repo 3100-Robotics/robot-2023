@@ -19,11 +19,11 @@ public class endAffectorController extends CommandBase{
 
   private double limit(double value) {
     // deadband
-    if (value >= 0.05){
+    if (value >= 0.1){
       return value;
     }
 
-    if (value <= -0.05) {
+    if (value <= -0.1) {
       return value;
     }
     

@@ -59,9 +59,9 @@ public class RobotContainer {
 
   // subsystems
   private final drivetrain drive = new drivetrain();
-  // private final Arm arm = new Arm();
+  private final Arm arm = new Arm();
   private final Elevator elevator = new Elevator();
-  // private final endAffector claw = new endAffector();
+  private final endAffector claw = new endAffector();
   private final PIDBallence autoballence = new PIDBallence(drive);
   private final vision m_Vision = new vision();
 
@@ -72,9 +72,9 @@ public class RobotContainer {
 
     // default commands
     drive.setDefaultCommand(new driving(drive, m_driverController));
-    // arm.setDefaultCommand(new ArmCommand(arm));
+    arm.setDefaultCommand(new ArmCommand(arm));
     elevator.setDefaultCommand(new ElevatorCommand(elevator));
-    // claw.setDefaultCommand(new endAffectorController(m_codriverController, claw));
+    claw.setDefaultCommand(new endAffectorController(m_codriverController, claw));
     // m_Vision.setDefaultCommand(new visionController(m_codriverController, m_Vision, claw));
 
     // Configure the trigger bindings
@@ -119,30 +119,40 @@ public class RobotContainer {
     // arm));
 
     // buttonB.whileTrue(new StartEndCommand(
-    //   () -> arm.Run(0.5), 
+    //   () -> arm.Run(0.25), 
     //   () -> arm.setSetpoint(arm.GetEncoderRotation()), 
     // arm));
 
     // buttonX.whileTrue(new StartEndCommand(
-    //   () -> arm.Run(-0.5), 
+    //   () -> arm.Run(-0.1), 
     //   () -> arm.setSetpoint(arm.GetEncoderRotation()), 
     // arm));
+
+    buttonB.whileTrue(new StartEndCommand(
+      () -> arm.Run(0.25), 
+      () -> arm.Stop(), 
+    arm));
+
+    buttonX.whileTrue(new StartEndCommand(
+      () -> arm.Run(-0.1), 
+      () -> arm.Stop(), 
+    arm));
     
     // end affector commands
 
     // lock claw joystick movements
-    // buttonSelect.onTrue(new InstantCommand(() -> claw.toggleEndAffectorLock(), claw));
+    buttonSelect.onTrue(new InstantCommand(() -> claw.toggleEndAffectorLock(), claw));
 
     // run both the claws at once
-    // buttonlb.whileTrue(new StartEndCommand(
-    //   () -> claw.runBoth(0.3),
-    //   () -> claw.stopBoth(),
-    // claw));
+    buttonlb.whileTrue(new StartEndCommand(
+      () -> claw.runBoth(0.3),
+      () -> claw.stopBoth(),
+    claw));
     
-    // buttonrb.whileTrue(new StartEndCommand(
-    //   () -> claw.runBoth(-0.3),
-    //   () -> claw.stopBoth(),
-    // claw));
+    buttonrb.whileTrue(new StartEndCommand(
+      () -> claw.runBoth(-0.3),
+      () -> claw.stopBoth(),
+    claw));
   }
 
   public Command getAutonomousCommand() {
