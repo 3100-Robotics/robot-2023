@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -19,8 +20,8 @@ public class Arm extends SubsystemBase{
 
     private SlewRateLimiter limiter = new SlewRateLimiter(ArmMotorConstants.slewRate);
     // thorugh bore encoder
-    // private AbsoluteEncoder encoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
-    private RelativeEncoder encoder = armMotor.getEncoder();
+    private AbsoluteEncoder externalEncoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    private RelativeEncoder internalEncoder = armMotor.getEncoder();
     // pid
     public PIDController controller;
     int setpointNum;
@@ -85,6 +86,7 @@ public class Arm extends SubsystemBase{
 
     public double GetEncoderRotation(){
         // get the encoder rot
-        return encoder.getPosition();
+        // return encoder.getPosition();
+        return internalEncoder.getRotations() % 1 + externalEncoder.getPosition();
     }
 }
