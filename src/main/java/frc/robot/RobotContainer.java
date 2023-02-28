@@ -119,12 +119,12 @@ public class RobotContainer {
     // arm));
 
     buttonB.whileTrue(new StartEndCommand(
-      () -> arm.Run(0.25), 
+      () -> arm.Run(0.5), 
       () -> arm.Run(0.03), 
     arm));
 
     buttonX.whileTrue(new StartEndCommand(
-      () -> arm.Run(-0.1), 
+      () -> arm.Run(-0.4), 
       () -> arm.Run(0.03), 
     arm));
 

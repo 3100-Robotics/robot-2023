@@ -31,6 +31,7 @@ public class drivetrain extends SubsystemBase{
 
     // slew rate limiter
     private SlewRateLimiter speedLimiter = new SlewRateLimiter(driveTrainConstants.driveSlewRate);
+    private SlewRateLimiter turnLimiter = new SlewRateLimiter(driveTrainConstants.turnSlewRate);
 
     // pid controller. named driveController in case I want to add a turn controller
     private PIDController driveController = new PIDController(
@@ -61,7 +62,8 @@ public class drivetrain extends SubsystemBase{
 
     public void arcadeDrive(double speed, double rotation) {
         // arcade drive
-        drive.arcadeDrive(speedLimiter.calculate(speed), rotation, true);
+        drive.arcadeDrive(speedLimiter.calculate(speed), rotation, false);
+        // drive.arcadeDrive(speedLimiter.calculate(rotation), turnLimiter.calculate(rotation), false);
     }
 
     public void curvyDrive(double speed, double rotation, Boolean allowTurnInPlace) {

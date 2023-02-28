@@ -38,6 +38,7 @@ public final class Constants {
 
     // slew rate constant
     public final static double driveSlewRate = 5;
+    public final static double turnSlewRate = 5;
 
     // pid tollerances
     public final static double kDriveToleranceMeter = 0.1;
@@ -56,6 +57,8 @@ public final class Constants {
   public static class ArmMotorConstants{
     // motor port
     public static final int armMotor = 5;
+
+    public static final double slewRate = 300;
 
     // pid
     public final static double kp = 0;
@@ -88,6 +91,8 @@ public final class Constants {
     // motor ports
     public static final int LeftElevatorMotor = 6;
     public static final int RightElevatorMotor = 7;
+
+    public static final double slewRate = 300;
 
     // pid
     public final static double kp = 0;

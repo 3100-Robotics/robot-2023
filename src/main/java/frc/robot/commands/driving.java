@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.IOConstants;
 import frc.robot.subsystems.drivetrain;
 
 public class driving extends CommandBase{
@@ -20,8 +21,10 @@ public class driving extends CommandBase{
   @Override
   public void execute() {
     // get speed
-    double xSpeed = m_controller.getLeftY();
-    double zRotation = m_controller.getRightX();
+    // double xSpeed = m_controller.getRawAxis(IOConstants.leftYAxisChannel);
+    double xSpeed = m_controller.getRawAxis(IOConstants.leftYAxisChannel);
+    double zRotation = m_controller.getRawAxis(IOConstants.rightXAxisChannel);
+    // double zRotation = m_controller.getRightX();
 
     // apply slow mode
     if (m_drive.slowmode) {

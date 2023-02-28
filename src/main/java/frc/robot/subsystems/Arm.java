@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -8,6 +7,7 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmMotorConstants;
@@ -16,6 +16,8 @@ public class Arm extends SubsystemBase{
     // motor
     private CANSparkMax armMotor = new CANSparkMax(ArmMotorConstants.armMotor, MotorType.kBrushless);
 
+
+    private SlewRateLimiter limiter = new SlewRateLimiter(ArmMotorConstants.slewRate);
     // thorugh bore encoder
     // private AbsoluteEncoder encoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
     private RelativeEncoder encoder = armMotor.getEncoder();
@@ -73,7 +75,7 @@ public class Arm extends SubsystemBase{
 
     public void Run(double speed) {
         // run the motor
-        armMotor.set(speed);
+        armMotor.set(limiter.calculate(speed));
     }
 
     public void Stop(){

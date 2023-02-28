@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -36,13 +35,13 @@ public class endAffector extends SubsystemBase{
 
         leftAffector.setSoftLimit(SoftLimitDirection.kForward, endAffectorConstants.encoderPosFactor);
         leftAffector.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        leftAffector.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        leftAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
+        // leftAffector.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        // leftAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
 
         rightAffector.setSoftLimit(SoftLimitDirection.kReverse, endAffectorConstants.encoderPosFactor);
         rightAffector.setSoftLimit(SoftLimitDirection.kForward, 0);
-        rightAffector.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        rightAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
+        // rightAffector.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        // rightAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
     }
 
     @Override

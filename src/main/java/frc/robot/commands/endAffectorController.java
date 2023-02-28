@@ -33,7 +33,7 @@ public class endAffectorController extends CommandBase{
   public void execute(){
     // as long as joysticks aren't locked move them according to the input
     if (!affector.endAffectorLock) {
-      affector.runLeft(limit(controller.getLeftX()));
+      affector.runLeft(-limit(controller.getLeftX()));
       affector.runRight(limit(controller.getRightX()));
     }
   }

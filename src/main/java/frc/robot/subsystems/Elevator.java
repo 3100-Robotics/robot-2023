@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
@@ -18,6 +19,8 @@ public class Elevator extends SubsystemBase{
 
     // encoder
     private AbsoluteEncoder encoder = LeftElevatorMotor.getAbsoluteEncoder(Type.kDutyCycle);
+
+    private SlewRateLimiter limiter = new SlewRateLimiter(ElevatorConstants.slewRate);
 
     // pid things
     public PIDController controller;
@@ -72,7 +75,7 @@ public class Elevator extends SubsystemBase{
 
     public void Run(double speed) {
         // set motor speed
-        LeftElevatorMotor.set(speed);
+        LeftElevatorMotor.set(limiter.calculate(speed));
     }
 
     public void Stop(){
