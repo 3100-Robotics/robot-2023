@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArmCommand;
+import frc.robot.commands.Autos;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.driving;
 import frc.robot.commands.endAffectorController;
@@ -20,6 +21,8 @@ import frc.robot.subsystems.vision;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -65,6 +68,11 @@ public class RobotContainer {
   private final PIDBallence autoballence = new PIDBallence(drive);
   private final vision m_Vision = new vision();
 
+  private static final String kDefaultAuto = "Default";
+  private static final String kCustomAuto = "My Auto";
+  private String m_autoSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // get them cameras
@@ -72,10 +80,14 @@ public class RobotContainer {
 
     // default commands
     drive.setDefaultCommand(new driving(drive, m_driverController));
-    // arm.setDefaultCommand(new ArmCommand(arm));
-    // elevator.setDefaultCommand(new ElevatorCommand(elevator));
-    claw.setDefaultCommand(new endAffectorController(m_codriverController, claw));
+    arm.setDefaultCommand(new ArmCommand(arm, m_codriverController));
+    elevator.setDefaultCommand(new ElevatorCommand(elevator, m_codriverController));
+    // claw.setDefaultCommand(new endAffectorController(m_codriverController, claw));
     // m_Vision.setDefaultCommand(new visionController(m_codriverController, m_Vision, claw));
+
+    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    m_chooser.addOption("My Auto", kCustomAuto);
+    SmartDashboard.putData("Auto choices", m_chooser);
 
     // Configure the trigger bindings
     configureBindings();
@@ -97,16 +109,6 @@ public class RobotContainer {
     //   () -> elevator.incrementSetpoint(true),
     // elevator));
 
-    buttonY.whileTrue(new StartEndCommand(
-      () -> elevator.Run(0.6), 
-      () -> elevator.Run(0.03),
-    elevator));
-
-    buttonA.whileTrue(new StartEndCommand(
-      () -> elevator.Run(-0.5), 
-      () -> elevator.Run(0.03), 
-    elevator));
-
     // arm commands
 
     // too fancy enable if I have time
@@ -117,26 +119,6 @@ public class RobotContainer {
     // buttonX.onTrue(new InstantCommand(
     //   () -> arm.incrementSetpoint(true),
     // arm));
-
-    buttonB.whileTrue(new StartEndCommand(
-      () -> arm.Run(0.5), 
-      () -> arm.Run(0.03), 
-    arm));
-
-    buttonX.whileTrue(new StartEndCommand(
-      () -> arm.Run(-0.4), 
-      () -> arm.Run(0.03), 
-    arm));
-
-    // buttonB.whileTrue(new StartEndCommand(
-    //   () -> arm.Run(0.25), 
-    //   () -> arm.Stop(), 
-    // arm));
-
-    // buttonX.whileTrue(new StartEndCommand(
-    //   () -> arm.Run(-0.1), 
-    //   () -> arm.Stop(), 
-    // arm));
     
     // end affector commands
 
@@ -145,13 +127,33 @@ public class RobotContainer {
 
     // run both the claws at once
     buttonlb.whileTrue(new StartEndCommand(
-      () -> claw.runBoth(0.3),
+      () -> claw.runBoth(0.2),
       () -> claw.stopBoth(),
     claw));
     
     buttonrb.whileTrue(new StartEndCommand(
-      () -> claw.runBoth(-0.3),
+      () -> claw.runBoth(-0.2),
       () -> claw.stopBoth(),
+    claw));
+
+    buttonA.whileTrue(new StartEndCommand(
+      () -> claw.runLeft(-0.2), 
+      () -> claw.stopLeft(), 
+    claw));
+
+    buttonB.whileTrue(new StartEndCommand(
+      () -> claw.runLeft(0.2), 
+      () -> claw.stopLeft(), 
+    claw));
+
+    buttonX.whileTrue(new StartEndCommand(
+      () -> claw.runRight(-0.2), 
+      () -> claw.stopRight(), 
+    claw));
+
+    buttonY.whileTrue(new StartEndCommand(
+      () -> claw.runRight(0.2), 
+      () -> claw.stopRight(), 
     claw));
   }
 

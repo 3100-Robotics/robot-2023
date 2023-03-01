@@ -53,7 +53,33 @@ public final class Constants {
     public final static double tick2Feet = (1 / kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
   }
 
-  
+  public static class ElevatorConstants{
+    // motor ports
+    public static final int LeftElevatorMotor = 6;
+    public static final int RightElevatorMotor = 7;
+
+    public static final double slewRate = 300;
+
+    // pid
+    public final static double kp = 0;
+    public final static double ki = 0;
+    public final static double kd = 0;
+
+    // gear ratio math
+    public final static int kSensorUnitsPerRotation = 8192;
+    private final static double kGearReduction = 1;
+    private final static double kWinchRadious = 1.91/2;
+    private final static double kRads2inches = 2 * Math.PI * kWinchRadious;
+    public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
+
+    // fancy level stuff isn't used right now
+    public static double[] elevatorLevels = {1.0, 2.0, 3.0, 4.0, 5.0}; {
+      for (int i = 0; i < elevatorLevels.length; ++i) {
+        elevatorLevels[i] *= tick2Feet;
+      }
+    }
+  }
+
   public static class ArmMotorConstants{
     // motor port
     public static final int armMotor = 5;
@@ -72,44 +98,17 @@ public final class Constants {
     // gear ratio math
     public final static int kSensorUnitsPerRotation = 8192;
     private final static double kGearReduction = 1;
-    private final static double kWinchRadious = 1;
+    private final static double kWinchRadious = 1.9/2;
     private final static double kRads2inches = 2 * Math.PI * kWinchRadious;
     public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
 
-    public final static double doubleEcoderPosFactor = 0.95 * Math.PI * 61;
-    public final static float encoderPosFactor = (float)doubleEcoderPosFactor;
+    public final static double doubleEcoderPosFactor = kRads2inches * 60;
+    public final static float softLimitRots = (float)doubleEcoderPosFactor;
 
     // fancy level stuff isn't used right now
     public static double[] armLevels = {1, 2, 3}; {
       for (int i = 0; i < armLevels.length; ++i) {
         armLevels[i] *= tick2Feet;
-      }
-    }
-  }
-  
-  public static class ElevatorConstants{
-    // motor ports
-    public static final int LeftElevatorMotor = 6;
-    public static final int RightElevatorMotor = 7;
-
-    public static final double slewRate = 300;
-
-    // pid
-    public final static double kp = 0;
-    public final static double ki = 0;
-    public final static double kd = 0;
-
-    // gear ratio math
-    public final static int kSensorUnitsPerRotation = 8192;
-    private final static double kGearReduction = 1;
-    private final static double kWinchRadious = 1;
-    private final static double kRads2inches = 2 * Math.PI * kWinchRadious;
-    public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
-
-    // fancy level stuff isn't used right now
-    public static double[] elevatorLevels = {1.0, 2.0, 3.0, 4.0, 5.0}; {
-      for (int i = 0; i < elevatorLevels.length; ++i) {
-        elevatorLevels[i] *= tick2Feet;
       }
     }
   }
@@ -126,13 +125,14 @@ public final class Constants {
 
     // gear ratio math
     public final static int kSensorUnitsPerRotation = 42;
-    private final static double kGearReduction = 20;
-    private final static double kWinchRadious = 1.9 / 2.0;
+    private final static double kGearReduction = 25;
+    private final static double kWinchRadious = 1.29/2;
     private final static double kRads2inches = 2 * Math.PI * kWinchRadious;
     public final static double tick2Feet = (kGearReduction) * (kSensorUnitsPerRotation) * (kRads2inches);
 
-    public final static double douleEncoderPosFactor = 3.82 * Math.PI * 13 * (1/tick2Feet);
-    public final static float encoderPosFactor = (float)douleEncoderPosFactor;
+    public final static double doublesoftLimitRots = kRads2inches * 3.75;
+    public final static float rightSoftLimitRots = (float)doublesoftLimitRots;
+    public final static float leftSoftLimitRots = (float)doublesoftLimitRots;
 
     // pid tolerances
     public final static double kAffectorToleranceMeter = 0.1;

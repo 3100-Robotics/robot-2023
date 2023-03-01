@@ -6,6 +6,7 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -34,10 +35,10 @@ public class Arm extends SubsystemBase{
 
         // encoder.setPositionConversionFactor(ArmMotorConstants.encoderPosFactor);
 
-        armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmMotorConstants.encoderPosFactor);
-        armMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmMotorConstants.softLimitRots);
+        armMotor.setSoftLimit(SoftLimitDirection.kReverse, 1);
+        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        armMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
 
         // motor config
         armMotor.setIdleMode(IdleMode.kBrake);
@@ -45,7 +46,7 @@ public class Arm extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("arm pos", encoder.getPosition());
+        SmartDashboard.putNumber("arm pos", GetEncoderRotation());
         SmartDashboard.putBoolean("at setpoint", atSetpoint());
     }
 
@@ -87,6 +88,6 @@ public class Arm extends SubsystemBase{
     public double GetEncoderRotation(){
         // get the encoder rot
         // return encoder.getPosition();
-        return internalEncoder.getRotations() % 1 + externalEncoder.getPosition();
+        return internalEncoder.getPosition() % 1 + externalEncoder.getPosition() / 20;
     }
 }

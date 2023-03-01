@@ -29,25 +29,35 @@ public class endAffector extends SubsystemBase{
         // brake mode!
         leftAffector.setIdleMode(IdleMode.kBrake);
         rightAffector.setIdleMode(IdleMode.kBrake);
+
+        leftAffector.setSoftLimit(SoftLimitDirection.kForward, endAffectorConstants.leftSoftLimitRots);
+        leftAffector.setSoftLimit(SoftLimitDirection.kReverse, endAffectorConstants.leftSoftLimitRots);
         
-        LeftEncoder.setPositionConversionFactor(endAffectorConstants.encoderPosFactor);
-        righEncoder.setPositionConversionFactor(endAffectorConstants.encoderPosFactor);
+        leftAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
+        leftAffector.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
-        leftAffector.setSoftLimit(SoftLimitDirection.kForward, endAffectorConstants.encoderPosFactor);
-        leftAffector.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        // leftAffector.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        // leftAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
+        rightAffector.setSoftLimit(SoftLimitDirection.kForward, endAffectorConstants.rightSoftLimitRots);
+        rightAffector.setSoftLimit(SoftLimitDirection.kReverse, endAffectorConstants.rightSoftLimitRots);
 
-        rightAffector.setSoftLimit(SoftLimitDirection.kReverse, endAffectorConstants.encoderPosFactor);
-        rightAffector.setSoftLimit(SoftLimitDirection.kForward, 0);
-        // rightAffector.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        // rightAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
+        rightAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
+        rightAffector.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        
+        // debug stuff
+        // SmartDashboard.putBoolean("left forward", leftAffector.isSoftLimitEnabled(SoftLimitDirection.kForward));
+        // SmartDashboard.putBoolean("left backward", leftAffector.isSoftLimitEnabled(SoftLimitDirection.kReverse));
+        // SmartDashboard.putBoolean("right forward", rightAffector.isSoftLimitEnabled(SoftLimitDirection.kForward));
+        // SmartDashboard.putBoolean("right backward", rightAffector.isSoftLimitEnabled(SoftLimitDirection.kReverse));
     }
 
     @Override
     public void periodic() {
         // useful details
         SmartDashboard.putBoolean("end affector locked", endAffectorLock);
+        // debug stuff
+        // leftAffector.enableSoftLimit(SoftLimitDirection.kForward, SmartDashboard.getBoolean("left forward", false));
+        // rightAffector.enableSoftLimit(SoftLimitDirection.kForward, SmartDashboard.getBoolean("right forward", false));
+        // leftAffector.enableSoftLimit(SoftLimitDirection.kReverse, SmartDashboard.getBoolean("left backward", false));
+        // rightAffector.enableSoftLimit(SoftLimitDirection.kReverse, SmartDashboard.getBoolean("right backward", false));
     }
 
     public void toggleEndAffectorLock() {

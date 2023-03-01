@@ -120,8 +120,8 @@ public class drivetrain extends SubsystemBase{
     @Override
     public void periodic() {
         // useful info
-        SmartDashboard.putNumber("left speed", frontleftMotor.getSensorCollection().getIntegratedSensorVelocity());
-        SmartDashboard.putNumber("right speed", frontRightMotor.getSensorCollection().getIntegratedSensorVelocity());
+        // SmartDashboard.putNumber("left speed", frontleftMotor.getSensorCollection().getIntegratedSensorVelocity());
+        // SmartDashboard.putNumber("right speed", frontRightMotor.getSensorCollection().getIntegratedSensorVelocity());
         SmartDashboard.putData(drive);
         SmartDashboard.putData(gyro);
     }
