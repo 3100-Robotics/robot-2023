@@ -68,10 +68,18 @@ public class RobotContainer {
   private final PIDBallence autoballence = new PIDBallence(drive);
   private final vision m_Vision = new vision();
 
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private final Command m_simpleAuto = new DriveForward(drive, 5);
+
+  // A complex auto routine that drives forward, drops a hatch, and then drives backward.
+  private final Command m_complexAuto = new DriveTurn(m_robotDrive, 90);
+
+  // A chooser for autonomous commands
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+  m_chooser.setDefaultOption("Simple Auto", m_simpleAuto);
+  m_chooser.addOption("Complex Auto", m_complexAuto);
+
+  SmartDashboard.putData(m_chooser);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -85,10 +93,6 @@ public class RobotContainer {
     // claw.setDefaultCommand(new endAffectorController(m_codriverController, claw));
     // m_Vision.setDefaultCommand(new visionController(m_codriverController, m_Vision, claw));
 
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
-
     // Configure the trigger bindings
     configureBindings();
   }
@@ -97,28 +101,6 @@ public class RobotContainer {
     // drivetrain commands
     driverButtonStart.onTrue(new InstantCommand(() -> drive.ToggleSlowMode(), drive));
     driverButtonSelect.whileTrue(autoballence);
-
-    // elevator commands
-
-    // too fancy enable if I have time
-    // buttonY.onTrue(new InstantCommand(
-    //   () -> elevator.incrementSetpoint(false),
-    // elevator));
-
-    // buttonA.onTrue(new InstantCommand(
-    //   () -> elevator.incrementSetpoint(true),
-    // elevator));
-
-    // arm commands
-
-    // too fancy enable if I have time
-    // buttonB.onTrue(new InstantCommand(
-    //   () -> arm.incrementSetpoint(false),
-    // arm));
-
-    // buttonX.onTrue(new InstantCommand(
-    //   () -> arm.incrementSetpoint(true),
-    // arm));
     
     // end affector commands
 
@@ -159,6 +141,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return m_chooser.getSelected();;
   }
 }
