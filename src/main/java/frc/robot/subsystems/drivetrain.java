@@ -41,7 +41,7 @@ public class drivetrain extends SubsystemBase{
     private static AHRS gyro = new AHRS(SPI.Port.kMXP);
     
     // slowmode for presision
-    public Boolean slowmode = false;
+    public Boolean slowmode = true;
 
     public drivetrain() {
         // deadband
@@ -58,6 +58,10 @@ public class drivetrain extends SubsystemBase{
     public void ToggleSlowMode() {
         // enable/disable the slow mode
         slowmode = !slowmode;
+    }
+
+    public void setSlowMode(boolean mode) {
+        slowmode = mode;
     }
 
     public void arcadeDrive(double speed, double rotation) {
@@ -104,11 +108,13 @@ public class drivetrain extends SubsystemBase{
 
     public void setSetpoint(double setpoint) {
         // set pid setpoint
+        System.out.println(setpoint);
         driveController.setSetpoint(setpoint);
     }
 
     public boolean atSetpoint() {
         // am I at pid setpoint?
+        System.out.println(driveController.atSetpoint());
         return driveController.atSetpoint();
     }
 
@@ -117,11 +123,19 @@ public class drivetrain extends SubsystemBase{
         return driveController.calculate(measurement);
     }
 
+    public void setBrakeMode(NeutralMode mode) {
+        frontleftMotor.setNeutralMode(mode);
+        backLeftMotor.setNeutralMode(mode);
+        frontRightMotor.setNeutralMode(mode);
+        backRightMotor.setNeutralMode(mode);
+    }
+
     @Override
     public void periodic() {
         // useful info
         // SmartDashboard.putNumber("left speed", frontleftMotor.getSensorCollection().getIntegratedSensorVelocity());
         // SmartDashboard.putNumber("right speed", frontRightMotor.getSensorCollection().getIntegratedSensorVelocity());
+        SmartDashboard.putBoolean("slowmode", slowmode);
         SmartDashboard.putData(drive);
         SmartDashboard.putData(gyro);
     }
@@ -143,10 +157,10 @@ public class drivetrain extends SubsystemBase{
         backRightMotor.setSafetyEnabled(false);
 
         // invert motors
-        frontleftMotor.setInverted(false);
-        backLeftMotor.setInverted(false);
-        frontRightMotor.setInverted(true);
-        backRightMotor.setInverted(true);
+        frontleftMotor.setInverted(true);
+        backLeftMotor.setInverted(true);
+        frontRightMotor.setInverted(false);
+        backRightMotor.setInverted(false);
 
         // brake mode
         frontleftMotor.setNeutralMode(NeutralMode.Brake);

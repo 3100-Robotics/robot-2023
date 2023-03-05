@@ -88,7 +88,7 @@ public class Elevator extends SubsystemBase{
     public double GetEncoderRotation(){
         // get the pos of the elevator
         // return encoder.getPosition();
-        return internalEncoder.getPosition() % 1 + externalEncoder.getPosition();
+        return internalEncoder.getPosition();
     }
 
     @Override
@@ -97,6 +97,7 @@ public class Elevator extends SubsystemBase{
         // SmartDashboard.putNumber("motor 1 voltage", LeftElevatorMotor.getBusVoltage());
         // SmartDashboard.putNumber("motor 2 voltage", LeftElevatorMotor.getBusVoltage());
         SmartDashboard.putNumber("elevator pos", GetEncoderRotation());
+        
         SmartDashboard.putNumber("elevator Speed", speed);
     }
 }

@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
+  boolean autonomous = false;
+
   private RobotContainer m_robotContainer;
 
   /**
@@ -62,6 +64,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    autonomous = true;
   }
 
   /** This function is called periodically during autonomous. */
@@ -77,6 +80,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    autonomous = false;
   }
 
   /** This function is called periodically during operator control. */

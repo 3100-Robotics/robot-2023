@@ -18,7 +18,7 @@ public class PIDBallence extends CommandBase{
         // typical stuff
         this.drive = drive;
         controller.setSetpoint(0);
-        controller.setTolerance(0.5, 1);
+        controller.setTolerance(0.3, 1);
         addRequirements(this.drive);
     }
 
@@ -30,7 +30,7 @@ public class PIDBallence extends CommandBase{
         if (Math.abs(speed) > 0.6) {
             speed = Math.copySign(0.6, speed);
         }
-        drive.arcadeDrive(speed, 0);
+        drive.arcadeDrive(-speed, 0);
     }  
 
     @Override

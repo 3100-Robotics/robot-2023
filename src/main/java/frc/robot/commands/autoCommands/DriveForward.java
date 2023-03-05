@@ -14,12 +14,16 @@ public class DriveForward extends CommandBase{
         // typical stuff
         this.Drive = Drive;
         this.distance = distance;
-        Drive.setSetpoint(Drive.getAverageEncoderRotation() + distance * driveTrainConstants.tick2Feet);
+        addRequirements(Drive);
+        Drive.resetEncoders();
+        Drive.setSetpoint(distance * driveTrainConstants.tick2feet);
+        Drive.setSetpoint(distance);
     }
 
     @Override
     public void execute() {
         // move
+        System.out.println("moving");
         Drive.arcadeDrive(Drive.driveCalculate(Drive.getAverageEncoderRotation()), 0);
     }
 

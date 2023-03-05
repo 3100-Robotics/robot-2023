@@ -26,9 +26,9 @@ public class ArmCommand extends CommandBase{
         // arm.Run(speed);
         double speed = m_Controller.getRightX();
         if (speed < 0.1 && speed > -0.1) {
-            speed = 0.03;
+            speed = 0.02;
         }
-        arm.Run(speed);
+        arm.Run(speed*0.5);
     }
 
     @Override

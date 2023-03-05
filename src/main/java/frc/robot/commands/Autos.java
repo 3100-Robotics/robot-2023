@@ -4,11 +4,11 @@
 
 package frc.robot.commands;
 
-import frc.robot.commands.autoCommands.DriveForward;
 import frc.robot.commands.autoCommands.MoveArm;
 import frc.robot.commands.autoCommands.MoveElevator;
 import frc.robot.commands.autoCommands.PIDBallence;
 import frc.robot.commands.autoCommands.openAffector;
+import frc.robot.commands.autoCommands.simpleDrive;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
@@ -19,33 +19,22 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public final class Autos {
 
   // drive forward
-  public static CommandBase driveForward(drivetrain subsystem, double distance) {
-    return Commands.sequence(new DriveForward(subsystem, distance));
+  public static CommandBase drive(drivetrain subsystem, double speed, double distance) {
+    return Commands.sequence(new simpleDrive(subsystem, speed, distance));
   }
 
-  // score something
-  public static CommandBase score(Elevator elevator, Arm arm, endAffector affector) {
-    return Commands.sequence(new MoveElevator(elevator, false), new MoveElevator(elevator, false),
-                             new MoveArm(arm, false), new MoveArm(arm, false), new openAffector(affector, 1));
+  public static CommandBase ballence(drivetrain drive, double speed, double backDistance) {
+    return Commands.sequence(new simpleDrive(drive, speed, backDistance), new PIDBallence(drive));
   }
 
-  // score something and leave
-  public static CommandBase scoreleave(drivetrain drive, Arm arm, Elevator elevator, endAffector affector){
-    return Commands.sequence(new MoveElevator(elevator, false), new MoveElevator(elevator, false),
-                            new MoveArm(arm, false), new MoveArm(arm, false),
-                            new openAffector(affector, 1), new DriveForward(drive, -5));
+  public static CommandBase scoreCubeStay(Elevator elevator, Arm arm, endAffector end) {
+    return Commands.sequence(new MoveElevator(elevator, 0.4, 2.3*12*7), new MoveArm(arm, 0.3, 1.7*12*6.5), new openAffector(end, 0.3, 0.025*3));
   }
 
-  // score and ballance
-  public static CommandBase scoreballance(drivetrain drive, Arm arm, Elevator elevator, endAffector ea, PIDBallence balance) {
-    return Commands.sequence(new MoveElevator(elevator, false), new MoveElevator(elevator, false),
-                            new MoveArm(arm, false), new MoveArm(arm, false),
-                            new openAffector(ea, 1),
-                            new DriveForward(drive, -5),
-                            new MoveElevator(elevator, true), new MoveElevator(elevator, true),
-                            new MoveArm(arm, true), new MoveArm(arm, true),
-                            new PIDBallence(drive));
-  }
+  public static CommandBase scoreCubeLeave(drivetrain drive, Elevator elevator, Arm arm, endAffector end,
+                  double speed, double distance) {
+      return Commands.sequence(scoreCubeStay(elevator, arm, end), drive(drive, speed, distance));
+    }
 
   private Autos() {
     // not meant to be defiend

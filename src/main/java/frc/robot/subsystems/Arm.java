@@ -36,8 +36,8 @@ public class Arm extends SubsystemBase{
         // encoder.setPositionConversionFactor(ArmMotorConstants.encoderPosFactor);
 
         armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmMotorConstants.softLimitRots);
-        armMotor.setSoftLimit(SoftLimitDirection.kReverse, 1);
-        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        armMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         armMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
 
         // motor config
@@ -75,6 +75,10 @@ public class Arm extends SubsystemBase{
         controller.setSetpoint(setpoint);
     }
 
+    public double calculate(double measurment) {
+        return controller.calculate(measurment);
+    }
+
     public void Run(double speed) {
         // run the motor
         armMotor.set(limiter.calculate(speed));
@@ -88,6 +92,6 @@ public class Arm extends SubsystemBase{
     public double GetEncoderRotation(){
         // get the encoder rot
         // return encoder.getPosition();
-        return internalEncoder.getPosition() % 1 + externalEncoder.getPosition() / 20;
+        return internalEncoder.getPosition();
     }
 }

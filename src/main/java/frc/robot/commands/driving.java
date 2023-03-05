@@ -11,6 +11,8 @@ public class driving extends CommandBase{
   private final drivetrain m_drive;
   private final XboxController m_controller;
 
+  double xSpeed, zRotation;
+
   public driving(drivetrain subsystem, XboxController controller) {
     // typical stuff
     m_drive = subsystem;
@@ -22,17 +24,43 @@ public class driving extends CommandBase{
   public void execute() {
     // get speed
     // double xSpeed = m_controller.getRawAxis(IOConstants.leftYAxisChannel);
-    double xSpeed = m_controller.getRawAxis(IOConstants.leftYAxisChannel);
-    double zRotation = m_controller.getRawAxis(IOConstants.rightXAxisChannel);
+    xSpeed = -m_controller.getRawAxis(IOConstants.leftYAxisChannel);
+    zRotation = -m_controller.getRawAxis(IOConstants.rightXAxisChannel);
     // double zRotation = m_controller.getRightX();
 
     // apply slow mode
-    if (m_drive.slowmode) {
-      xSpeed *= 0.5;
-      zRotation *= 0.5;
+
+    if (m_controller.getRightTriggerAxis() > 0.5) {
+      xSpeed *= 0.75;
+      zRotation *= 0.25;
     }
+    else {
+      xSpeed *= 0.5;
+      zRotation *= 0.25;
+    }
+
+
+    // if (m_drive.slowmode) {
+    // }
+    // else {
+    // }
+
+    // if (xSpeed > 0) {
+    //   xSpeed = Math.pow(xSpeed, 2);
+    // }
+    // else {
+    //   xSpeed = -Math.pow(xSpeed, 2);
+    // }
+    // if (zRotation > 0) {
+    //   zRotation = Math.pow(zRotation, 2);
+    // }
+    // else {
+    //   zRotation = -Math.pow(zRotation, 2);
+    // }
 
     // drive robot
     m_drive.arcadeDrive(xSpeed, zRotation);
   }
+
+  
 }

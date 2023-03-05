@@ -27,12 +27,12 @@ public final class Constants {
     public static final int backRightPort = 4;
 
     // ballencing pid
-    public final static double k_balenceP = 0;
+    public final static double k_balenceP = 0.01215;
     public final static double k_balenceI = 0;
     public final static double k_balenceD = 0;
 
     // driving pid
-    public final static double k_driveP = 0;
+    public final static double k_driveP = 0.001;
     public final static double k_driveI = 0;
     public final static double k_driveD = 0;
 
@@ -50,7 +50,8 @@ public final class Constants {
     private final static double kGearReduction = 5.51;
     private final static double kWheelRadious = 3;
     private final static double kRads2inches = 2 * Math.PI * kWheelRadious;
-    public final static double tick2Feet = (1 / kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
+    public final static double feet2tick = (kGearReduction) * (kSensorUnitsPerRotation) / (kRads2inches / 12);
+    public final static double tick2feet = 1/feet2tick;
   }
 
   public static class ElevatorConstants{
@@ -66,11 +67,14 @@ public final class Constants {
     public final static double kd = 0;
 
     // gear ratio math
-    public final static int kSensorUnitsPerRotation = 8192;
-    private final static double kGearReduction = 1;
-    private final static double kWinchRadious = 1.91/2;
-    private final static double kRads2inches = 2 * Math.PI * kWinchRadious;
-    public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
+    public final static int kSensorUnitsPerRotation = 42;
+    private final static double kGearReduction = 20;
+    private final static double kWinchRadious = 1.72/2;
+    public final static double kInches2Rots = 2 * Math.PI * kWinchRadious / kGearReduction;
+    public final static double kRads2inches = 1/kInches2Rots;
+    public final static double kcircumperence = 2 * Math.PI * kWinchRadious;
+    public final static double feet2tick = (kGearReduction) * (kSensorUnitsPerRotation) / (kcircumperence / 12);
+    public final static double tick2Feet = 1/feet2tick;
 
     // fancy level stuff isn't used right now
     public static double[] elevatorLevels = {1.0, 2.0, 3.0, 4.0, 5.0}; {
@@ -96,11 +100,14 @@ public final class Constants {
     public final static double kArmRateToleranceMeterPerS = 0.2;
 
     // gear ratio math
-    public final static int kSensorUnitsPerRotation = 8192;
-    private final static double kGearReduction = 1;
+    public final static int kSensorUnitsPerRotation = 42;
+    private final static double kGearReduction = 20;
     private final static double kWinchRadious = 1.9/2;
-    private final static double kRads2inches = 2 * Math.PI * kWinchRadious;
-    public final static double tick2Feet = (kGearReduction) * (1 / kSensorUnitsPerRotation) * (kRads2inches);
+    public final static double kInches2Rots = 2 * Math.PI * kWinchRadious / kGearReduction;
+    public final static double kRads2inches = 1/kInches2Rots;
+    public final static double kcircumperence = 2 * Math.PI * kWinchRadious;
+    public final static double feet2tick = (kGearReduction) * (kSensorUnitsPerRotation) / (kcircumperence / 12);
+    public final static double tick2Feet = 1/feet2tick;
 
     public final static double doubleEcoderPosFactor = kRads2inches * 60;
     public final static float softLimitRots = (float)doubleEcoderPosFactor;
@@ -127,10 +134,13 @@ public final class Constants {
     public final static int kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 25;
     private final static double kWinchRadious = 1.29/2;
-    private final static double kRads2inches = 2 * Math.PI * kWinchRadious;
-    public final static double tick2Feet = (kGearReduction) * (kSensorUnitsPerRotation) * (kRads2inches);
+    public final static double kInches2Rots = 2 * Math.PI * kWinchRadious / kGearReduction;
+    public final static double kRots2inches = 1/kInches2Rots;
+    public final static double kcircumperence = 2 * Math.PI * kWinchRadious;
+    public final static double feet2tick = (kGearReduction) * (kSensorUnitsPerRotation) / (kcircumperence / 12);
+    public final static double tick2Feet = 1/feet2tick;
 
-    public final static double doublesoftLimitRots = kRads2inches * 3.75;
+    public final static double doublesoftLimitRots = kRots2inches * 3.75;
     public final static float rightSoftLimitRots = (float)doublesoftLimitRots;
     public final static float leftSoftLimitRots = (float)doublesoftLimitRots;
 
