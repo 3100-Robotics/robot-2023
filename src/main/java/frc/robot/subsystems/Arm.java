@@ -2,11 +2,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -21,17 +19,19 @@ public class Arm extends SubsystemBase{
 
     private SlewRateLimiter limiter = new SlewRateLimiter(ArmMotorConstants.slewRate);
     // thorugh bore encoder
-    private AbsoluteEncoder externalEncoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
     private RelativeEncoder internalEncoder = armMotor.getEncoder();
     // pid
     public PIDController controller;
     int setpointNum;
 
+    public String position = "";
+    public Boolean altPos = false;
+
     public Arm() {
         // pid config
         setpointNum = 1;
         controller = new PIDController(ArmMotorConstants.kp, ArmMotorConstants.ki, ArmMotorConstants.kd);
-        controller.setSetpoint(ArmMotorConstants.armLevels[setpointNum - 1]);
+        controller.setSetpoint(0);
 
         // encoder.setPositionConversionFactor(ArmMotorConstants.encoderPosFactor);
 
@@ -48,21 +48,6 @@ public class Arm extends SubsystemBase{
     public void periodic() {
         SmartDashboard.putNumber("arm pos", GetEncoderRotation());
         SmartDashboard.putBoolean("at setpoint", atSetpoint());
-    }
-
-    public void incrementSetpoint(boolean negative) {
-        // change setpoint to next pre-defined setpoint
-        if (negative) {
-            if (setpointNum != 1) {
-                setpointNum -= 1;
-            }
-        }
-        else {
-            if (setpointNum != ArmMotorConstants.armLevels.length){
-                setpointNum += 1;
-            }
-        }
-        controller.setSetpoint(ArmMotorConstants.armLevels[setpointNum - 1]);
     }
 
     public boolean atSetpoint() {
@@ -87,6 +72,11 @@ public class Arm extends SubsystemBase{
     public void Stop(){
         // stop the motor
         armMotor.stopMotor();
+    }
+
+    public void setPos(String pos) {
+        position = pos;
+        altPos = false;
     }
 
     public double GetEncoderRotation(){

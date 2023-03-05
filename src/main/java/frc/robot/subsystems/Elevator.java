@@ -1,11 +1,9 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -19,7 +17,6 @@ public class Elevator extends SubsystemBase{
     private CANSparkMax RightElevatorMotor = new CANSparkMax(ElevatorConstants.RightElevatorMotor, MotorType.kBrushless);
 
     // encoder
-    private AbsoluteEncoder externalEncoder = LeftElevatorMotor.getAbsoluteEncoder(Type.kDutyCycle);
     private RelativeEncoder internalEncoder = LeftElevatorMotor.getEncoder();
 
     private SlewRateLimiter limiter = new SlewRateLimiter(ElevatorConstants.slewRate);
@@ -27,34 +24,22 @@ public class Elevator extends SubsystemBase{
     // pid things
     public PIDController controller;
     int setpointNum;
-    double speed;
+
+    public String position = "ground";
+    public boolean altPos = false;
 
     public Elevator(){
         // pid
         setpointNum = 1;
         controller = new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd);
-        controller.setSetpoint(ElevatorConstants.elevatorLevels[setpointNum - 1]);
+        controller.setSetpoint(0);
         // motor config
         LeftElevatorMotor.setIdleMode(IdleMode.kBrake);
         RightElevatorMotor.setIdleMode(IdleMode.kBrake);
-        // RightElevatorMotor.follow(LeftElevatorMotor, true);
+        RightElevatorMotor.follow(LeftElevatorMotor, true);
     }
 
-    public void incrementSetpoint(boolean negative) {
-        // change the setpoint to the next one in the list
-        if (negative) {
-            if (setpointNum != 1) {
-                setpointNum -= 1;
-            }
-        }
-        else {
-            if (setpointNum != ElevatorConstants.elevatorLevels.length){
-                setpointNum += 1;
-            }
-        }
-
-        controller.setSetpoint(ElevatorConstants.elevatorLevels[setpointNum - 1]);
-    }
+    // PID
 
     public boolean atSetpoint() {
         // am I at the pid setpoint?
@@ -75,6 +60,8 @@ public class Elevator extends SubsystemBase{
         return controller.getSetpoint();
     }
 
+    // movement
+
     public void Run(double speed) {
         // set motor speed
         LeftElevatorMotor.set(limiter.calculate(speed));
@@ -85,9 +72,15 @@ public class Elevator extends SubsystemBase{
         LeftElevatorMotor.stopMotor();
     }
 
+    public void setPos(String pos) {
+        position = pos;
+        altPos = false;
+    }
+
+    // data
+
     public double GetEncoderRotation(){
         // get the pos of the elevator
-        // return encoder.getPosition();
         return internalEncoder.getPosition();
     }
 
@@ -97,8 +90,6 @@ public class Elevator extends SubsystemBase{
         // SmartDashboard.putNumber("motor 1 voltage", LeftElevatorMotor.getBusVoltage());
         // SmartDashboard.putNumber("motor 2 voltage", LeftElevatorMotor.getBusVoltage());
         SmartDashboard.putNumber("elevator pos", GetEncoderRotation());
-        
-        SmartDashboard.putNumber("elevator Speed", speed);
     }
 }
 

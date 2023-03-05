@@ -70,18 +70,17 @@ public final class Constants {
     public final static int kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 20;
     private final static double kWinchRadious = 1.72/2;
+
     public final static double kInches2Rots = 2 * Math.PI * kWinchRadious / kGearReduction;
     public final static double kRads2inches = 1/kInches2Rots;
-    public final static double kcircumperence = 2 * Math.PI * kWinchRadious;
-    public final static double feet2tick = (kGearReduction) * (kSensorUnitsPerRotation) / (kcircumperence / 12);
-    public final static double tick2Feet = 1/feet2tick;
 
-    // fancy level stuff isn't used right now
-    public static double[] elevatorLevels = {1.0, 2.0, 3.0, 4.0, 5.0}; {
-      for (int i = 0; i < elevatorLevels.length; ++i) {
-        elevatorLevels[i] *= tick2Feet;
-      }
-    }
+    private final static double kBumperOffset = 7;
+    public final static double groundRots =  (3 - kBumperOffset) * kInches2Rots;
+    public final static double midCubeRots = (24 - kBumperOffset) * kInches2Rots;
+    public final static double midConeRots = (36 - kBumperOffset) * kInches2Rots;
+    public final static double humanPlayerRots = (42 - kBumperOffset) * kInches2Rots;
+    public final static double highCubeRots = (36 - kBumperOffset) * kInches2Rots;
+    public final static double highConeRots = (48 - kBumperOffset) * kInches2Rots;
   }
 
   public static class ArmMotorConstants{
@@ -103,21 +102,18 @@ public final class Constants {
     public final static int kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 20;
     private final static double kWinchRadious = 1.9/2;
+
     public final static double kInches2Rots = 2 * Math.PI * kWinchRadious / kGearReduction;
     public final static double kRads2inches = 1/kInches2Rots;
-    public final static double kcircumperence = 2 * Math.PI * kWinchRadious;
-    public final static double feet2tick = (kGearReduction) * (kSensorUnitsPerRotation) / (kcircumperence / 12);
-    public final static double tick2Feet = 1/feet2tick;
 
     public final static double doubleEcoderPosFactor = kRads2inches * 60;
     public final static float softLimitRots = (float)doubleEcoderPosFactor;
 
-    // fancy level stuff isn't used right now
-    public static double[] armLevels = {1, 2, 3}; {
-      for (int i = 0; i < armLevels.length; ++i) {
-        armLevels[i] *= tick2Feet;
-      }
-    }
+    private final static double kBumperOffset = 3;
+    public final static double groundRots =  (3 + kBumperOffset) * kInches2Rots;
+    public final static double midCubeRots = (34 + kBumperOffset) * kInches2Rots;
+    public final static double humanPlayerRots = (30 + kBumperOffset) * kInches2Rots;
+    public final static double highCubeRots = (39.25 + kBumperOffset) * kInches2Rots;
   }
 
   public static class endAffectorConstants{
@@ -143,10 +139,6 @@ public final class Constants {
     public final static double doublesoftLimitRots = kRots2inches * 3.75;
     public final static float rightSoftLimitRots = (float)doublesoftLimitRots;
     public final static float leftSoftLimitRots = (float)doublesoftLimitRots;
-
-    // pid tolerances
-    public final static double kAffectorToleranceMeter = 0.1;
-    public final static double kAffectorRateToleranceMeterPerS = 0.2;
   }
 
   public static final class IOConstants {
