@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.driveTrainConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.RunElevator;
 import frc.robot.commands.driving;
@@ -14,9 +15,23 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
 import frc.robot.subsystems.endAffector;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 // import frc.robot.subsystems.vision;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.EventLoop;
 // import edu.wpi.first.wpilibj.event.EventLoop;
@@ -24,7 +39,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -57,8 +72,8 @@ public class RobotContainer {
   private JoystickButton buttonB = new JoystickButton(m_codriverController, IOConstants.bButtonChannel);
   private JoystickButton buttonStart = new JoystickButton(m_codriverController, IOConstants.startButtonChannel);
   private JoystickButton buttonSelect = new JoystickButton(m_codriverController, IOConstants.backButtonChannel);
-  private JoystickButton buttonlb = new JoystickButton(m_codriverController, IOConstants.leftBumperChannel);
-  private JoystickButton buttonrb = new JoystickButton(m_codriverController, IOConstants.rightBumperChannel);
+  private JoystickButton buttonLeftBumper = new JoystickButton(m_codriverController, IOConstants.leftBumperChannel);
+  private JoystickButton buttonRightBumper = new JoystickButton(m_codriverController, IOConstants.rightBumperChannel);
   private Trigger buttonDUp = new Trigger(m_codriverController.pov(IOConstants.POVU, povLoop));
   private Trigger buttonDDown = new Trigger(m_codriverController.pov(IOConstants.POVD, povLoop));
 
@@ -83,6 +98,12 @@ public class RobotContainer {
   private final Command m_ballence = Autos.ballence(drive, 0.3, Units.metersToFeet(1.5));
   private final Command m_scoreCube = Autos.scoreCubeStay(elevator, arm, claw);
   private final Command m_scoreCubeLeave = Autos.scoreCubeLeave(drive, elevator, arm, claw, -0.3, 6);
+
+  // path planner setup
+
+  private final Command m_PathPlannerCommand = null;
+  private final PathPlannerTrajectory m_testPathPlanner = PathPlanner.loadPath("double score", new PathConstraints(4, 3));
+
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -124,21 +145,75 @@ public class RobotContainer {
     buttonSelect.onTrue(new InstantCommand(() -> claw.toggleEndAffectorLock(), claw));
 
     // movement commands
-    buttonY.onTrue(new InstantCommand(() -> elevator.position = "high", elevator));
-    buttonA.onTrue(new InstantCommand(() -> elevator.position = "ground", elevator));
-    buttonX.onTrue(new InstantCommand(() -> elevator.position = "mid", elevator));
-    buttonB.onTrue(new InstantCommand(() -> elevator.position = "player", elevator));
-    buttonrb.onTrue(new InstantCommand(() -> elevator.altPos = !elevator.altPos, elevator));
 
     buttonY.onTrue(new InstantCommand(() -> elevator.position = "high", elevator));
     buttonA.onTrue(new InstantCommand(() -> elevator.position = "ground", elevator));
     buttonX.onTrue(new InstantCommand(() -> elevator.position = "mid", elevator));
     buttonB.onTrue(new InstantCommand(() -> elevator.position = "player", elevator));
-    buttonrb.onTrue(new InstantCommand(() -> elevator.altPos = !elevator.altPos, elevator));
+    buttonRightBumper.onTrue(new InstantCommand(() -> elevator.altPos = !elevator.altPos, elevator));
+
+    buttonY.onTrue(new InstantCommand(() -> arm.position = "high", arm));
+    buttonA.onTrue(new InstantCommand(() -> arm.position = "ground", arm));
+    buttonX.onTrue(new InstantCommand(() -> arm.position = "mid", arm));
+    buttonB.onTrue(new InstantCommand(() -> arm.position = "player", arm));
+    buttonRightBumper.onTrue(new InstantCommand(() -> arm.altPos = !arm.altPos, arm));
   }
 
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
+
     return m_chooser.getSelected();
+  }
+
+  public Command loadPathplannerTrajectory(String filename, boolean resetOdometry){
+    Trajectory trajectory;
+
+    try{
+      // get the directory name where the trajectory path is located
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filename);
+      // build the trajectory from PathweaverJson file
+      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    }
+    catch(IOException exception){
+      DriverStation.reportError("unableto open trajectory file "+filename, exception.getStackTrace());
+
+      System.out.println("Unable to read from file"+filename );
+
+      return new InstantCommand();  // do nothing command
+    }
+
+    // // Construct command to follow trajectory
+    // RamseteCommand command =
+    //     new RamseteCommand(
+    //         trajectory,
+    //         drive::getPose,
+    //         DriveConstants.kFeedforward,
+    //         driveTrainConstants.kDriveKinematics,
+
+    //         // Position controllers
+    //         new PIDController(AutoConstants.kPXController, 0, 0),
+    //         new PIDController(AutoConstants.kPYController, 0, 0),
+    //         new ProfiledPIDController(
+    //             AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints),
+
+    //         // Needed for normalizing wheel speeds
+    //         driveTrainConstants.kMaxSpeedMetersPerSecond,
+
+    //         // Velocity PID's
+    //         new PIDController(DriveConstants.kPFrontLeftVel, 0, 0),
+    //         new PIDController(DriveConstants.kPRearLeftVel, 0, 0),
+    //         new PIDController(DriveConstants.kPFrontRightVel, 0, 0),
+    //         new PIDController(DriveConstants.kPRearRightVel, 0, 0),
+    //         m_DriveSubsystem::getCurrentWheelSpeeds,
+    //         m_DriveSubsystem::setDriveMotorControllersVolts, // Consumer for the output motor voltages
+    //         drive);
+
+    if (resetOdometry){
+      // Reset odometry to the starting pose of the trajectory.
+      drive.resetOdometry(trajectory.getInitialPose());
+    }
+
+    // // Run path following command, then stop at the end.
+    // return mecanumControllerCommand.andThen(() -> m_DriveSubsystem.drive(0, 0, 0));
+    return null;
   }
 }

@@ -8,6 +8,9 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,7 +20,7 @@ import frc.robot.Constants.driveTrainConstants;
 public class drivetrain extends SubsystemBase{
 
     // motors
-    private static WPI_TalonFX frontleftMotor = 
+    private static WPI_TalonFX frontLeftMotor = 
         new WPI_TalonFX(driveTrainConstants.frontLeftPort);
     private static WPI_TalonFX frontRightMotor = 
         new WPI_TalonFX(driveTrainConstants.frontRightPort);
@@ -27,7 +30,7 @@ public class drivetrain extends SubsystemBase{
         new WPI_TalonFX(driveTrainConstants.backRightPort);
 
     // drivetrain
-    private static DifferentialDrive drive = new DifferentialDrive(frontleftMotor, frontRightMotor);
+    private static DifferentialDrive drive = new DifferentialDrive(frontLeftMotor, frontRightMotor);
 
     // slew rate limiter
     private SlewRateLimiter speedLimiter = new SlewRateLimiter(driveTrainConstants.driveSlewRate);
@@ -39,6 +42,8 @@ public class drivetrain extends SubsystemBase{
 
     // navx gyro
     private static AHRS gyro = new AHRS(SPI.Port.kMXP);
+
+    private final DifferentialDriveOdometry odometry;
     
     // slowmode for presision
     public Boolean slowmode = true;
@@ -53,6 +58,9 @@ public class drivetrain extends SubsystemBase{
         // config
         configureMotors();
         resetEncoders();
+
+        odometry = new DifferentialDriveOdometry(gyro.getRotation2d(),
+        frontLeftMotor.getSelectedSensorPosition(), frontRightMotor.getSelectedSensorPosition());
     }
 
     public void ToggleSlowMode() {
@@ -79,15 +87,21 @@ public class drivetrain extends SubsystemBase{
         // tank drive
         drive.tankDrive(leftSpeed, rightSpeed, true);
     }
+    
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
+      frontLeftMotor.setVoltage(leftVolts);
+      frontRightMotor.setVoltage(rightVolts);
+      drive.feed();
+    }
 
     public double getAverageEncoderRotation() {
         // average encoder distance
-        return (frontleftMotor.getSelectedSensorPosition(0) + frontRightMotor.getSelectedSensorPosition(0))/2;
+        return (frontLeftMotor.getSelectedSensorPosition(0) + frontRightMotor.getSelectedSensorPosition(0))/2;
     }
 
     public void resetEncoders() {
         // reset encoders
-        frontleftMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
+        frontLeftMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
         frontRightMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
     }
 
@@ -105,6 +119,43 @@ public class drivetrain extends SubsystemBase{
         // get that roll
         return gyro.getRoll();
     }
+
+    public void zeroHeading() {
+      gyro.reset();
+    }
+  
+    public double getHeading() {
+      return gyro.getRotation2d().getDegrees();
+    }
+  
+    public double getTurnRate() {
+      return -gyro.getRate();
+    }
+
+    public Pose2d getPose() {
+        return odometry.getPoseMeters();
+    }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+      return new DifferentialDriveWheelSpeeds(
+        frontLeftMotor.getSelectedSensorVelocity(),
+        frontRightMotor.getSelectedSensorVelocity());
+    }
+
+    public void resetOdometry(Pose2d pose) {
+      resetEncoders();
+      odometry.resetPosition(
+        gyro.getRotation2d(), frontLeftMotor.getSelectedSensorPosition(),
+        frontRightMotor.getSelectedSensorPosition(), pose);
+    }
+
+    // public Encoder getLeftEncoder() {
+    //   return m_leftEncoder;
+    // }
+
+    // public Encoder getRightEncoder() {
+    //   return m_rightEncoder;
+    // }
 
     public void setSetpoint(double setpoint) {
         // set pid setpoint
@@ -124,7 +175,7 @@ public class drivetrain extends SubsystemBase{
     }
 
     public void setBrakeMode(NeutralMode mode) {
-        frontleftMotor.setNeutralMode(mode);
+        frontLeftMotor.setNeutralMode(mode);
         backLeftMotor.setNeutralMode(mode);
         frontRightMotor.setNeutralMode(mode);
         backRightMotor.setNeutralMode(mode);
@@ -138,6 +189,8 @@ public class drivetrain extends SubsystemBase{
         SmartDashboard.putBoolean("slowmode", slowmode);
         SmartDashboard.putData(drive);
         SmartDashboard.putData(gyro);
+        odometry.update(
+        gyro.getRotation2d(), frontLeftMotor.getSelectedSensorPosition(), frontRightMotor.getSelectedSensorPosition());
     }
 
     private void configureMotors() {
@@ -145,43 +198,43 @@ public class drivetrain extends SubsystemBase{
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
         // factory default
-        frontleftMotor.configFactoryDefault();
+        frontLeftMotor.configFactoryDefault();
         backLeftMotor.configFactoryDefault();
         frontRightMotor.configFactoryDefault();
         backRightMotor.configFactoryDefault();
 
         // safty good
-        frontleftMotor.setSafetyEnabled(false);
+        frontLeftMotor.setSafetyEnabled(false);
         backLeftMotor.setSafetyEnabled(false);
         frontRightMotor.setSafetyEnabled(false);
         backRightMotor.setSafetyEnabled(false);
 
         // invert motors
-        frontleftMotor.setInverted(true);
+        frontLeftMotor.setInverted(true);
         backLeftMotor.setInverted(true);
         frontRightMotor.setInverted(false);
         backRightMotor.setInverted(false);
 
         // brake mode
-        frontleftMotor.setNeutralMode(NeutralMode.Brake);
+        frontLeftMotor.setNeutralMode(NeutralMode.Brake);
         backLeftMotor.setNeutralMode(NeutralMode.Brake);
         frontRightMotor.setNeutralMode(NeutralMode.Brake);
         backRightMotor.setNeutralMode(NeutralMode.Brake);
 
         // follow motors
-        backLeftMotor.follow(frontleftMotor);
+        backLeftMotor.follow(frontLeftMotor);
         backRightMotor.follow(frontRightMotor);
 
         // peak output for left
-        frontleftMotor.configPeakOutputForward(1.0);
-        frontleftMotor.configPeakOutputReverse(-1.0);
+        frontLeftMotor.configPeakOutputForward(1.0);
+        frontLeftMotor.configPeakOutputReverse(-1.0);
 
         // peak output for right
         frontRightMotor.configPeakOutputForward(1.0);
         frontRightMotor.configPeakOutputReverse(-1.0);
 
         // what sensor to use?
-        frontleftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        frontLeftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         frontRightMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     }
 }
