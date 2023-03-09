@@ -32,7 +32,7 @@ public class driving extends CommandBase{
 
     if (m_controller.getRightTriggerAxis() > 0.5) {
       xSpeed *= 0.75;
-      zRotation *= 0.25;
+      zRotation *= 0.5;
     }
     else {
       xSpeed *= 0.5;
