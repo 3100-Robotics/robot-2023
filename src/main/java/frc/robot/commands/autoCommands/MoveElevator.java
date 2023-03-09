@@ -13,7 +13,7 @@ public class MoveElevator extends CommandBase{
     public MoveElevator(Elevator elevator, double speed, double distance) {
         // typical stuff
         this.elevator = elevator;
-        this.distance = distance * (ElevatorConstants.kInches2Rots);
+        this.distance = distance * (ElevatorConstants.kRads2inches);
         System.out.println(distance);
         this.speed = speed;
         addRequirements(this.elevator);
@@ -29,6 +29,7 @@ public class MoveElevator extends CommandBase{
 
     @Override
     public void end(boolean interupted) {
+        // elevator.Run(0.002);
         elevator.Stop();
     }
 

@@ -76,7 +76,7 @@ public final class Constants {
     private final static double kGearReduction = 20;
     private final static double kWinchRadious = 1.72/2;
 
-    public final static double kInches2Rots = 2 * Math.PI * kWinchRadious / kGearReduction;
+    public final static double kInches2Rots = 2 * Math.PI * kWinchRadious * 1.5 / (kGearReduction);
     public final static double kRads2inches = 1/kInches2Rots;
 
     private final static double kBumperOffset = 7;

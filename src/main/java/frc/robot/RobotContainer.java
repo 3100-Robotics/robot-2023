@@ -10,6 +10,8 @@ import frc.robot.Constants.driveTrainConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.RunElevator;
 import frc.robot.commands.driving;
+import frc.robot.commands.autoCommands.MoveArm;
+import frc.robot.commands.autoCommands.MoveElevator;
 import frc.robot.commands.autoCommands.PIDBallence;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
@@ -38,8 +40,10 @@ import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -76,6 +80,8 @@ public class RobotContainer {
   private JoystickButton buttonRightBumper = new JoystickButton(m_codriverController, IOConstants.rightBumperChannel);
   private Trigger buttonDUp = new Trigger(m_codriverController.pov(IOConstants.POVU, povLoop));
   private Trigger buttonDDown = new Trigger(m_codriverController.pov(IOConstants.POVD, povLoop));
+  private Trigger buttonDLeft = new Trigger(m_codriverController.pov(IOConstants.POVL, povLoop));
+  private Trigger buttonDRight = new Trigger(m_codriverController.pov(IOConstants.POVR, povLoop));
 
   // subsystems
   private final drivetrain drive = new drivetrain();
@@ -98,6 +104,7 @@ public class RobotContainer {
   private final Command m_ballence = Autos.ballence(drive, 0.3, Units.metersToFeet(1.5));
   private final Command m_scoreCube = Autos.scoreCubeStay(elevator, arm, claw);
   private final Command m_scoreCubeLeave = Autos.scoreCubeLeave(drive, elevator, arm, claw, -0.3, 6);
+  private final Command m_testAuto = Commands.sequence(new MoveElevator(elevator, 0.4, 18), new MoveArm(arm, 0.4, 3));
 
   // path planner setup
 
@@ -122,12 +129,13 @@ public class RobotContainer {
     m_chooser.addOption("ballence", m_ballence);
     m_chooser.addOption("score cube", m_scoreCube);
     m_chooser.addOption("score cube leave", m_scoreCubeLeave);
+    m_chooser.addOption("test auto", m_testAuto);
 
     SmartDashboard.putData(m_chooser);
 
     // default commands
     drive.setDefaultCommand(new driving(drive, m_driverController));
-    elevator.setDefaultCommand(new RunElevator(elevator, 0.4));
+    // elevator.setDefaultCommand(new RunElevator(elevator, 0.4));
     // m_Vision.setDefaultCommand(new visionController(m_codriverController, m_Vision, claw));
 
     // Configure the trigger bindings
@@ -157,6 +165,11 @@ public class RobotContainer {
     buttonX.onTrue(new InstantCommand(() -> arm.position = "mid", arm));
     buttonB.onTrue(new InstantCommand(() -> arm.position = "player", arm));
     buttonRightBumper.onTrue(new InstantCommand(() -> arm.altPos = !arm.altPos, arm));
+
+    buttonDUp.whileTrue(new StartEndCommand(() -> elevator.Run(0.4), () -> elevator.Run(0.02), elevator));
+    buttonDDown.whileTrue(new StartEndCommand(() -> elevator.Run(-0.3), () -> elevator.Run(0.02), elevator));
+    buttonDLeft.whileTrue(new StartEndCommand(() -> arm.Run(-0.2), () -> arm.Run(0.02), arm));
+    buttonDRight.whileTrue(new StartEndCommand(() -> arm.Run(0.3), () -> arm.Run(0.02), arm));
   }
 
   public Command getAutonomousCommand() {
