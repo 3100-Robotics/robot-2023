@@ -4,48 +4,36 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.driveTrainConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.RunElevator;
 import frc.robot.commands.driving;
-import frc.robot.commands.autoCommands.MoveArm;
-import frc.robot.commands.autoCommands.MoveElevator;
 import frc.robot.commands.autoCommands.PIDBallence;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
 import frc.robot.subsystems.endAffector;
+import frc.robot.subsystems.mover;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-
-// import frc.robot.subsystems.vision;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.EventLoop;
-// import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-// import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -85,9 +73,8 @@ public class RobotContainer {
 
   // subsystems
   private final drivetrain drive = new drivetrain();
-  private final Arm arm = new Arm();
-  private final Elevator elevator = new Elevator();
   private final endAffector claw = new endAffector();
+  private final mover elearm = new mover();
   private final PIDBallence autoballence = new PIDBallence(drive);
   // private final vision m_Vision = new vision();
 
@@ -102,14 +89,6 @@ public class RobotContainer {
 
   // fancy autos
   private final Command m_ballence = Autos.ballence(drive, 0.3, Units.metersToFeet(1.5));
-  private final Command m_scoreCube = Autos.scoreCubeStay(elevator, arm, claw);
-  private final Command m_scoreCubeLeave = Autos.scoreCubeLeave(drive, elevator, arm, claw, -0.3, 6);
-  private final Command m_testAuto = Commands.sequence(new MoveElevator(elevator, 0.4, 18), new MoveArm(arm, 0.4, 3));
-
-  // path planner setup
-
-  private final Command m_PathPlannerCommand = null;
-  private final PathPlannerTrajectory m_testPathPlanner = PathPlanner.loadPath("double score", new PathConstraints(4, 3));
 
 
   // A chooser for autonomous commands
@@ -127,9 +106,6 @@ public class RobotContainer {
     m_chooser.addOption("drive out left short", driveOutShortLeft);
     m_chooser.addOption("drive out left long", driveOutLongLeft);
     m_chooser.addOption("ballence", m_ballence);
-    m_chooser.addOption("score cube", m_scoreCube);
-    m_chooser.addOption("score cube leave", m_scoreCubeLeave);
-    m_chooser.addOption("test auto", m_testAuto);
 
     SmartDashboard.putData(m_chooser);
 
@@ -154,22 +130,21 @@ public class RobotContainer {
 
     // movement commands
 
-    buttonY.onTrue(new InstantCommand(() -> elevator.position = "high", elevator));
-    buttonA.onTrue(new InstantCommand(() -> elevator.position = "ground", elevator));
-    buttonX.onTrue(new InstantCommand(() -> elevator.position = "mid", elevator));
-    buttonB.onTrue(new InstantCommand(() -> elevator.position = "player", elevator));
-    buttonRightBumper.onTrue(new InstantCommand(() -> elevator.altPos = !elevator.altPos, elevator));
+    buttonY.onTrue(elearm.getMovements(new Pose2d(ArmConstants.highHeight, ElevatorConstants.highLength, new Rotation2d(0)), 0.4));
+    buttonA.onTrue(elearm.getMovements(new Pose2d(ArmConstants.bumperRots, ElevatorConstants.floorHeight, new Rotation2d(0))), 0.4);
+    buttonX.onTrue(elearm.getMovements(new Pose2d(ArmConstants.midHeight, ElevatorConstants.midLength, new Rotation2d(0))), 0.4);
+    buttonB.onTrue(elearm.getMovements(new Pose2d(ArmConstants.playerHeight, ElevatorConstants.playerLength, new Rotation2d(0))), 0.4);
 
-    buttonY.onTrue(new InstantCommand(() -> arm.position = "high", arm));
-    buttonA.onTrue(new InstantCommand(() -> arm.position = "ground", arm));
-    buttonX.onTrue(new InstantCommand(() -> arm.position = "mid", arm));
-    buttonB.onTrue(new InstantCommand(() -> arm.position = "player", arm));
-    buttonRightBumper.onTrue(new InstantCommand(() -> arm.altPos = !arm.altPos, arm));
 
-    buttonDUp.whileTrue(new StartEndCommand(() -> elevator.Run(0.4), () -> elevator.Run(0.02), elevator));
-    buttonDDown.whileTrue(new StartEndCommand(() -> elevator.Run(-0.3), () -> elevator.Run(0.02), elevator));
-    buttonDLeft.whileTrue(new StartEndCommand(() -> arm.Run(-0.2), () -> arm.Run(0.02), arm));
-    buttonDRight.whileTrue(new StartEndCommand(() -> arm.Run(0.3), () -> arm.Run(0.02), arm));
+    double[] goUp = {0, 0.3};
+    double[] goDown = {0, -0.3};
+    double[] goOut = {0.3, 0};
+    double[] goIn = {-0.3, 0};
+    double[] stop = {0.02, 0.02};
+    buttonDUp.whileTrue(new StartEndCommand(() -> elearm.move(goUp), () -> elearm.move(stop), elearm));
+    buttonDDown.whileTrue(new StartEndCommand(() -> elearm.move(goDown), () -> elearm.move(stop), elearm));
+    buttonDLeft.whileTrue(new StartEndCommand(() -> elearm.move(goOut), () -> elearm.move(stop), elearm));
+    buttonDRight.whileTrue(new StartEndCommand(() -> elearm.move(goIn), () -> elearm.move(stop), elearm));
   }
 
   public Command getAutonomousCommand() {

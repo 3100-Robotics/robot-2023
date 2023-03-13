@@ -67,58 +67,42 @@ public final class Constants {
     public static final double slewRate = 300;
 
     // pid
-    public final static double kp = 0;
+    public final static double kp = 0.005;
     public final static double ki = 0;
     public final static double kd = 0;
+
+    public final static double floorHeight = -3;
+    public final static double bumperRots = 28.0;
+    public final static double midLength = 33;
+    public final static double highLength = 58;
+    public final static double playerLength = 19.5;
 
     // gear ratio math
     public final static int kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 20;
     private final static double kWinchRadious = 1.72/2;
-
-    public final static double kInches2Rots = 2 * Math.PI * kWinchRadious * 1.5 / (kGearReduction);
-    public final static double kRads2inches = 1/kInches2Rots;
-
-    private final static double kBumperOffset = 7;
-    public final static double groundRots =  (3 - kBumperOffset) * kInches2Rots;
-    public final static double midCubeRots = (24 - kBumperOffset) * kInches2Rots;
-    public final static double midConeRots = (36 - kBumperOffset) * kInches2Rots;
-    public final static double humanPlayerRots = (42 - kBumperOffset) * kInches2Rots;
-    public final static double highCubeRots = (36 - kBumperOffset) * kInches2Rots;
-    public final static double highConeRots = (48 - kBumperOffset) * kInches2Rots;
   }
 
-  public static class ArmMotorConstants{
+  public static class ArmConstants{
     // motor port
     public static final int armMotor = 5;
 
     public static final double slewRate = 300;
 
     // pid
-    public final static double kp = 0;
+    public final static double kp = 0.005;
     public final static double ki = 0;
     public final static double kd = 0;
-
-    // pid tolerences
-    public final static double kArmToleranceMeter = 0.1;
-    public final static double kArmRateToleranceMeterPerS = 0.2;
 
     // gear ratio math
     public final static int kSensorUnitsPerRotation = 42;
     private final static double kGearReduction = 20;
     private final static double kWinchRadious = 1.9/2;
 
-    public final static double kInches2Rots = 2 * Math.PI * kWinchRadious / kGearReduction;
-    public final static double kRads2inches = 1/kInches2Rots;
-
-    public final static double doubleEcoderPosFactor = kRads2inches * 60;
-    public final static float softLimitRots = (float)doubleEcoderPosFactor;
-
-    private final static double kBumperOffset = 3;
-    public final static double groundRots =  (3 + kBumperOffset) * kInches2Rots;
-    public final static double midCubeRots = (34 + kBumperOffset) * kInches2Rots;
-    public final static double humanPlayerRots = (30 + kBumperOffset) * kInches2Rots;
-    public final static double highCubeRots = (39.25 + kBumperOffset) * kInches2Rots;
+    public final static double bumperRots = 10.0;
+    public final static double midHeight = 64;
+    public final static double highHeight = 83;
+    public final static double playerHeight = 68;
   }
 
   public static class endAffectorConstants{
@@ -127,7 +111,7 @@ public final class Constants {
     public static final int rightMotor = 9;
 
     // pid
-    public final static double kp = 0;
+    public final static double kp = 0.005;
     public final static double ki = 0;
     public final static double kd = 0;
 
