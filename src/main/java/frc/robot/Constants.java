@@ -79,8 +79,8 @@ public final class Constants {
 
     // gear ratio math
     public final static int kSensorUnitsPerRotation = 42;
-    private final static double kGearReduction = 20;
-    private final static double kWinchRadious = 1.72/2;
+    // private final static double kGearReduction = 20;
+    // private final static double kWinchRadious = 1.72/2;
   }
 
   public static class ArmConstants{
@@ -96,8 +96,8 @@ public final class Constants {
 
     // gear ratio math
     public final static int kSensorUnitsPerRotation = 42;
-    private final static double kGearReduction = 20;
-    private final static double kWinchRadious = 1.9/2;
+    // private final static double kGearReduction = 20;
+    // private final static double kWinchRadious = 1.9/2;
 
     public final static double bumperRots = 10.0;
     public final static double midHeight = 64;

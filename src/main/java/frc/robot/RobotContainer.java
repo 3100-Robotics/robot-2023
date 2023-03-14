@@ -10,6 +10,7 @@ import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.driving;
+import frc.robot.commands.moveClaw;
 import frc.robot.commands.autoCommands.PIDBallence;
 import frc.robot.subsystems.drivetrain;
 import frc.robot.subsystems.endAffector;
@@ -54,15 +55,12 @@ public class RobotContainer {
   EventLoop povLoop = new EventLoop();
 
   // buttons for commands
-  private JoystickButton driverButtonStart = new JoystickButton(m_driverController, IOConstants.startButtonChannel);
-  private JoystickButton driverButtonSelect = new JoystickButton(m_driverController, IOConstants.backButtonChannel);
   private JoystickButton driverButtonB = new JoystickButton(m_driverController, IOConstants.bButtonChannel);
   private JoystickButton driverRightBumper = new JoystickButton(m_driverController, IOConstants.rightBumperChannel);
   private JoystickButton buttonX = new JoystickButton(m_codriverController, IOConstants.xButtonChannel);
   private JoystickButton buttonY = new JoystickButton(m_codriverController, IOConstants.yButtonChannel);
   private JoystickButton buttonA = new JoystickButton(m_codriverController, IOConstants.aButtonChannel);
   private JoystickButton buttonB = new JoystickButton(m_codriverController, IOConstants.bButtonChannel);
-  private JoystickButton buttonStart = new JoystickButton(m_codriverController, IOConstants.startButtonChannel);
   private JoystickButton buttonSelect = new JoystickButton(m_codriverController, IOConstants.backButtonChannel);
   private JoystickButton buttonLeftBumper = new JoystickButton(m_codriverController, IOConstants.leftBumperChannel);
   private JoystickButton buttonRightBumper = new JoystickButton(m_codriverController, IOConstants.rightBumperChannel);
@@ -113,6 +111,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new driving(drive, m_driverController));
     // elevator.setDefaultCommand(new RunElevator(elevator, 0.4));
     // m_Vision.setDefaultCommand(new visionController(m_codriverController, m_Vision, claw));
+    claw.setDefaultCommand(new moveClaw(m_codriverController, claw));
 
     // Configure the trigger bindings
     configureBindings();
@@ -130,10 +129,20 @@ public class RobotContainer {
 
     // movement commands
 
-    buttonY.onTrue(elearm.getMovements(new Pose2d(ArmConstants.highHeight, ElevatorConstants.highLength, new Rotation2d(0)), 0.4));
-    buttonA.onTrue(elearm.getMovements(new Pose2d(ArmConstants.bumperRots, ElevatorConstants.floorHeight, new Rotation2d(0))), 0.4);
-    buttonX.onTrue(elearm.getMovements(new Pose2d(ArmConstants.midHeight, ElevatorConstants.midLength, new Rotation2d(0))), 0.4);
-    buttonB.onTrue(elearm.getMovements(new Pose2d(ArmConstants.playerHeight, ElevatorConstants.playerLength, new Rotation2d(0))), 0.4);
+    buttonLeftBumper.whileTrue(new StartEndCommand(
+      () -> claw.runBoth(0.2),
+      () -> claw.stopBoth(),
+    claw));
+    
+    buttonRightBumper.whileTrue(new StartEndCommand(
+      () -> claw.runBoth(-0.2),
+      () -> claw.stopBoth(),
+    claw));
+
+    buttonY.onTrue(elearm.getMovements(new Pose2d(ArmConstants.highHeight, ElevatorConstants.highLength, new Rotation2d(0))));
+    buttonA.onTrue(elearm.getMovements(new Pose2d(ArmConstants.bumperRots, ElevatorConstants.floorHeight, new Rotation2d(0))));
+    buttonX.onTrue(elearm.getMovements(new Pose2d(ArmConstants.midHeight, ElevatorConstants.midLength, new Rotation2d(0))));
+    buttonB.onTrue(elearm.getMovements(new Pose2d(ArmConstants.playerHeight, ElevatorConstants.playerLength, new Rotation2d(0))));
 
 
     double[] goUp = {0, 0.3};
@@ -143,8 +152,8 @@ public class RobotContainer {
     double[] stop = {0.02, 0.02};
     buttonDUp.whileTrue(new StartEndCommand(() -> elearm.move(goUp), () -> elearm.move(stop), elearm));
     buttonDDown.whileTrue(new StartEndCommand(() -> elearm.move(goDown), () -> elearm.move(stop), elearm));
-    buttonDLeft.whileTrue(new StartEndCommand(() -> elearm.move(goOut), () -> elearm.move(stop), elearm));
-    buttonDRight.whileTrue(new StartEndCommand(() -> elearm.move(goIn), () -> elearm.move(stop), elearm));
+    buttonDRight.whileTrue(new StartEndCommand(() -> elearm.move(goOut), () -> elearm.move(stop), elearm));
+    buttonDLeft.whileTrue(new StartEndCommand(() -> elearm.move(goIn), () -> elearm.move(stop), elearm));
   }
 
   public Command getAutonomousCommand() {

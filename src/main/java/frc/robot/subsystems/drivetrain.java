@@ -34,7 +34,7 @@ public class drivetrain extends SubsystemBase{
 
     // slew rate limiter
     private SlewRateLimiter speedLimiter = new SlewRateLimiter(driveTrainConstants.driveSlewRate);
-    private SlewRateLimiter turnLimiter = new SlewRateLimiter(driveTrainConstants.turnSlewRate);
+    // private SlewRateLimiter turnLimiter = new SlewRateLimiter(driveTrainConstants.turnSlewRate);
 
     // pid controller. named driveController in case I want to add a turn controller
     private PIDController driveController = new PIDController(
