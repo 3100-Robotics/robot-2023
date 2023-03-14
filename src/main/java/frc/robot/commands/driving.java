@@ -31,8 +31,8 @@ public class driving extends CommandBase{
     // apply slow mode
 
     if (m_controller.getRightTriggerAxis() > 0.5) {
-      xSpeed *= 0.75;
-      zRotation *= 0.25;
+      xSpeed *= 1;
+      zRotation *= 0.75;
     }
     else {
       xSpeed *= 0.5;

@@ -2,10 +2,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,20 +30,31 @@ public class mover extends SubsystemBase {
   // private SlewRateLimiter limiter = new SlewRateLimiter(ElevatorConstants.slewRate);
   // private SlewRateLimiter limiter = new SlewRateLimiter(ArmMotorConstants.slewRate);
 
-  public PIDController elevatorController;
-  public PIDController armController;
+  public SparkMaxPIDController  elevatorController;
+  public SparkMaxPIDController  armController;
 
   /** Creates a new ExampleSubsystem. */
   public mover() {
-    elevatorController = new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd);
-    elevatorController.setSetpoint(0);
+    // elevatorController = new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd);
+    // elevatorController.setSetpoint(0);
+    elevatorController = LeftElevatorMotor.getPIDController();
+    elevatorController.setP(ElevatorConstants.kp);
+    elevatorController.setI(ElevatorConstants.ki);
+    elevatorController.setD(ElevatorConstants.kd);
+
     LeftElevatorMotor.setIdleMode(IdleMode.kBrake);
     RightElevatorMotor.setIdleMode(IdleMode.kBrake);
     RightElevatorMotor.follow(LeftElevatorMotor, true);
 
-    armController = new PIDController(ArmConstants.kp, ArmConstants.ki, ArmConstants.kd);
-    armController.setSetpoint(0);
+    // armController = new PIDController(ArmConstants.kp, ArmConstants.ki, ArmConstants.kd);
+    // armController.setSetpoint(0);
+    armController = armMotor.getPIDController();
+    armController.setP(ArmConstants.kp);
+    armController.setI(ArmConstants.ki);
+    armController.setD(ArmConstants.kd);
+
     armMotor.setIdleMode(IdleMode.kBrake);
+    armMotor.setInverted(false);
   }
 
   public void move(double[] speeds) {
@@ -55,27 +66,31 @@ public class mover extends SubsystemBase {
     return new Pose2d(armEncoder.getPosition(), elevatorEncoder.getPosition(), new Rotation2d());
   }
 
-  public Command getMovements(Pose2d endPos, double speed) {
-    SmartDashboard.putNumber("speed thing", speed);
-    double[] upDistance = {0, Math.max(ElevatorConstants.bumperRots - getPos().getY(), 0), speed};
-    double[] distances = {endPos.getX() - getPos().getX(), endPos.getY() - getPos().getY(), speed};
+  public Command getMovements(Pose2d endPos) {
+    double[] upDistance = {0, Math.max(ElevatorConstants.bumperRots - getPos().getY(), 0)};
+    double[] distances = {endPos.getX() - getPos().getX(), endPos.getY() - getPos().getY()};
 
     return Commands.sequence(new moveConMover(this, upDistance), new moveConMover(this, distances));
   }
 
-  public double[] calculate(double[] calculations) {
-    double[] output = {armController.calculate(calculations[0]), elevatorController.calculate(calculations[1])};
-    return output;
-  }
+  // public double[] calculate(double[] calculations) {
+  //   double[] output = {armController.calculate(calculations[0]), elevatorController.calculate(calculations[1])};
+  //   return output;
+  // }
 
-  public void setSetpoints(double[] setpoints) {
-    armController.setSetpoint(setpoints[0]);
-    elevatorController.setSetpoint(setpoints[1]);
-  }
+  // public void setSetpoints(double[] setpoints) {
+  //   armController.setSetpoint(setpoints[0]);
+  //   elevatorController.setSetpoint(setpoints[1]);
+  // }
 
-  public boolean[] atSetpoint() {
-    boolean[] output = {armController.atSetpoint(), elevatorController.atSetpoint()};
-    return output;
+  // public boolean[] atSetpoint() {
+  //   boolean[] output = {armController.atSetpoint(), elevatorController.atSetpoint()};
+  //   return output;
+  // }
+
+  public void doSmartMotion(double[] wantedPos) {
+    elevatorController.setReference(wantedPos[1], CANSparkMax.ControlType.kSmartMotion);
+    armController.setReference(wantedPos[0], CANSparkMax.ControlType.kSmartMotion);
   }
 
   @Override

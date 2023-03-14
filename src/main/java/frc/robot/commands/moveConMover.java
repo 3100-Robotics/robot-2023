@@ -23,18 +23,19 @@ public class moveConMover extends CommandBase {
 
   @Override
   public void initialize() {
-    m_subsystem.setSetpoints(m_distances);
+    // m_distances[0] *= -1;
+    // m_subsystem.setSetpoints(m_distances);
+    m_subsystem.doSmartMotion(m_distances);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Pose2d currPos = m_subsystem.getPos();   
-    // double[] calculations = {m_distances[0] - currPos.getX(), m_distances[1] = currPos.getY()};
+    // Pose2d currPos = m_subsystem.getPos();
+    // double[] calculations = {-m_distances[0] + currPos.getX(), -m_distances[1] + currPos.getY()};
     // double[] speeds = m_subsystem.calculate(calculations);
+    // speeds[0] = 0;
     // m_subsystem.move(speeds);
-    double[] speed = {m_distances[2], m_distances[2]};
-    m_subsystem.move(speed);
   }
 
   // Called once the command ends or is interrupted.
@@ -47,10 +48,10 @@ public class moveConMover extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    boolean[] atSetpoint = m_subsystem.atSetpoint();
-    if (atSetpoint[0] && atSetpoint[1]) {
-        return true;
-    }
-    return false;
+    // boolean[] atSetpoint = m_subsystem.atSetpoint();
+    Pose2d pos = m_subsystem.getPos();
+    boolean atSetpoint = (Math.abs(pos.getX() - m_distances[0]) < 0.01 ? true : false) &&
+     (Math.abs(pos.getY() - m_distances[1]) < 0.01 ? true : false);
+    return atSetpoint;
   }
 }
