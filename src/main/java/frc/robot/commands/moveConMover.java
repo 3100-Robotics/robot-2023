@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.mover;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -24,18 +25,21 @@ public class moveConMover extends CommandBase {
   @Override
   public void initialize() {
     // m_distances[0] *= -1;
-    // m_subsystem.setSetpoints(m_distances);
-    m_subsystem.doSmartMotion(m_distances);
+     m_subsystem.setSetpoints(m_distances);
+     System.out.println("starting command");
+//    m_subsystem.doSmartMotion(m_distances);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Pose2d currPos = m_subsystem.getPos();
-    // double[] calculations = {-m_distances[0] + currPos.getX(), -m_distances[1] + currPos.getY()};
-    // double[] speeds = m_subsystem.calculate(calculations);
-    // speeds[0] = 0;
-    // m_subsystem.move(speeds);
+    Pose2d currPos = m_subsystem.getPos();
+    double[] calculations = {-m_distances[0] + currPos.getX(), -m_distances[1] + currPos.getY()};
+   double[] speeds = m_subsystem.calculate(calculations);
+//    SmartDashboard.putNumber("arm speed", speeds[0]);
+//    SmartDashboard.putNumber("elevator speed", speeds[1]);
+    // double[] speeds = {0.4, 0.4};
+    m_subsystem.move(speeds);
   }
 
   // Called once the command ends or is interrupted.
@@ -50,8 +54,9 @@ public class moveConMover extends CommandBase {
   public boolean isFinished() {
     // boolean[] atSetpoint = m_subsystem.atSetpoint();
     Pose2d pos = m_subsystem.getPos();
-    boolean atSetpoint = (Math.abs(pos.getX() - m_distances[0]) < 0.01 ? true : false) &&
-     (Math.abs(pos.getY() - m_distances[1]) < 0.01 ? true : false);
+   boolean atSetpoint = (Math.abs(pos.getX()) >= m_distances[0]) &&
+    (Math.abs(pos.getY()) >= m_distances[1]);
+    // boolean atSetpoint = m_subsystem.atSetpoint();
     return atSetpoint;
   }
 }

@@ -4,8 +4,8 @@
 
 package frc.robot.commands;
 
+import frc.robot.commands.autoCommands.DriveForward;
 import frc.robot.commands.autoCommands.PIDBallence;
-import frc.robot.commands.autoCommands.simpleDrive;
 import frc.robot.subsystems.drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -14,11 +14,11 @@ public final class Autos {
 
   // drive forward
   public static CommandBase drive(drivetrain subsystem, double speed, double distance) {
-    return Commands.sequence(new simpleDrive(subsystem, speed, distance));
+    return Commands.sequence(new DriveForward(subsystem, speed, distance));
   }
 
   public static CommandBase ballence(drivetrain drive, double speed, double backDistance) {
-    return Commands.sequence(new simpleDrive(drive, speed, backDistance), new PIDBallence(drive));
+    return Commands.sequence(new DriveForward(drive, speed, backDistance), new PIDBallence(drive));
   }
 
   private Autos() {

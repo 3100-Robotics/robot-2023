@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -46,72 +47,76 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   // contrillers
-  private final XboxController m_driverController =
+  private final XboxController driverController =
       new XboxController(OperatorConstants.kDriverControllerPort);
-  private final XboxController m_codriverController =
+  private final XboxController codriverController =
       new XboxController(OperatorConstants.kCoDriverControllerPort);
 
   // event loop neeed to use dpad (Pretty sure this is actually neeed)
   EventLoop povLoop = new EventLoop();
 
   // buttons for commands
-  private JoystickButton driverButtonB = new JoystickButton(m_driverController, IOConstants.bButtonChannel);
-  private JoystickButton driverRightBumper = new JoystickButton(m_driverController, IOConstants.rightBumperChannel);
-  private JoystickButton buttonX = new JoystickButton(m_codriverController, IOConstants.xButtonChannel);
-  private JoystickButton buttonY = new JoystickButton(m_codriverController, IOConstants.yButtonChannel);
-  private JoystickButton buttonA = new JoystickButton(m_codriverController, IOConstants.aButtonChannel);
-  private JoystickButton buttonB = new JoystickButton(m_codriverController, IOConstants.bButtonChannel);
-  private JoystickButton buttonSelect = new JoystickButton(m_codriverController, IOConstants.backButtonChannel);
-  private JoystickButton buttonLeftBumper = new JoystickButton(m_codriverController, IOConstants.leftBumperChannel);
-  private JoystickButton buttonRightBumper = new JoystickButton(m_codriverController, IOConstants.rightBumperChannel);
-  private Trigger buttonDUp = new Trigger(m_codriverController.pov(IOConstants.POVU, povLoop));
-  private Trigger buttonDDown = new Trigger(m_codriverController.pov(IOConstants.POVD, povLoop));
-  private Trigger buttonDLeft = new Trigger(m_codriverController.pov(IOConstants.POVL, povLoop));
-  private Trigger buttonDRight = new Trigger(m_codriverController.pov(IOConstants.POVR, povLoop));
+  private final JoystickButton driverButtonB = new JoystickButton(driverController, IOConstants.bButtonChannel);
+  private final JoystickButton driverRightBumper = new JoystickButton(driverController, IOConstants.rightBumperChannel);
+  private final JoystickButton buttonX = new JoystickButton(codriverController, IOConstants.xButtonChannel);
+  private final JoystickButton buttonY = new JoystickButton(codriverController, IOConstants.yButtonChannel);
+  private final JoystickButton buttonA = new JoystickButton(codriverController, IOConstants.aButtonChannel);
+  private final JoystickButton buttonB = new JoystickButton(codriverController, IOConstants.bButtonChannel);
+  private final JoystickButton buttonSelect = new JoystickButton(codriverController, IOConstants.backButtonChannel);
+  private final JoystickButton buttonLeftBumper = new JoystickButton(codriverController, IOConstants.leftBumperChannel);
+  private final JoystickButton buttonRightBumper = new JoystickButton(codriverController, IOConstants.rightBumperChannel);
+  private final Trigger buttonDUp = new Trigger(codriverController.pov(IOConstants.POVU, povLoop));
+  private final Trigger buttonDDown = new Trigger(codriverController.pov(IOConstants.POVD, povLoop));
+  private final Trigger buttonDLeft = new Trigger(codriverController.pov(IOConstants.POVL, povLoop));
+  private final Trigger buttonDRight = new Trigger(codriverController.pov(IOConstants.POVR, povLoop));
 
   // subsystems
   private final drivetrain drive = new drivetrain();
   private final endAffector claw = new endAffector();
   private final mover elearm = new mover();
-  private final PIDBallence autoballence = new PIDBallence(drive);
   // private final vision m_Vision = new vision();
 
-  // no auto
-  private final Command m_noAuto = null;
+  ///////////
+  // AUTOS //
+  ///////////
 
-  // driving out
-  private final Command driveOutShortRight = Autos.drive(drive, 0.3, Units.metersToFeet(2));
-  private final Command driveOutLongRight = Autos.drive(drive, 0.3, Units.metersToFeet(4));
-  private final Command driveOutShortLeft = Autos.drive(drive, -0.3, Units.metersToFeet(2));
-  private final Command driveOutLongLeft = Autos.drive(drive, 0.3, Units.metersToFeet(4));
+  private final Command noAuto = null;
 
-  // fancy autos
-  private final Command m_ballence = Autos.ballence(drive, 0.3, Units.metersToFeet(1.5));
+  private final Command driveOutRightLong = Autos.drive(drive, 0.3, Units.metersToFeet(4.5));
+  private final Command driveOutRightShort = Autos.drive(drive, 0.3, Units.metersToFeet(2));
+  private final Command driveOutLeft = Autos.drive(drive, 0.3, Units.metersToFeet(3));
 
+  private final Command ScoreBallance = Commands.sequence(new InstantCommand(() -> elearm.getMovements(new Pose2d(ArmConstants.highLength, ElevatorConstants.highHeight, new Rotation2d(0))), elearm),
+    Autos.ballence(drive, -0.3, Units.metersToFeet(1.5)));
+  private final Command ScoreLeaveRight = Commands.sequence(new InstantCommand(() -> elearm.getMovements(new Pose2d(ArmConstants.highLength, ElevatorConstants.highHeight, new Rotation2d(0))), elearm),
+    driveOutRightLong);
+  private final Command ScoreLeaveLeft = Commands.sequence(new InstantCommand(() -> elearm.getMovements(new Pose2d(ArmConstants.highLength, ElevatorConstants.highHeight, new Rotation2d(0))), elearm),
+    driveOutLeft);
 
-  // A chooser for autonomous commands
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  private final Command m_ballance = Autos.ballence(drive, 0.3, Units.metersToFeet(1.5));
 
+  SendableChooser<Command> chooser = new SendableChooser<>();
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // get them cameras
     CameraServer.startAutomaticCapture();
 
-    m_chooser.setDefaultOption("No Auto", m_noAuto);
-    m_chooser.addOption("drive out right charge", driveOutShortRight);
-    m_chooser.addOption("drive out long right", driveOutLongRight);
-    m_chooser.addOption("drive out left short", driveOutShortLeft);
-    m_chooser.addOption("drive out left long", driveOutLongLeft);
-    m_chooser.addOption("ballence", m_ballence);
+    chooser.setDefaultOption("No Auto", noAuto);
+    chooser.addOption("driveOutRightLong", driveOutRightLong);
+    chooser.addOption("driveOutRightShort", driveOutRightShort);
+    chooser.addOption("driveOutLeft", driveOutLeft);
+    chooser.addOption("ballance", m_ballance);
+    chooser.addOption("ScoreBallance", ScoreBallance);
+    chooser.addOption("ScoreLeaveRight", ScoreLeaveRight);
+    chooser.addOption("ScoreLeaveLeft", ScoreLeaveLeft);
 
-    SmartDashboard.putData(m_chooser);
+    SmartDashboard.putData(chooser);
 
     // default commands
-    drive.setDefaultCommand(new driving(drive, m_driverController));
-    // elevator.setDefaultCommand(new RunElevator(elevator, 0.4));
-    // m_Vision.setDefaultCommand(new visionController(m_codriverController, m_Vision, claw));
-    claw.setDefaultCommand(new moveClaw(m_codriverController, claw));
+    drive.setDefaultCommand(new driving(drive, driverController));
+    claw.setDefaultCommand(new moveClaw(codriverController, claw));
+    elearm.setDefaultCommand(new InstantCommand(() -> elearm.move(new double[]{0.02, 0.02}), elearm));
+    // m_Vision.setDefaultCommand(new visionController(codriverController, m_Vision, claw));
 
     // Configure the trigger bindings
     configureBindings();
@@ -119,30 +124,31 @@ public class RobotContainer {
 
   private void configureBindings() {
     // drivetrain commands
-    driverRightBumper.onTrue(new InstantCommand(() -> drive.ToggleSlowMode(), drive));
-    driverButtonB.whileTrue(autoballence);
+    driverRightBumper.onTrue(new InstantCommand(drive::ToggleSlowMode, drive));
+    driverButtonB.whileTrue(new PIDBallence(drive));
     
     // end affector commands
 
     // lock claw joystick movements
-    buttonSelect.onTrue(new InstantCommand(() -> claw.toggleEndAffectorLock(), claw));
+    buttonSelect.onTrue(new InstantCommand(claw::toggleEndAffectorLock, claw));
 
     // movement commands
 
     buttonLeftBumper.whileTrue(new StartEndCommand(
       () -> claw.runBoth(0.2),
-      () -> claw.stopBoth(),
+            claw::stopBoth,
     claw));
     
     buttonRightBumper.whileTrue(new StartEndCommand(
       () -> claw.runBoth(-0.2),
-      () -> claw.stopBoth(),
+            claw::stopBoth,
     claw));
 
-    buttonY.onTrue(elearm.getMovements(new Pose2d(ArmConstants.highHeight, ElevatorConstants.highLength, new Rotation2d(0))));
-    buttonA.onTrue(elearm.getMovements(new Pose2d(ArmConstants.bumperRots, ElevatorConstants.floorHeight, new Rotation2d(0))));
-    buttonX.onTrue(elearm.getMovements(new Pose2d(ArmConstants.midHeight, ElevatorConstants.midLength, new Rotation2d(0))));
-    buttonB.onTrue(elearm.getMovements(new Pose2d(ArmConstants.playerHeight, ElevatorConstants.playerLength, new Rotation2d(0))));
+//    buttonLeftBumper.onTrue(new InstantCommand(() -> elearm.getMovements(new Pose2d(0, 0, new Rotation2d())), elearm));
+    buttonY.onTrue(new InstantCommand(() -> elearm.getMovements(new Pose2d(ArmConstants.highLength, ElevatorConstants.highHeight, new Rotation2d(0))), elearm));
+    buttonA.onTrue(new InstantCommand(() -> elearm.getMovements(new Pose2d(ArmConstants.bumperRots, ElevatorConstants.floorHeight, new Rotation2d(0))), elearm));
+    buttonX.onTrue(new InstantCommand(() -> elearm.getMovements(new Pose2d(ArmConstants.midLength, ElevatorConstants.midHeight, new Rotation2d(0))), elearm));
+    buttonB.onTrue(new InstantCommand(() -> elearm.getMovements(new Pose2d(0, 0, new Rotation2d(0))), elearm));
 
 
     double[] goUp = {0, 0.3};
@@ -158,7 +164,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
 
-    return m_chooser.getSelected();
+    return chooser.getSelected();
   }
 
   public Command loadPathplannerTrajectory(String filename, boolean resetOdometry){

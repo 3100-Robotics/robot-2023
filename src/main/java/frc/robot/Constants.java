@@ -67,15 +67,15 @@ public final class Constants {
     public static final double slewRate = 300;
 
     // pid
-    public final static double kp = 0.005;
+    public final static double kp = 0.001;
     public final static double ki = 0;
     public final static double kd = 0;
 
-    public final static double floorHeight = -3;
-    public final static double bumperRots = 28.0;
-    public final static double midLength = 33;
-    public final static double highLength = 58;
-    public final static double playerLength = 19.5;
+    public final static double floorHeight = -3.7;
+    public final static double bumperRots = 20;
+    public final static double midHeight = 60;
+    public final static double highHeight = 86;
+    public final static double playerHeight = 66;
 
     // gear ratio math
     public final static int kSensorUnitsPerRotation = 42;
@@ -90,7 +90,7 @@ public final class Constants {
     public static final double slewRate = 300;
 
     // pid
-    public final static double kp = 0.005;
+    public final static double kp = 0.0001;
     public final static double ki = 0;
     public final static double kd = 0;
 
@@ -99,10 +99,10 @@ public final class Constants {
     // private final static double kGearReduction = 20;
     // private final static double kWinchRadious = 1.9/2;
 
-    public final static double bumperRots = 10.0;
-    public final static double midHeight = 64;
-    public final static double highHeight = 83;
-    public final static double playerHeight = 68;
+    public final static double bumperRots = 32;
+    public final static double midLength = 38;
+    public final static double highLength = 61;
+    public final static double playerLength = 33;
   }
 
   public static class endAffectorConstants{

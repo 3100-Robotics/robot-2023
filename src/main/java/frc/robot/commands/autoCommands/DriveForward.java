@@ -1,35 +1,59 @@
 package frc.robot.commands.autoCommands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.driveTrainConstants;
 import frc.robot.subsystems.drivetrain;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveForward extends CommandBase{
+public class DriveForward extends CommandBase {
+  private final drivetrain m_subsystem;
+  private final double speed, distance;
+
+  /**
+   * Creates a new ExampleCommand.
+   *
+   * @param subsystem The subsystem used by this command.
+   */
+  public DriveForward(drivetrain subsystem, double speed, double distance) {
+    m_subsystem = subsystem;
+    this.speed = speed;
+    this.distance = distance * driveTrainConstants.tick2feet;
     
-    // var setup
-    drivetrain Drive;
-    double distance;
+    addRequirements(subsystem);
+  }
 
-    public DriveForward(drivetrain Drive, double distance) {
-        // typical stuff
-        this.Drive = Drive;
-        this.distance = distance;
-        addRequirements(Drive);
-        Drive.resetEncoders();
-        Drive.setSetpoint(distance * driveTrainConstants.tick2feet);
-        Drive.setSetpoint(distance);
-    }
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    m_subsystem.resetEncoders();
+  }
 
-    @Override
-    public void execute() {
-        // move
-        System.out.println("moving");
-        Drive.arcadeDrive(Drive.driveCalculate(Drive.getAverageEncoderRotation()), 0);
-    }
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+   m_subsystem.arcadeDrive(speed, 0); 
+  }
 
-    @Override
-    public boolean isFinished() {
-      // Am I done?
-      return Drive.atSetpoint();
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    m_subsystem.arcadeDrive(0.0, 0.0);
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    SmartDashboard.putNumber("auton distance", m_subsystem.getAverageEncoderRotation()*driveTrainConstants.tick2feet);
+    if (speed < 0) {
+        if (m_subsystem.getAverageEncoderRotation() <= -distance) {
+            return true;
+        }
     }
+    else {
+        if (m_subsystem.getAverageEncoderRotation() >= distance) {
+            return true;
+        }
+    }
+    return false;
+  }
 }
