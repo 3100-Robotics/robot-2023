@@ -43,7 +43,6 @@ public class simpleDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    SmartDashboard.putNumber("auton distance", m_subsystem.getAverageEncoderRotation()*driveTrainConstants.tick2feet);
     if (speed < 0) {
         if (m_subsystem.getAverageEncoderRotation() <= -distance) {
             return true;

@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.commands.autoCommands.DriveForward;
 import frc.robot.commands.autoCommands.MoveArm;
 import frc.robot.commands.autoCommands.MoveElevator;
 import frc.robot.commands.autoCommands.PIDBallence;
@@ -28,7 +29,15 @@ public final class Autos {
   }
 
   public static CommandBase scoreCubeStay(Elevator elevator, Arm arm, endAffector end) {
-    return Commands.sequence(new MoveElevator(elevator, 0.4, 2.3*12*7), new MoveArm(arm, 0.3, 1.7*12*6.5), new openAffector(end, 0.3, 0.025*3));
+    return Commands.sequence(new MoveElevator(elevator, 0.4, 83), new MoveArm(arm, 0.3, 56), new openAffector(end, 0.3, 0.025*3));
+  }
+
+  public static CommandBase moveArmIn(Elevator elevator, Arm arm, endAffector end) {
+    return Commands.sequence(new MoveArm(arm, -0.3, 0), new MoveElevator(elevator, -0.4, 0));
+  }
+
+  public static CommandBase scoreCubeBallance(Elevator elevator, Arm arm, endAffector end, drivetrain drive, double driveSpeed, double backDistance, double forwardDistance) {
+    return Commands.sequence(scoreCubeStay(elevator, arm, end), moveArmIn(elevator, arm, end), drive(drive, -driveSpeed, backDistance), ballence(drive, driveSpeed, forwardDistance));
   }
 
   public static CommandBase scoreCubeLeave(drivetrain drive, Elevator elevator, Arm arm, endAffector end,

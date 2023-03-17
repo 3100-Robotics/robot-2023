@@ -140,7 +140,7 @@ public final class Constants {
     public final static double feet2tick = (kGearReduction) * (kSensorUnitsPerRotation) / (kcircumperence / 12);
     public final static double tick2Feet = 1/feet2tick;
 
-    public final static double doublesoftLimitRots = kRots2inches * 3.75;
+    public final static double doublesoftLimitRots = 20;
     public final static float rightSoftLimitRots = (float)doublesoftLimitRots;
     public final static float leftSoftLimitRots = (float)doublesoftLimitRots;
 

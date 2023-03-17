@@ -80,6 +80,7 @@ public class RobotContainer {
   private final Command m_ballence = Autos.ballence(drive, 0.3, Units.metersToFeet(1.5));
   private final Command m_scoreCube = Autos.scoreCubeStay(elevator, arm, claw);
   private final Command m_scoreCubeLeave = Autos.scoreCubeLeave(drive, elevator, arm, claw, -0.3, 6);
+  private final Command m_scoreCubeBallance = Autos.scoreCubeBallance(elevator, arm, claw, drive, 0.3, 10, 5);
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -98,11 +99,12 @@ public class RobotContainer {
     m_chooser.addOption("ballence", m_ballence);
     m_chooser.addOption("score cube", m_scoreCube);
     m_chooser.addOption("score cube leave", m_scoreCubeLeave);
+    m_chooser.addOption("score cube ballance", m_scoreCubeBallance);
 
     SmartDashboard.putData(m_chooser);
 
     // default commands
-    drive.setDefaultCommand(new driving(drive, m_driverController));
+    drive.setDefaultCommand(new driving(drive, elevator, m_driverController));
     arm.setDefaultCommand(new ArmCommand(arm, m_codriverController));
     elevator.setDefaultCommand(new ElevatorCommand(elevator, m_codriverController));
     // claw.setDefaultCommand(new endAffectorController(m_codriverController, claw));
@@ -125,32 +127,32 @@ public class RobotContainer {
 
     // run both the claws at once
     buttonlb.whileTrue(new StartEndCommand(
-      () -> claw.runBoth(0.2),
+      () -> claw.runBoth(0.3),
       () -> claw.stopBoth(),
     claw));
     
     buttonrb.whileTrue(new StartEndCommand(
-      () -> claw.runBoth(-0.2),
+      () -> claw.runBoth(-0.3),
       () -> claw.stopBoth(),
     claw));
 
     buttonA.whileTrue(new StartEndCommand(
-      () -> claw.runLeft(-0.2), 
+      () -> claw.runLeft(-0.3),
       () -> claw.stopLeft(), 
     claw));
 
     buttonB.whileTrue(new StartEndCommand(
-      () -> claw.runLeft(0.2), 
+      () -> claw.runLeft(0.3),
       () -> claw.stopLeft(), 
     claw));
 
     buttonX.whileTrue(new StartEndCommand(
-      () -> claw.runRight(-0.2), 
+      () -> claw.runRight(-0.3),
       () -> claw.stopRight(), 
     claw));
 
     buttonY.whileTrue(new StartEndCommand(
-      () -> claw.runRight(0.2), 
+      () -> claw.runRight(0.3),
       () -> claw.stopRight(), 
     claw));
   }

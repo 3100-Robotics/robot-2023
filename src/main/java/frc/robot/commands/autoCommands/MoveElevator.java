@@ -1,7 +1,6 @@
 package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 
 public class MoveElevator extends CommandBase{
@@ -13,7 +12,7 @@ public class MoveElevator extends CommandBase{
     public MoveElevator(Elevator elevator, double speed, double distance) {
         // typical stuff
         this.elevator = elevator;
-        this.distance = distance * (ElevatorConstants.kInches2Rots);
+        this.distance = distance;
         System.out.println(distance);
         this.speed = speed;
         addRequirements(this.elevator);
@@ -34,9 +33,15 @@ public class MoveElevator extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        // finished after one run
-        if (elevator.GetEncoderRotation() >= distance) {
-            return true;
+        if (speed < 0) {
+            if (elevator.GetEncoderRotation() <= -distance) {
+                return true;
+            }
+        }
+        else {
+            if (elevator.GetEncoderRotation() >= distance) {
+                return true;
+            }
         }
         return false;
     }

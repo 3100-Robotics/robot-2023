@@ -28,7 +28,7 @@ public class ArmCommand extends CommandBase{
         if (speed < 0.1 && speed > -0.1) {
             speed = 0.02;
         }
-        arm.Run(speed*0.5);
+        arm.Run(speed*0.75);
     }
 
     @Override

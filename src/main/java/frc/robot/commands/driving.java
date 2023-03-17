@@ -3,19 +3,22 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.IOConstants;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drivetrain;
 
 public class driving extends CommandBase{
 
   // var setup
   private final drivetrain m_drive;
+  private final Elevator m_elevator;
   private final XboxController m_controller;
 
   double xSpeed, zRotation;
 
-  public driving(drivetrain subsystem, XboxController controller) {
+  public driving(drivetrain drive, Elevator elevator, XboxController controller) {
     // typical stuff
-    m_drive = subsystem;
+    m_drive = drive;
+    m_elevator = elevator;
     m_controller = controller;
     addRequirements(m_drive);
   }
@@ -31,13 +34,15 @@ public class driving extends CommandBase{
     // apply slow mode
 
     if (m_controller.getRightTriggerAxis() > 0.5) {
-      xSpeed *= 0.75;
-      zRotation *= 0.5;
+      xSpeed *= 1;
+      zRotation *= 0.65;
     }
     else {
       xSpeed *= 0.5;
       zRotation *= 0.25;
     }
+
+    xSpeed *= 1.4 - Math.abs(m_elevator.GetEncoderRotation()*0.01);
 
 
     // if (m_drive.slowmode) {
