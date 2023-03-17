@@ -26,7 +26,7 @@ public class moveConMover extends CommandBase {
   public void initialize() {
     // m_distances[0] *= -1;
      m_subsystem.setSetpoints(m_distances);
-     System.out.println("starting command");
+     m_subsystem.resetPID();
 //    m_subsystem.doSmartMotion(m_distances);
   }
 
@@ -34,11 +34,8 @@ public class moveConMover extends CommandBase {
   @Override
   public void execute() {
     Pose2d currPos = m_subsystem.getPos();
-    double[] calculations = {-m_distances[0] + currPos.getX(), -m_distances[1] + currPos.getY()};
+    double[] calculations = {currPos.getX(), currPos.getY()};
    double[] speeds = m_subsystem.calculate(calculations);
-//    SmartDashboard.putNumber("arm speed", speeds[0]);
-//    SmartDashboard.putNumber("elevator speed", speeds[1]);
-    // double[] speeds = {0.4, 0.4};
     m_subsystem.move(speeds);
   }
 
@@ -54,9 +51,9 @@ public class moveConMover extends CommandBase {
   public boolean isFinished() {
     // boolean[] atSetpoint = m_subsystem.atSetpoint();
     Pose2d pos = m_subsystem.getPos();
-   boolean atSetpoint = (Math.abs(pos.getX()) >= m_distances[0]) &&
-    (Math.abs(pos.getY()) >= m_distances[1]);
-    // boolean atSetpoint = m_subsystem.atSetpoint();
+//   boolean atSetpoint = (Math.abs(pos.getX()) >= m_distances[0]) &&
+//    (Math.abs(pos.getY()) >= m_distances[1]);
+     boolean atSetpoint = m_subsystem.atSetpoint();
     return atSetpoint;
   }
 }

@@ -34,7 +34,7 @@ public class mover extends SubsystemBase {
 
   /** Creates a new ExampleSubsystem. */
   public mover() {
-    elevatorController = new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd);
+    elevatorController = new PIDController(ElevatorConstants.kUpP, ElevatorConstants.kUpI, ElevatorConstants.kUpD);
     elevatorController.setSetpoint(0);
     // elevatorController = LeftElevatorMotor.getPIDController();
     // elevatorController.setP(ElevatorConstants.kp);
@@ -46,7 +46,7 @@ public class mover extends SubsystemBase {
     RightElevatorMotor.setIdleMode(IdleMode.kBrake);
     RightElevatorMotor.follow(LeftElevatorMotor, true);
 
-    armController = new PIDController(ArmConstants.kp, ArmConstants.ki, ArmConstants.kd);
+    armController = new PIDController(ArmConstants.kUpP, ArmConstants.kUpI, ArmConstants.kUpD);
     armController.setSetpoint(0);
     // armController = armMotor.getPIDController();
     // armController.setP(ArmConstants.kp);
@@ -77,6 +77,8 @@ public class mover extends SubsystemBase {
 //            ((getPos().getX() > ArmConstants.playerLength && getPos().getX() < ArmConstants.midLength) ?
 //                    new moveConMover(this, new double[]{0, getPos().getY()}): new InstantCommand()),
     (new moveConMover(this, distances)));
+    elevatorController.reset();
+    armController.reset();
     command.schedule();
   }
 
@@ -85,12 +87,29 @@ public class mover extends SubsystemBase {
   }
 
   public void setSetpoints(double[] setpoints) {
+    if (setpoints[1] > elevatorController.getSetpoint()) {
+      elevatorController.setPID(ElevatorConstants.kUpP, ElevatorConstants.kUpI, ElevatorConstants.kUpD);
+    }
+    else {
+      elevatorController.setPID(ElevatorConstants.kDownP, ElevatorConstants.kDownI, ElevatorConstants.kDownD);
+    }
+    if (setpoints[0] > armController.getSetpoint()) {
+      elevatorController.setPID(ElevatorConstants.kUpP, ElevatorConstants.kUpI, ElevatorConstants.kUpD);
+    }
+    else {
+      elevatorController.setPID(ElevatorConstants.kDownP, ElevatorConstants.kDownI, ElevatorConstants.kDownD);
+    }
     armController.setSetpoint(setpoints[0]);
     elevatorController.setSetpoint(setpoints[1]);
   }
 
   public boolean atSetpoint() {
     return (armController.atSetpoint() && elevatorController.atSetpoint());
+  }
+
+  public void resetPID() {
+    elevatorController.reset();
+    armController.reset();
   }
 
   public void doSmartMotion(double[] wantedPos) {

@@ -67,12 +67,16 @@ public final class Constants {
     public static final double slewRate = 300;
 
     // pid
-    public final static double kp = 0.001;
-    public final static double ki = 0;
-    public final static double kd = 0;
+    public final static double kDownP = 0.005;
+    public final static double kDownI = 0.00001;
+    public final static double kDownD = 0;
+
+    public final static double kUpP = 0.015;
+    public final static double kUpI = 0.1;
+    public final static double kUpD = 0;
 
     public final static double floorHeight = -3.7;
-    public final static double bumperRots = 20;
+    public final static double bumperRots = 12;
     public final static double midHeight = 60;
     public final static double highHeight = 86;
     public final static double playerHeight = 66;
@@ -90,9 +94,13 @@ public final class Constants {
     public static final double slewRate = 300;
 
     // pid
-    public final static double kp = 0.0001;
-    public final static double ki = 0;
-    public final static double kd = 0;
+    public final static double kDownP = 0.002;
+    public final static double kDownI = 0.00001;
+    public final static double kDownD = 0;
+
+    public final static double kUpP = 0.002;
+    public final static double kUpI = 0.00001;
+    public final static double kUpD = 0;
 
     // gear ratio math
     public final static int kSensorUnitsPerRotation = 42;
@@ -111,7 +119,7 @@ public final class Constants {
     public static final int rightMotor = 9;
 
     // pid
-    public final static double kp = 0.005;
+    public final static double kp = 0.006;
     public final static double ki = 0;
     public final static double kd = 0;
 
