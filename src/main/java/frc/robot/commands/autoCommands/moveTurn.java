@@ -1,15 +1,15 @@
 package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.drivetrain;
+import frc.robot.subsystems.Drive;
 
-public class DriveTurn extends CommandBase{
+public class moveTurn extends CommandBase{
 
   // var setup
-  drivetrain Drive;
+  Drive Drive;
   double angle;
 
-  public DriveTurn(drivetrain Drive, double angle) {
+  public moveTurn(Drive Drive, double angle) {
     // typical stuff
     this.Drive = Drive;
     this.angle = angle;

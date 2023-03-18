@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.driveTrainConstants;
 
-public class drivetrain extends SubsystemBase{
+public class Drive extends SubsystemBase{
 
     // motors
     private static WPI_TalonFX frontleftMotor = 
@@ -31,7 +31,6 @@ public class drivetrain extends SubsystemBase{
 
     // slew rate limiter
     private SlewRateLimiter speedLimiter = new SlewRateLimiter(driveTrainConstants.driveSlewRate);
-    private SlewRateLimiter turnLimiter = new SlewRateLimiter(driveTrainConstants.turnSlewRate);
 
     // pid controller. named driveController in case I want to add a turn controller
     private PIDController driveController = new PIDController(
@@ -43,7 +42,7 @@ public class drivetrain extends SubsystemBase{
     // slowmode for presision
     public Boolean slowmode = true;
 
-    public drivetrain() {
+    public Drive() {
         // deadband
         drive.setDeadband(0.05);
         // pid

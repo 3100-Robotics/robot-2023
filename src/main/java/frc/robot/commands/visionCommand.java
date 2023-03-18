@@ -8,17 +8,17 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.endAffectorConstants;
-import frc.robot.subsystems.endAffector;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.vision;
 
-public class visionController extends CommandBase{
+public class visionCommand extends CommandBase{
     
     // var setup
     private XboxController m_Controller;
     private vision m_visionSubsystem;
-    private endAffector m_claw;
+    private Claw m_claw;
 
-    public visionController(XboxController controller, vision visionSubsystem, endAffector claw) {
+    public visionCommand(XboxController controller, vision visionSubsystem, Claw claw) {
         // typical stuff
         m_Controller = controller;
         m_visionSubsystem = visionSubsystem;

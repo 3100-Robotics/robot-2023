@@ -3,18 +3,18 @@ package frc.robot.commands.autoCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.driveTrainConstants;
-import frc.robot.subsystems.drivetrain;
+import frc.robot.subsystems.Drive;
 
-public class PIDBallence extends CommandBase{
+public class balance extends CommandBase{
     // make controller
     PIDController controller = new PIDController(
         driveTrainConstants.k_balenceP, driveTrainConstants.k_balenceI, driveTrainConstants.k_balenceD);
 
     // other vars
-    drivetrain drive;
+    Drive drive;
     double gyroReading, speed;
 
-    public PIDBallence(drivetrain drive) {
+    public balance(Drive drive) {
         // typical stuff
         this.drive = drive;
         controller.setSetpoint(0);

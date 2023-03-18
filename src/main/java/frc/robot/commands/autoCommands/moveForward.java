@@ -1,12 +1,11 @@
 package frc.robot.commands.autoCommands;
 
 import frc.robot.Constants.driveTrainConstants;
-import frc.robot.subsystems.drivetrain;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Drive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class simpleDrive extends CommandBase {
-  private final drivetrain m_subsystem;
+public class moveForward extends CommandBase {
+  private final Drive m_subsystem;
   private final double speed, distance;
 
   /**
@@ -14,7 +13,7 @@ public class simpleDrive extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public simpleDrive(drivetrain subsystem, double speed, double distance) {
+  public moveForward(Drive subsystem, double speed, double distance) {
     m_subsystem = subsystem;
     this.speed = speed;
     this.distance = distance * driveTrainConstants.feet2tick;

@@ -1,18 +1,16 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.endAffectorConstants;
 
-public class endAffector extends SubsystemBase{
+public class Claw extends SubsystemBase{
     // motors
     private CANSparkMax leftAffector = new CANSparkMax(endAffectorConstants.leftMotor, MotorType.kBrushless);
     private CANSparkMax rightAffector = new CANSparkMax(endAffectorConstants.rightMotor, MotorType.kBrushless);
@@ -26,28 +24,18 @@ public class endAffector extends SubsystemBase{
     // are the joystick controlls locked?
     public Boolean endAffectorLock = false;
 
-    public endAffector() {
-        // brake mode!
+    public Claw() {
+        leftAffector.setInverted(false);
+        rightAffector.setInverted(false);
+
         leftAffector.setIdleMode(IdleMode.kBrake);
         rightAffector.setIdleMode(IdleMode.kBrake);
 
-        leftAffector.setSoftLimit(SoftLimitDirection.kForward, endAffectorConstants.leftSoftLimitRots);
-        leftAffector.setSoftLimit(SoftLimitDirection.kReverse, endAffectorConstants.leftSoftLimitRots);
-        
+        leftAffector.setSoftLimit(SoftLimitDirection.kForward, endAffectorConstants.leftSoftLimitRots);        
         leftAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
-        leftAffector.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
         rightAffector.setSoftLimit(SoftLimitDirection.kForward, endAffectorConstants.rightSoftLimitRots);
-        rightAffector.setSoftLimit(SoftLimitDirection.kReverse, endAffectorConstants.rightSoftLimitRots);
-
         rightAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
-        rightAffector.enableSoftLimit(SoftLimitDirection.kReverse, false);
-        
-        // debug stuff
-        // SmartDashboard.putBoolean("left forward", leftAffector.isSoftLimitEnabled(SoftLimitDirection.kForward));
-        // SmartDashboard.putBoolean("left backward", leftAffector.isSoftLimitEnabled(SoftLimitDirection.kReverse));
-        // SmartDashboard.putBoolean("right forward", rightAffector.isSoftLimitEnabled(SoftLimitDirection.kForward));
-        // SmartDashboard.putBoolean("right backward", rightAffector.isSoftLimitEnabled(SoftLimitDirection.kReverse));
     }
 
     @Override
@@ -55,11 +43,6 @@ public class endAffector extends SubsystemBase{
         // useful details
         SmartDashboard.putNumber("left encoder", getLeftEncoder());
         SmartDashboard.putNumber("right encoder", getRightEncoder());
-        // debug stuff
-        // leftAffector.enableSoftLimit(SoftLimitDirection.kForward, SmartDashboard.getBoolean("left forward", false));
-        // rightAffector.enableSoftLimit(SoftLimitDirection.kForward, SmartDashboard.getBoolean("right forward", false));
-        // leftAffector.enableSoftLimit(SoftLimitDirection.kReverse, SmartDashboard.getBoolean("left backward", false));
-        // rightAffector.enableSoftLimit(SoftLimitDirection.kReverse, SmartDashboard.getBoolean("right backward", false));
     }
 
     public void toggleEndAffectorLock() {

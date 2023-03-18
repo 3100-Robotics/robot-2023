@@ -1,11 +1,9 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -19,7 +17,6 @@ public class Elevator extends SubsystemBase{
     private CANSparkMax RightElevatorMotor = new CANSparkMax(ElevatorConstants.RightElevatorMotor, MotorType.kBrushless);
 
     // encoder
-    private AbsoluteEncoder externalEncoder = LeftElevatorMotor.getAbsoluteEncoder(Type.kDutyCycle);
     private RelativeEncoder internalEncoder = LeftElevatorMotor.getEncoder();
 
     private SlewRateLimiter limiter = new SlewRateLimiter(ElevatorConstants.slewRate);

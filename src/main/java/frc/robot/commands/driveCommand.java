@@ -4,18 +4,18 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.IOConstants;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.drivetrain;
+import frc.robot.subsystems.Drive;
 
-public class driving extends CommandBase{
+public class driveCommand extends CommandBase{
 
   // var setup
-  private final drivetrain m_drive;
+  private final Drive m_drive;
   private final Elevator m_elevator;
   private final XboxController m_controller;
 
   double xSpeed, zRotation;
 
-  public driving(drivetrain drive, Elevator elevator, XboxController controller) {
+  public driveCommand(Drive drive, Elevator elevator, XboxController controller) {
     // typical stuff
     m_drive = drive;
     m_elevator = elevator;

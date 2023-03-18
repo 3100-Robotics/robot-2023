@@ -2,15 +2,15 @@ package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.endAffectorConstants;
-import frc.robot.subsystems.endAffector;
+import frc.robot.subsystems.Claw;
 
-public class openAffector extends CommandBase{
+public class moveClaw extends CommandBase{
 
 
-  endAffector affector;
+  Claw affector;
   double distance, speed;
 
-  public openAffector(endAffector affector, double speed, double distance) {
+  public moveClaw(Claw affector, double speed, double distance) {
     this.affector = affector;
     this.distance = distance * (endAffectorConstants.kRots2inches / 12);
     this.speed = speed;
