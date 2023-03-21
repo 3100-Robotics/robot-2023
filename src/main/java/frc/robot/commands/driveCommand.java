@@ -35,7 +35,7 @@ public class driveCommand extends CommandBase{
 
     if (m_controller.getRightTriggerAxis() > 0.5) {
       xSpeed *= 1;
-      zRotation *= 0.65;
+      zRotation *= 0.55;
     }
     else {
       xSpeed *= 0.5;

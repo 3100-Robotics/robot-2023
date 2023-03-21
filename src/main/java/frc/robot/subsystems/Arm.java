@@ -34,7 +34,7 @@ public class Arm extends SubsystemBase{
 
         armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmMotorConstants.softLimitRots);
         armMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
         armMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
 
         // motor config

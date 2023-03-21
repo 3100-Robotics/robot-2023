@@ -37,7 +37,7 @@ public final class Constants {
     public final static double k_driveD = 0;
 
     // slew rate constant
-    public final static double driveSlewRate = 5;
+    public final static double driveSlewRate = 4.5;
     public final static double turnSlewRate = 5;
 
     // pid tollerances

@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -41,6 +42,12 @@ public class RobotContainer {
   // buttons for commands
   private JoystickButton driverButtonB = new JoystickButton(m_driverController, IOConstants.bButtonChannel);
   private JoystickButton buttonSelect = new JoystickButton(m_codriverController, IOConstants.backButtonChannel);
+  private JoystickButton buttonX = new JoystickButton(m_codriverController, IOConstants.xButtonChannel);
+  private JoystickButton buttonY = new JoystickButton(m_codriverController, IOConstants.yButtonChannel);
+  private JoystickButton buttonA = new JoystickButton(m_codriverController, IOConstants.aButtonChannel);
+  private JoystickButton buttonB = new JoystickButton(m_codriverController, IOConstants.bButtonChannel);
+  private JoystickButton buttonlb = new JoystickButton(m_codriverController, IOConstants.leftBumperChannel);
+  private JoystickButton buttonrb = new JoystickButton(m_codriverController, IOConstants.rightBumperChannel);
 
   // subsystems
   private final Drive drive = new Drive();
@@ -60,7 +67,7 @@ public class RobotContainer {
   private final Command m_balance = Autos.balance(drive, 0.3, 5);
   private final Command m_scoreCube = Autos.scoreCubeStay(elevator, arm, claw);
   private final Command m_scoreCubeLeave = Autos.scoreCubeLeave(drive, elevator, arm, claw, -0.3, 15);
-  private final Command m_scoreCubeBalance = Autos.scoreCubeBalance(elevator, arm, claw, drive, 0.3, 10, 5);
+  private final Command m_scoreCubeBalance = Autos.scoreCubeBalance(elevator, arm, claw, drive, 0.3, 12, 5);
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -102,33 +109,33 @@ public class RobotContainer {
     // lock claw joystick movements
     buttonSelect.onTrue(new InstantCommand(() -> claw.toggleEndAffectorLock(), claw));
 
-    // buttonlb.whileTrue(new StartEndCommand(
-    //   () -> claw.runBoth(0.3),
-    //   () -> claw.stopBoth(),
-    // claw));
+    buttonlb.whileTrue(new StartEndCommand(
+      () -> claw.runBoth(0.4),
+      () -> claw.stopBoth(),
+    claw));
     
-    // buttonrb.whileTrue(new StartEndCommand(
-    //   () -> claw.runBoth(-0.3),
-    //   () -> claw.stopBoth(),
-    // claw));
+    buttonrb.whileTrue(new StartEndCommand(
+      () -> claw.runBoth(-0.4),
+      () -> claw.stopBoth(),
+    claw));
 
     // buttonA.whileTrue(new StartEndCommand(
-    //   () -> claw.runLeft(-0.3),
+    //   () -> claw.runLeft(-0.5),
     //   () -> claw.stopLeft(), 
     // claw));
 
     // buttonB.whileTrue(new StartEndCommand(
-    //   () -> claw.runLeft(0.3),
+    //   () -> claw.runLeft(0.5),
     //   () -> claw.stopLeft(), 
     // claw));
 
     // buttonX.whileTrue(new StartEndCommand(
-    //   () -> claw.runRight(-0.3),
+    //   () -> claw.runRight(-0.5),
     //   () -> claw.stopRight(), 
     // claw));
 
     // buttonY.whileTrue(new StartEndCommand(
-    //   () -> claw.runRight(0.3),
+    //   () -> claw.runRight(0.5),
     //   () -> claw.stopRight(), 
     // claw));
   }

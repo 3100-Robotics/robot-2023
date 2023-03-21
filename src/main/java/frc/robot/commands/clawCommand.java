@@ -19,10 +19,8 @@ public class clawCommand extends CommandBase{
 
   public void execute(){
     // as long as joysticks aren't locked move them according to the input
-    double leftSpeed = (controller.getYButton() || controller.getLeftBumper()) ? 0.4 : 0;
-    leftSpeed = (controller.getXButton() || controller.getRightBumper()) ? -0.4 : 0;
-    double rightSpeed = (controller.getBButton() || controller.getRightBumper()) ? 0.4 : 0;
-    rightSpeed = (controller.getAButton() || controller.getLeftBumper()) ? -0.4 : 0;
+    double leftSpeed = (controller.getYButton()) ? 0.5 : ((controller.getXButton()) ? -0.5 : 0);
+    double rightSpeed = (controller.getBButton()) ? 0.5 : ((controller.getAButton()) ? -0.5 : 0);
 
     affector.runLeft(leftSpeed);
     affector.runRight(rightSpeed);

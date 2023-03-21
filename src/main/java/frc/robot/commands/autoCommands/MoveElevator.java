@@ -6,16 +6,15 @@ import frc.robot.subsystems.Elevator;
 public class MoveElevator extends CommandBase{
 
     // var setup
-    Elevator elevator;
+    Elevator arm;
     double distance, speed;
 
-    public MoveElevator(Elevator elevator, double speed, double distance) {
+    public MoveElevator(Elevator arm, double speed, double distance) {
         // typical stuff
-        this.elevator = elevator;
+        this.arm = arm;
         this.distance = distance;
-        System.out.println(distance);
         this.speed = speed;
-        addRequirements(this.elevator);
+        addRequirements(this.arm);
     }
 
     @Override
@@ -23,23 +22,23 @@ public class MoveElevator extends CommandBase{
 
     @Override
     public void execute() {
-        elevator.Run(speed);
+        arm.Run(speed);
     }
 
     @Override
     public void end(boolean interupted) {
-        elevator.Stop();
+        arm.Stop();
     }
 
     @Override
     public boolean isFinished() {
         if (speed < 0) {
-            if (elevator.GetEncoderRotation() <= -distance) {
+            if (arm.GetEncoderRotation() <= -distance) {
                 return true;
             }
         }
         else {
-            if (elevator.GetEncoderRotation() >= distance) {
+            if (arm.GetEncoderRotation() >= distance) {
                 return true;
             }
         }
