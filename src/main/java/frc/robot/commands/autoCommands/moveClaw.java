@@ -20,13 +20,21 @@ public class moveClaw extends CommandBase{
   @Override
   public void execute() {
     affector.runLeft(speed);
+    affector.runRight(speed);
   }
 
   @Override
   public boolean isFinished() {
     // am I finished?
-    if (affector.getLeftEncoder() >= distance) {
-      return true;
+    if (speed < 0) {
+      if (affector.getLeftEncoder() <= distance) {
+        return true;
+      }
+    }
+    else {
+      if (affector.getLeftEncoder() >= distance) {
+        return true;
+      }
     }
     return false;
   }

@@ -68,6 +68,8 @@ public class RobotContainer {
   private final Command m_scoreCube = Autos.scoreCubeStay(elevator, arm, claw);
   private final Command m_scoreCubeLeave = Autos.scoreCubeLeave(drive, elevator, arm, claw, -0.3, 15);
   private final Command m_scoreCubeBalance = Autos.scoreCubeBalance(elevator, arm, claw, drive, 0.3, 12, 5);
+  private final Command m_1AndHalfPieceAuto = Autos.score2Cubes(drive, elevator, arm, claw, 0.3, 10,
+          0.3, 0.3, 0.3, 0.3);
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -85,6 +87,7 @@ public class RobotContainer {
     m_chooser.addOption("drive out short", driveOutShort);
     m_chooser.addOption("drive out mid", driveOutMid);
     m_chooser.addOption("drive out long", driveOutLong);
+    m_chooser.addOption("1.5 piece auto", m_1AndHalfPieceAuto);
     m_chooser.addOption("No Auto", m_noAuto);
 
     SmartDashboard.putData(m_chooser);
