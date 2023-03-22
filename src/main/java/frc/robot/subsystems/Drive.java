@@ -8,6 +8,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,30 +18,29 @@ import frc.robot.Constants.driveTrainConstants;
 public class Drive extends SubsystemBase{
 
     // motors
-    private static WPI_TalonFX frontleftMotor = 
+    private static final WPI_TalonFX frontLeftMotor =
         new WPI_TalonFX(driveTrainConstants.frontLeftPort);
-    private static WPI_TalonFX frontRightMotor = 
+    private static final WPI_TalonFX frontRightMotor =
         new WPI_TalonFX(driveTrainConstants.frontRightPort);
-    private static WPI_TalonFX backLeftMotor = 
+    private static final WPI_TalonFX backLeftMotor =
         new WPI_TalonFX(driveTrainConstants.backLeftPort);
-    private static WPI_TalonFX backRightMotor = 
+    private static final WPI_TalonFX backRightMotor =
         new WPI_TalonFX(driveTrainConstants.backRightPort);
 
     // drivetrain
-    private static DifferentialDrive drive = new DifferentialDrive(frontleftMotor, frontRightMotor);
+    private static final DifferentialDrive drive = new DifferentialDrive(frontLeftMotor, frontRightMotor);
 
     // slew rate limiter
-    private SlewRateLimiter speedLimiter = new SlewRateLimiter(driveTrainConstants.driveSlewRate);
+    private final SlewRateLimiter speedLimiter = new SlewRateLimiter(driveTrainConstants.driveSlewRate);
 
     // pid controller. named driveController in case I want to add a turn controller
-    private PIDController driveController = new PIDController(
+    private final PIDController driveController = new PIDController(
         driveTrainConstants.k_driveP, driveTrainConstants.k_driveI, driveTrainConstants.k_driveD);
 
     // navx gyro
-    private static AHRS gyro = new AHRS(SPI.Port.kMXP);
+    private static final AHRS gyro = new AHRS(SPI.Port.kMXP);
     
-    // slowmode for presision
-    public Boolean slowmode = true;
+    private final DifferentialDriveOdometry odometry;
 
     public Drive() {
         // deadband
@@ -49,18 +49,14 @@ public class Drive extends SubsystemBase{
         driveController.enableContinuousInput(-180, 180);
         driveController.setTolerance(driveTrainConstants.kDriveToleranceMeter,
             driveTrainConstants.kDriveRateToleranceMeterPerS);
+
+        
         // config
         configureMotors();
         resetEncoders();
-    }
-
-    public void ToggleSlowMode() {
-        // enable/disable the slow mode
-        slowmode = !slowmode;
-    }
-
-    public void setSlowMode(boolean mode) {
-        slowmode = mode;
+        odometry =
+            new DifferentialDriveOdometry(
+                gyro.getRotation2d(), frontLeftMotor.getSelectedSensorPosition(), frontRightMotor.getSelectedSensorPosition());
     }
 
     public void arcadeDrive(double speed, double rotation) {
@@ -70,8 +66,7 @@ public class Drive extends SubsystemBase{
     }
 
     public void curvyDrive(double speed, double rotation, Boolean allowTurnInPlace) {
-        // curvy drive will be odd because dosn't look like it sqares inputs
-        drive.curvatureDrive(speed, rotation, false);
+        drive.curvatureDrive(speed, rotation, allowTurnInPlace);
     }
 
     public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -81,26 +76,26 @@ public class Drive extends SubsystemBase{
 
     public double getAverageEncoderRotation() {
         // average encoder distance
-        return (frontleftMotor.getSelectedSensorPosition(0) + frontRightMotor.getSelectedSensorPosition(0))/2;
+        return (frontLeftMotor.getSelectedSensorPosition(0) + frontRightMotor.getSelectedSensorPosition(0))/2;
     }
 
     public void resetEncoders() {
         // reset encoders
-        frontleftMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
+        frontLeftMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
         frontRightMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
     }
 
-    public double getgyroz() {
+    public double getGyroZ() {
         // get that pitch
         return gyro.getPitch();
     }
 
-    public double getgyrox() {
+    public double getGyroX() {
         // get that yaw
         return gyro.getYaw();
     }
 
-    public double getgyroy() {
+    public double getGyroY() {
         // get that roll
         return gyro.getRoll();
     }
@@ -123,7 +118,7 @@ public class Drive extends SubsystemBase{
     }
 
     public void setBrakeMode(NeutralMode mode) {
-        frontleftMotor.setNeutralMode(mode);
+        frontLeftMotor.setNeutralMode(mode);
         backLeftMotor.setNeutralMode(mode);
         frontRightMotor.setNeutralMode(mode);
         backRightMotor.setNeutralMode(mode);
@@ -132,9 +127,6 @@ public class Drive extends SubsystemBase{
     @Override
     public void periodic() {
         // useful info
-        // SmartDashboard.putNumber("left speed", frontleftMotor.getSensorCollection().getIntegratedSensorVelocity());
-        // SmartDashboard.putNumber("right speed", frontRightMotor.getSensorCollection().getIntegratedSensorVelocity());
-        SmartDashboard.putBoolean("slowmode", slowmode);
         SmartDashboard.putData(drive);
         SmartDashboard.putData(gyro);
     }
@@ -144,43 +136,43 @@ public class Drive extends SubsystemBase{
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
         // factory default
-        frontleftMotor.configFactoryDefault();
+        frontLeftMotor.configFactoryDefault();
         backLeftMotor.configFactoryDefault();
         frontRightMotor.configFactoryDefault();
         backRightMotor.configFactoryDefault();
 
-        // safty good
-        frontleftMotor.setSafetyEnabled(false);
+        // safety good
+        frontLeftMotor.setSafetyEnabled(false);
         backLeftMotor.setSafetyEnabled(false);
         frontRightMotor.setSafetyEnabled(false);
         backRightMotor.setSafetyEnabled(false);
 
         // invert motors
-        frontleftMotor.setInverted(true);
+        frontLeftMotor.setInverted(true);
         backLeftMotor.setInverted(true);
         frontRightMotor.setInverted(false);
         backRightMotor.setInverted(false);
 
         // brake mode
-        frontleftMotor.setNeutralMode(NeutralMode.Brake);
+        frontLeftMotor.setNeutralMode(NeutralMode.Brake);
         backLeftMotor.setNeutralMode(NeutralMode.Brake);
         frontRightMotor.setNeutralMode(NeutralMode.Brake);
         backRightMotor.setNeutralMode(NeutralMode.Brake);
 
         // follow motors
-        backLeftMotor.follow(frontleftMotor);
+        backLeftMotor.follow(frontLeftMotor);
         backRightMotor.follow(frontRightMotor);
 
         // peak output for left
-        frontleftMotor.configPeakOutputForward(1.0);
-        frontleftMotor.configPeakOutputReverse(-1.0);
+        frontLeftMotor.configPeakOutputForward(1.0);
+        frontLeftMotor.configPeakOutputReverse(-1.0);
 
         // peak output for right
         frontRightMotor.configPeakOutputForward(1.0);
         frontRightMotor.configPeakOutputReverse(-1.0);
 
         // what sensor to use?
-        frontleftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        frontLeftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         frontRightMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     }
 }

@@ -14,12 +14,11 @@ import frc.robot.Constants.ArmMotorConstants;
 
 public class Arm extends SubsystemBase{
     // motor
-    private CANSparkMax armMotor = new CANSparkMax(ArmMotorConstants.armMotor, MotorType.kBrushless);
+    private final CANSparkMax armMotor = new CANSparkMax(ArmMotorConstants.armMotor, MotorType.kBrushless);
 
 
-    private SlewRateLimiter limiter = new SlewRateLimiter(ArmMotorConstants.slewRate);
-    // thorugh bore encoder
-    private RelativeEncoder internalEncoder = armMotor.getEncoder();
+    private final SlewRateLimiter limiter = new SlewRateLimiter(ArmMotorConstants.slewRate);
+    private final RelativeEncoder internalEncoder = armMotor.getEncoder();
     // pid
     public PIDController controller;
     int setpointNum;
@@ -34,7 +33,7 @@ public class Arm extends SubsystemBase{
 
         armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmMotorConstants.softLimitRots);
         armMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         armMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
 
         // motor config
@@ -48,21 +47,6 @@ public class Arm extends SubsystemBase{
         SmartDashboard.putBoolean("at setpoint", atSetpoint());
     }
 
-    public void incrementSetpoint(boolean negative) {
-        // change setpoint to next pre-defined setpoint
-        if (negative) {
-            if (setpointNum != 1) {
-                setpointNum -= 1;
-            }
-        }
-        else {
-            if (setpointNum != ArmMotorConstants.armLevels.length){
-                setpointNum += 1;
-            }
-        }
-        controller.setSetpoint(ArmMotorConstants.armLevels[setpointNum - 1]);
-    }
-
     public boolean atSetpoint() {
         // am I at setpoint
         return controller.atSetpoint();
@@ -73,8 +57,8 @@ public class Arm extends SubsystemBase{
         controller.setSetpoint(setpoint);
     }
 
-    public double calculate(double measurment) {
-        return controller.calculate(measurment);
+    public double calculate(double measurement) {
+        return controller.calculate(measurement);
     }
 
     public void Run(double speed) {
@@ -89,7 +73,6 @@ public class Arm extends SubsystemBase{
 
     public double GetEncoderRotation(){
         // get the encoder rot
-        // return encoder.getPosition();
         return internalEncoder.getPosition();
     }
 }

@@ -4,8 +4,11 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants;
-import frc.robot.commands.autoCommands.*;
+import frc.robot.commands.autoCommands.moveForward;
+import frc.robot.commands.autoCommands.moveArm;
+import frc.robot.commands.autoCommands.MoveElevator;
+import frc.robot.commands.autoCommands.balance;
+import frc.robot.commands.autoCommands.moveClaw;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Drive;
@@ -30,16 +33,16 @@ public final class Autos {
 
   public static CommandBase scoreCubeStay(Elevator elevator, Arm arm, Claw end) {
     return Commands.sequence(
-      new moveElevator(elevator, 0.4, 83),
-      new moveArm(arm, 0.3, 56), 
-      new moveClaw(end, 0.3, 0.075));
+      new MoveElevator(elevator, 0.6, 83),
+      new moveArm(arm, 0.6, 56), 
+      new moveClaw(end, 0.6, 0.075));
   }
 
 
-  public static CommandBase moveArmIn(Elevator elevator, Arm arm, Claw end) {
+  public static CommandBase moveArmIn(Elevator elevator, Arm arm) {
     return Commands.sequence(
-      new moveArm(arm, -0.3, 1),
-      new moveElevator(elevator, -0.4, 1));
+      new moveArm(arm, -0.6, 1), 
+      new MoveElevator(elevator, -0.6, 1));
   }
   
 
@@ -47,7 +50,7 @@ public final class Autos {
       double driveSpeed, double backDistance, double forwardDistance) {
     return Commands.sequence(
       scoreCubeStay(elevator, arm, end), 
-      moveArmIn(elevator, arm, end), 
+      moveArmIn(elevator, arm),
       drive(drive, -driveSpeed, backDistance), 
       balance(drive, driveSpeed, forwardDistance));
   }
@@ -57,23 +60,13 @@ public final class Autos {
         double speed, double distance) {
       return Commands.sequence(
         scoreCubeStay(elevator, arm, end),
-        moveArmIn(elevator, arm, end),
+        moveArmIn(elevator, arm),
         drive(drive, speed, distance));
-  }
-
-  public static CommandBase score2Cubes(Drive drive, Elevator elevator, Arm arm, Claw end,
-                                        double driveSpeed, double driveDistance, double elevatorSpeed,
-                                        double armSpeed, double clawSpeed, double turnSpeed) {
-    return Commands.sequence(scoreCubeStay(elevator, arm, end), moveArmIn(elevator, arm, end),
-            drive(drive, -driveSpeed, driveDistance), new moveTurn(drive, turnSpeed, 180),
-            new moveElevator(elevator, elevatorSpeed, 20), new moveArm(arm, armSpeed, 20),
-            new moveElevator(elevator, -elevatorSpeed, -2), new moveClaw(end, -clawSpeed, 0.075),
-            new moveElevator(elevator, elevatorSpeed, 20), new moveArm(arm, -clawSpeed, 1));
   }
 
 
   private Autos() {
-    // not meant to be defiend
+    // not meant to be defined
     throw new UnsupportedOperationException("This is a utility class!");
   }
 }

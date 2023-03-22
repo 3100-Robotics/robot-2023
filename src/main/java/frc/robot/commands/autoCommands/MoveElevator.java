@@ -3,13 +3,13 @@ package frc.robot.commands.autoCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
-public class moveElevator extends CommandBase{
+public class MoveElevator extends CommandBase{
 
     // var setup
     Elevator arm;
     double distance, speed;
 
-    public moveElevator(Elevator arm, double speed, double distance) {
+    public MoveElevator(Elevator arm, double speed, double distance) {
         // typical stuff
         this.arm = arm;
         this.distance = distance;
@@ -26,22 +26,17 @@ public class moveElevator extends CommandBase{
     }
 
     @Override
-    public void end(boolean interupted) {
+    public void end(boolean interrupted) {
         arm.Stop();
     }
 
     @Override
     public boolean isFinished() {
         if (speed < 0) {
-            if (arm.GetEncoderRotation() <= distance) {
-                return true;
-            }
+            return arm.GetEncoderRotation() <= distance;
         }
         else {
-            if (arm.GetEncoderRotation() >= distance) {
-                return true;
-            }
+            return arm.GetEncoderRotation() >= distance;
         }
-        return false;
     }
 }

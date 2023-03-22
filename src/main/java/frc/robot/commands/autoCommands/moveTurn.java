@@ -7,35 +7,24 @@ public class moveTurn extends CommandBase{
 
   // var setup
   Drive Drive;
-  double angle, speed, startAngle;
+  double angle;
 
-  public moveTurn(Drive Drive, double speed, double angle) {
+  public moveTurn(Drive Drive, double angle) {
     // typical stuff
     this.Drive = Drive;
     this.angle = angle;
-    this.speed = speed;
-    Drive.setSetpoint(Drive.getgyroz() + angle);
-  }
-
-  @Override
-  public void initialize() {
-    startAngle = Drive.getgyroz();
+    Drive.setSetpoint(Drive.getGyroZ() + angle);
   }
 
   @Override
   public void execute() {
     // move
-    Drive.arcadeDrive(0, speed);
+    Drive.arcadeDrive(Drive.driveCalculate(Drive.getAverageEncoderRotation()), 0);
   }
 
   @Override
   public boolean isFinished() {
     // am I done?
-    if (speed < 0) {
-      return (startAngle - Drive.getgyroy() <= angle);
-    }
-    else {
-      return (startAngle - Drive.getgyroy() >= angle);
-    }
+    return Drive.atSetpoint();
   }
 }

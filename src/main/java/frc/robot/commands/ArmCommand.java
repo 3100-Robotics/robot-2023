@@ -8,23 +8,18 @@ public class ArmCommand extends CommandBase{
     
     // var setup
     Arm arm;
-    double EncoderReading, speed;
-    XboxController m_Controller;
+    XboxController controller;
 
     public ArmCommand(Arm arm, XboxController controller) {
         // typical stuff
         this.arm = arm;
-        m_Controller = controller;
+        this.controller = controller;
         addRequirements(this.arm);
     }
 
     @Override
     public void execute() {
-        // un according to pid
-        // EncoderReading = arm.GetEncoderRotation();
-        // speed = arm.controller.calculate(EncoderReading);
-        // arm.Run(speed);
-        double speed = m_Controller.getRightX();
+        double speed = controller.getRightX();
         if (speed < 0.1 && speed > -0.1) {
             speed = 0.02;
         }

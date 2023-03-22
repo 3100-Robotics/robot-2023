@@ -7,14 +7,14 @@ import frc.robot.subsystems.Claw;
 public class clawCommand extends CommandBase{
     
   // var setup
-  Claw affector;
+  Claw claw;
   XboxController controller;
 
-  public clawCommand(XboxController controller, Claw affector) {
+  public clawCommand(XboxController controller, Claw claw) {
     // typical stuff
     this.controller = controller;
-    this.affector = affector;
-    addRequirements(this.affector);
+    this.claw = claw;
+    addRequirements(this.claw);
   }
 
   public void execute(){
@@ -22,7 +22,7 @@ public class clawCommand extends CommandBase{
     double leftSpeed = (controller.getYButton()) ? 0.5 : ((controller.getXButton()) ? -0.5 : 0);
     double rightSpeed = (controller.getBButton()) ? 0.5 : ((controller.getAButton()) ? -0.5 : 0);
 
-    affector.runLeft(leftSpeed);
-    affector.runRight(rightSpeed);
+    claw.runLeft(leftSpeed);
+    claw.runRight(rightSpeed);
   }
 }
