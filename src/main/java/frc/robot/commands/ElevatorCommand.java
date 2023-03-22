@@ -9,24 +9,18 @@ public class ElevatorCommand extends CommandBase{
 
     // var setup
     Elevator elevator;
-    double EncoderReading;
-    XboxController m_Controller;
+    XboxController controller;
 
     public ElevatorCommand(Elevator elevator, XboxController controller) {
         // typical stuff
         this.elevator = elevator;
-        m_Controller = controller;
+        this.controller = controller;
         addRequirements(this.elevator);
     }
 
     @Override
     public void execute() {
-        // run according to pid
-        // EncoderReading = elevator.GetEncoderRotation();
-        // double speed = elevator.calculate(EncoderReading - elevator.getSetpoint());
-        // SmartDashboard.putNumber("elevator speed", speed);
-        // elevator.Run(speed);
-        double speed = -m_Controller.getLeftY();
+        double speed = -controller.getLeftY();
         if (speed < 0.1 && speed > -0.1) {
             speed = 0.03;
         }

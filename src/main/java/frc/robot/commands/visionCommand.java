@@ -7,30 +7,30 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.IOConstants;
-import frc.robot.Constants.endAffectorConstants;
+import frc.robot.Constants.endEffectorConstants;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.vision;
 
 public class visionCommand extends CommandBase{
     
     // var setup
-    private XboxController m_Controller;
-    private vision m_visionSubsystem;
-    private Claw m_claw;
+    private final XboxController controller;
+    private final vision visionSubsystem;
+    private final Claw claw;
 
     public visionCommand(XboxController controller, vision visionSubsystem, Claw claw) {
         // typical stuff
-        m_Controller = controller;
-        m_visionSubsystem = visionSubsystem;
-        m_claw = claw;
-        addRequirements(visionSubsystem, m_claw);
+        this.controller = controller;
+        this.visionSubsystem = visionSubsystem;
+        this.claw = claw;
+        addRequirements(visionSubsystem, this.claw);
     }
 
     @Override
     public void execute() {
         // should I run vision processing?
-        if (m_Controller.getRawButton(IOConstants.backButtonChannel)) {
-            var result = m_visionSubsystem.getCamera1Results();
+        if (controller.getRawButton(IOConstants.backButtonChannel)) {
+            var result = visionSubsystem.getCamera1Results();
             // do I have targets?
             if (result.hasTargets()) {
                 // set up the target
@@ -47,11 +47,11 @@ public class visionCommand extends CommandBase{
                 }
 
                 // run the motors in the correct dir
-                if (0.247775 - Units.feetToMeters(m_claw.getCenterPos()*endAffectorConstants.tick2Feet)  > neededDistance) {
-                    m_claw.runBoth(0.3);
+                if (0.247775 - Units.feetToMeters(claw.getCenterPos()* endEffectorConstants.tick2Feet)  > neededDistance) {
+                    claw.runBoth(0.3);
                 }
-                else if (0.247775 - Units.feetToMeters(m_claw.getCenterPos()*endAffectorConstants.tick2Feet)  > neededDistance) {
-                    m_claw.runBoth(-0.3);
+                else if (0.247775 - Units.feetToMeters(claw.getCenterPos()* endEffectorConstants.tick2Feet)  > neededDistance) {
+                    claw.runBoth(-0.3);
                 }
             }
         }

@@ -8,7 +8,7 @@ import frc.robot.subsystems.Drive;
 public class balance extends CommandBase{
     // make controller
     PIDController controller = new PIDController(
-        driveTrainConstants.k_balenceP, driveTrainConstants.k_balenceI, driveTrainConstants.k_balenceD);
+        driveTrainConstants.k_balanceP, driveTrainConstants.k_balanceI, driveTrainConstants.k_balanceD);
 
     // other vars
     Drive drive;
@@ -25,7 +25,7 @@ public class balance extends CommandBase{
     @Override
     public void execute() {
         // execute according to pid with speed limiting
-        gyroReading = drive.getgyroy();
+        gyroReading = drive.getGyroY();
         speed = controller.calculate(gyroReading);
         if (Math.abs(speed) > 0.6) {
             speed = Math.copySign(0.6, speed);

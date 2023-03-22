@@ -26,22 +26,17 @@ public class MoveElevator extends CommandBase{
     }
 
     @Override
-    public void end(boolean interupted) {
+    public void end(boolean interrupted) {
         arm.Stop();
     }
 
     @Override
     public boolean isFinished() {
         if (speed < 0) {
-            if (arm.GetEncoderRotation() <= -distance) {
-                return true;
-            }
+            return arm.GetEncoderRotation() <= distance;
         }
         else {
-            if (arm.GetEncoderRotation() >= distance) {
-                return true;
-            }
+            return arm.GetEncoderRotation() >= distance;
         }
-        return false;
     }
 }

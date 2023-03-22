@@ -8,34 +8,31 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.endAffectorConstants;
+import frc.robot.Constants.endEffectorConstants;
 
 public class Claw extends SubsystemBase{
     // motors
-    private CANSparkMax leftAffector = new CANSparkMax(endAffectorConstants.leftMotor, MotorType.kBrushless);
-    private CANSparkMax rightAffector = new CANSparkMax(endAffectorConstants.rightMotor, MotorType.kBrushless);
+    private final CANSparkMax leftEffector = new CANSparkMax(endEffectorConstants.leftMotor, MotorType.kBrushless);
+    private final CANSparkMax rightEffector = new CANSparkMax(endEffectorConstants.rightMotor, MotorType.kBrushless);
 
-    // encoders for motors change to absolute when they exist
-    // private AbsoluteEncoder LeftEncoder = leftAffector.getAbsoluteEncoder(Type.kDutyCycle);
-    // private AbsoluteEncoder righEncoder = rightAffector.getAbsoluteEncoder(Type.kDutyCycle);
-    private RelativeEncoder LefEncoder = leftAffector.getEncoder();
-    private RelativeEncoder RighEncoder = rightAffector.getEncoder();
+    private final RelativeEncoder LefEncoder = leftEffector.getEncoder();
+    private final RelativeEncoder RightEncoder = rightEffector.getEncoder();
 
-    // are the joystick controlls locked?
-    public Boolean endAffectorLock = false;
+    // are the joystick controls locked?
+    public Boolean endEffectorLock = false;
 
     public Claw() {
-        leftAffector.setInverted(false);
-        rightAffector.setInverted(false);
+        leftEffector.setInverted(false);
+        rightEffector.setInverted(false);
 
-        leftAffector.setIdleMode(IdleMode.kBrake);
-        rightAffector.setIdleMode(IdleMode.kBrake);
+        leftEffector.setIdleMode(IdleMode.kBrake);
+        rightEffector.setIdleMode(IdleMode.kBrake);
 
-        leftAffector.setSoftLimit(SoftLimitDirection.kForward, endAffectorConstants.leftSoftLimitRots);        
-        leftAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
+        leftEffector.setSoftLimit(SoftLimitDirection.kForward, endEffectorConstants.leftSoftLimitRots);
+        leftEffector.enableSoftLimit(SoftLimitDirection.kForward, true);
 
-        rightAffector.setSoftLimit(SoftLimitDirection.kForward, endAffectorConstants.rightSoftLimitRots);
-        rightAffector.enableSoftLimit(SoftLimitDirection.kForward, true);
+        rightEffector.setSoftLimit(SoftLimitDirection.kForward, endEffectorConstants.rightSoftLimitRots);
+        rightEffector.enableSoftLimit(SoftLimitDirection.kForward, true);
     }
 
     @Override
@@ -45,56 +42,50 @@ public class Claw extends SubsystemBase{
         SmartDashboard.putNumber("right encoder", getRightEncoder());
     }
 
-    public void toggleEndAffectorLock() {
-        // lock/unlock the joystick controlls
-        endAffectorLock = !endAffectorLock;
+    public void toggleEndEffectorLock() {
+        // lock/unlock the joystick controls
+        endEffectorLock = !endEffectorLock;
     }
 
     /**
-    * Constructor initializing hours to timeHours and 
-    * minutes to timeMins. 
     * @param speed speed to set the left claw to
     */  
     public void runLeft(double speed) {
         // run the left claw
-        leftAffector.set(speed);
+        leftEffector.set(speed);
     }
 
     /**
-    * Constructor initializing hours to timeHours and 
-    * minutes to timeMins. 
     * @param speed speed to set the right claw to
     */  
     public void runRight(double speed) {
         // run the right claw
-        rightAffector.set(speed);
+        rightEffector.set(speed);
     }
 
     public void stopLeft() {
         // stop the left claw
-        leftAffector.stopMotor();
+        leftEffector.stopMotor();
     }
 
     public void stopRight() {
         // stop the right claw
-        rightAffector.stopMotor();
+        rightEffector.stopMotor();
     }
 
     /**
-    * Constructor initializing hours to timeHours and 
-    * minutes to timeMins. 
     * @param speed the speed to move both claws to the left
     */  
     public void runBoth(double speed) {
         // run both claws positive number = to the left
-        leftAffector.set(speed);
-        rightAffector.set(-speed);
+        leftEffector.set(speed);
+        rightEffector.set(-speed);
     }
 
     public void stopBoth() {
         // stop both claws
-        leftAffector.stopMotor();
-        rightAffector.stopMotor();
+        leftEffector.stopMotor();
+        rightEffector.stopMotor();
     }
 
     public double getLeftEncoder() {
@@ -104,11 +95,11 @@ public class Claw extends SubsystemBase{
 
     public double getRightEncoder() {
         // get the right encoder pos
-        return RighEncoder.getPosition();
+        return RightEncoder.getPosition();
     }
 
     public double getCenterPos() {
         // get the center point between the claws
-        return (LefEncoder.getPosition() + RighEncoder.getPosition())/2;
+        return (LefEncoder.getPosition() + RightEncoder.getPosition())/2;
     }
 }

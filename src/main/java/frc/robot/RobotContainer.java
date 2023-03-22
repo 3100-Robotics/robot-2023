@@ -33,21 +33,21 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
 
-  // contrillers
-  private final XboxController m_driverController =
-      new XboxController(OperatorConstants.kDriverControllerPort);
-  private final XboxController m_codriverController =
-      new XboxController(OperatorConstants.kCoDriverControllerPort);
+  // controllers
+  private final XboxController driverController =
+      new XboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final XboxController coDriverController =
+      new XboxController(OperatorConstants.CO_DRIVER_CONTROLLER_PORT);
 
   // buttons for commands
-  private JoystickButton driverButtonB = new JoystickButton(m_driverController, IOConstants.bButtonChannel);
-  private JoystickButton buttonSelect = new JoystickButton(m_codriverController, IOConstants.backButtonChannel);
-  private JoystickButton buttonX = new JoystickButton(m_codriverController, IOConstants.xButtonChannel);
-  private JoystickButton buttonY = new JoystickButton(m_codriverController, IOConstants.yButtonChannel);
-  private JoystickButton buttonA = new JoystickButton(m_codriverController, IOConstants.aButtonChannel);
-  private JoystickButton buttonB = new JoystickButton(m_codriverController, IOConstants.bButtonChannel);
-  private JoystickButton buttonlb = new JoystickButton(m_codriverController, IOConstants.leftBumperChannel);
-  private JoystickButton buttonrb = new JoystickButton(m_codriverController, IOConstants.rightBumperChannel);
+  private final JoystickButton driverButtonB = new JoystickButton(driverController, IOConstants.bButtonChannel);
+  private final JoystickButton buttonSelect = new JoystickButton(coDriverController, IOConstants.backButtonChannel);
+  private final JoystickButton buttonX = new JoystickButton(coDriverController, IOConstants.xButtonChannel);
+  private final JoystickButton buttonY = new JoystickButton(coDriverController, IOConstants.yButtonChannel);
+  private final JoystickButton buttonA = new JoystickButton(coDriverController, IOConstants.aButtonChannel);
+  private final JoystickButton buttonB = new JoystickButton(coDriverController, IOConstants.bButtonChannel);
+  private final JoystickButton buttonLeftBumper = new JoystickButton(coDriverController, IOConstants.leftBumperChannel);
+  private final JoystickButton buttonRightBumper = new JoystickButton(coDriverController, IOConstants.rightBumperChannel);
 
   // subsystems
   private final Drive drive = new Drive();
@@ -60,17 +60,8 @@ public class RobotContainer {
   // autos //
   ///////////
 
-  private final Command m_noAuto = new InstantCommand();
-  private final Command driveOutLong = Autos.drive(drive, 0.3, 15);
-  private final Command driveOutMid = Autos.drive(drive, 0.3, 10);
-  private final Command driveOutShort = Autos.drive(drive, 0.3, 6.5);
-  private final Command m_balance = Autos.balance(drive, 0.3, 5);
-  private final Command m_scoreCube = Autos.scoreCubeStay(elevator, arm, claw);
-  private final Command m_scoreCubeLeave = Autos.scoreCubeLeave(drive, elevator, arm, claw, -0.3, 15);
-  private final Command m_scoreCubeBalance = Autos.scoreCubeBalance(elevator, arm, claw, drive, 0.3, 12, 5);
-
   // A chooser for autonomous commands
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  SendableChooser<Command> chooser = new SendableChooser<>();
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -78,23 +69,31 @@ public class RobotContainer {
     // get them cameras
     CameraServer.startAutomaticCapture();
 
-    m_chooser.setDefaultOption("score cube balance", m_scoreCubeBalance);
-    m_chooser.addOption("balance", m_balance);
-    m_chooser.addOption("score cube leave", m_scoreCubeLeave);
-    m_chooser.addOption("score cube", m_scoreCube);
-    m_chooser.addOption("drive out short", driveOutShort);
-    m_chooser.addOption("drive out mid", driveOutMid);
-    m_chooser.addOption("drive out long", driveOutLong);
-    m_chooser.addOption("No Auto", m_noAuto);
+    Command m_scoreCubeBalance = Autos.scoreCubeBalance(elevator, arm, claw, drive, 0.5, 20, 7);
+    Command m_balance = Autos.balance(drive, 0.3, 5);
+    Command m_scoreCubeLeave = Autos.scoreCubeLeave(drive, elevator, arm, claw, -0.3, 15);
+    Command m_scoreCube = Autos.scoreCubeStay(elevator, arm, claw);
+    Command driveOutShort = Autos.drive(drive, 0.3, 6.5);
+    Command driveOutMid = Autos.drive(drive, 0.3, 10);
+    Command driveOutLong = Autos.drive(drive, 0.3, 15);
+    Command m_noAuto = new InstantCommand();
+    chooser.setDefaultOption("score cube balance", m_scoreCubeBalance);
+    chooser.addOption("balance", m_balance);
+    chooser.addOption("score cube leave", m_scoreCubeLeave);
+    chooser.addOption("score cube", m_scoreCube);
+    chooser.addOption("drive out short", driveOutShort);
+    chooser.addOption("drive out mid", driveOutMid);
+    chooser.addOption("drive out long", driveOutLong);
+    chooser.addOption("No Auto", m_noAuto);
 
-    SmartDashboard.putData(m_chooser);
+    SmartDashboard.putData(chooser);
 
     // default commands
-    drive.setDefaultCommand(new driveCommand(drive, elevator, m_driverController));
-    arm.setDefaultCommand(new ArmCommand(arm, m_codriverController));
-    elevator.setDefaultCommand(new ElevatorCommand(elevator, m_codriverController));
-    claw.setDefaultCommand(new clawCommand(m_codriverController, claw));
-    // m_Vision.setDefaultCommand(new visionController(m_codriverController, m_Vision, claw));
+    drive.setDefaultCommand(new driveCommand(drive, elevator, driverController));
+    arm.setDefaultCommand(new ArmCommand(arm, coDriverController));
+    elevator.setDefaultCommand(new ElevatorCommand(elevator, coDriverController));
+    claw.setDefaultCommand(new clawCommand(coDriverController, claw));
+    // m_Vision.setDefaultCommand(new visionController(coDriverController, m_Vision, claw));
 
     // Configure the trigger bindings
     configureBindings();
@@ -107,41 +106,41 @@ public class RobotContainer {
     // end affector commands
 
     // lock claw joystick movements
-    buttonSelect.onTrue(new InstantCommand(() -> claw.toggleEndAffectorLock(), claw));
+    buttonSelect.onTrue(new InstantCommand(() -> claw.toggleEndEffectorLock(), claw));
 
-    buttonlb.whileTrue(new StartEndCommand(
+    buttonLeftBumper.whileTrue(new StartEndCommand(
       () -> claw.runBoth(0.4),
       () -> claw.stopBoth(),
     claw));
     
-    buttonrb.whileTrue(new StartEndCommand(
+    buttonRightBumper.whileTrue(new StartEndCommand(
       () -> claw.runBoth(-0.4),
       () -> claw.stopBoth(),
     claw));
 
-    // buttonA.whileTrue(new StartEndCommand(
-    //   () -> claw.runLeft(-0.5),
-    //   () -> claw.stopLeft(), 
-    // claw));
+    /*
+     buttonA.whileTrue(new StartEndCommand(
+       () -> claw.runLeft(-0.5),
+       () -> claw.stopLeft(),
+     claw));
+     buttonB.whileTrue(new StartEndCommand(
+       () -> claw.runLeft(0.5),
+       () -> claw.stopLeft(),
+     claw));
+     buttonX.whileTrue(new StartEndCommand(
+       () -> claw.runRight(-0.5),
+       () -> claw.stopRight(),
+     claw));
+     buttonY.whileTrue(new StartEndCommand(
+       () -> claw.runRight(0.5),
+       () -> claw.stopRight(),
+     claw));
+    */
 
-    // buttonB.whileTrue(new StartEndCommand(
-    //   () -> claw.runLeft(0.5),
-    //   () -> claw.stopLeft(), 
-    // claw));
-
-    // buttonX.whileTrue(new StartEndCommand(
-    //   () -> claw.runRight(-0.5),
-    //   () -> claw.stopRight(), 
-    // claw));
-
-    // buttonY.whileTrue(new StartEndCommand(
-    //   () -> claw.runRight(0.5),
-    //   () -> claw.stopRight(), 
-    // claw));
   }
 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return m_chooser.getSelected();
+    return chooser.getSelected();
   }
 }

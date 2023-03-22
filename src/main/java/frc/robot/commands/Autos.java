@@ -33,16 +33,16 @@ public final class Autos {
 
   public static CommandBase scoreCubeStay(Elevator elevator, Arm arm, Claw end) {
     return Commands.sequence(
-      new MoveElevator(elevator, 0.4, 83),
-      new moveArm(arm, 0.3, 56), 
-      new moveClaw(end, 0.3, 0.075));
+      new MoveElevator(elevator, 0.6, 83),
+      new moveArm(arm, 0.6, 56), 
+      new moveClaw(end, 0.6, 0.075));
   }
 
 
-  public static CommandBase moveArmIn(Elevator elevator, Arm arm, Claw end) {
+  public static CommandBase moveArmIn(Elevator elevator, Arm arm) {
     return Commands.sequence(
-      new moveArm(arm, -0.3, 1), 
-      new MoveElevator(elevator, -0.4, 1));
+      new moveArm(arm, -0.6, 1), 
+      new MoveElevator(elevator, -0.6, 1));
   }
   
 
@@ -50,7 +50,7 @@ public final class Autos {
       double driveSpeed, double backDistance, double forwardDistance) {
     return Commands.sequence(
       scoreCubeStay(elevator, arm, end), 
-      moveArmIn(elevator, arm, end), 
+      moveArmIn(elevator, arm),
       drive(drive, -driveSpeed, backDistance), 
       balance(drive, driveSpeed, forwardDistance));
   }
@@ -60,13 +60,13 @@ public final class Autos {
         double speed, double distance) {
       return Commands.sequence(
         scoreCubeStay(elevator, arm, end),
-        moveArmIn(elevator, arm, end),
+        moveArmIn(elevator, arm),
         drive(drive, speed, distance));
   }
 
 
   private Autos() {
-    // not meant to be defiend
+    // not meant to be defined
     throw new UnsupportedOperationException("This is a utility class!");
   }
 }
