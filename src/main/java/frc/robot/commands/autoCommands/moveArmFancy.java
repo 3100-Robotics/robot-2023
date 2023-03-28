@@ -1,15 +1,16 @@
 package frc.robot.commands.autoCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 
-public class moveArm extends CommandBase{
+public class moveArmFancy extends CommandBase{
 
     // var setup
     Arm arm;
-    double distance, speed;
+    double distance, speed = 0;
 
-    public moveArm(Arm arm, double speed, double distance) {
+    public moveArmFancy(Arm arm, double speed, double distance) {
         // typical stuff
         this.arm = arm;
         this.distance = distance;
@@ -18,7 +19,13 @@ public class moveArm extends CommandBase{
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+        SmartDashboard.putNumber("relative distance", distance);
+        double currDistance = arm.GetEncoderRotation();
+        SmartDashboard.putNumber("curr distance", currDistance);
+        distance = currDistance - 2.5;
+        SmartDashboard.putNumber("absolute distance", distance);
+    }
 
     @Override
     public void execute() {

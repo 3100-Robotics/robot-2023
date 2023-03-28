@@ -6,7 +6,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.endEffectorConstants;
 
@@ -38,8 +38,9 @@ public class Claw extends SubsystemBase{
     @Override
     public void periodic() {
         // useful details
-        SmartDashboard.putNumber("left encoder", getLeftEncoder());
-        SmartDashboard.putNumber("right encoder", getRightEncoder());
+        Shuffleboard.selectTab("debug");
+//        SmartDashboard.putNumber("left encoder", getLeftEncoder());
+//        SmartDashboard.putNumber("right encoder", getRightEncoder());
     }
 
     public void toggleEndEffectorLock() {

@@ -27,12 +27,12 @@ public class Arm extends SubsystemBase{
         // pid config
         setpointNum = 1;
         controller = new PIDController(ArmMotorConstants.kp, ArmMotorConstants.ki, ArmMotorConstants.kd);
-        controller.setSetpoint(ArmMotorConstants.armLevels[setpointNum - 1]);
+//        controller.setSetpoint(ArmMotorConstants.armLevels[setpointNum - 1]);
 
         // encoder.setPositionConversionFactor(ArmMotorConstants.encoderPosFactor);
 
-        armMotor.setSoftLimit(SoftLimitDirection.kForward, ArmMotorConstants.softLimitRots);
         armMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        armMotor.setSoftLimit(SoftLimitDirection.kForward, 58);
         armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         armMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
 
@@ -44,7 +44,7 @@ public class Arm extends SubsystemBase{
     @Override
     public void periodic() {
         SmartDashboard.putNumber("arm pos", GetEncoderRotation());
-        SmartDashboard.putBoolean("at setpoint", atSetpoint());
+//        SmartDashboard.putBoolean("at setpoint", atSetpoint());
     }
 
     public boolean atSetpoint() {

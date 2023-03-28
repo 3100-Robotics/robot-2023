@@ -3,11 +3,12 @@ package frc.robot.subsystems;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
@@ -30,11 +31,16 @@ public class Elevator extends SubsystemBase{
         // pid
         setpointNum = 1;
         controller = new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd);
-        controller.setSetpoint(ElevatorConstants.elevatorLevels[setpointNum - 1]);
+//        controller.setSetpoint(ElevatorConstants.elevatorLevels[setpointNum - 1]);
         // motor config
         LeftElevatorMotor.setIdleMode(IdleMode.kBrake);
         RightElevatorMotor.setIdleMode(IdleMode.kBrake);
-        // RightElevatorMotor.follow(LeftElevatorMotor, true);
+        RightElevatorMotor.follow(LeftElevatorMotor, true);
+
+        LeftElevatorMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        LeftElevatorMotor.setSoftLimit(SoftLimitDirection.kForward, 84);
+        LeftElevatorMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        LeftElevatorMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
     }
 
     public boolean atSetpoint() {
@@ -75,9 +81,10 @@ public class Elevator extends SubsystemBase{
     @Override
     public void periodic() {
         // useful data
-        SmartDashboard.putNumber("elevator pos", GetEncoderRotation());
-        
-        SmartDashboard.putNumber("elevator Speed", speed);
+        Shuffleboard.selectTab("debug");
+//        SmartDashboard.putNumber("elevator pos", GetEncoderRotation());
+//
+//        SmartDashboard.putNumber("elevator Speed", speed);
     }
 }
 

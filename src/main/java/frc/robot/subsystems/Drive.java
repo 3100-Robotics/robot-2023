@@ -11,6 +11,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.driveTrainConstants;
@@ -31,7 +32,9 @@ public class Drive extends SubsystemBase{
     private static final DifferentialDrive drive = new DifferentialDrive(frontLeftMotor, frontRightMotor);
 
     // slew rate limiter
-    private final SlewRateLimiter speedLimiter = new SlewRateLimiter(driveTrainConstants.driveSlewRate);
+//    private final SlewRateLimiter speedLimiter = new SlewRateLimiter(driveTrainConstants.driveStartSlewRate,
+//            driveTrainConstants.driveStopSlewRate, 0);
+    private  final SlewRateLimiter speedLimiter = new SlewRateLimiter(driveTrainConstants.driveStartSlewRate);
 
     // pid controller. named driveController in case I want to add a turn controller
     private final PIDController driveController = new PIDController(
@@ -39,7 +42,7 @@ public class Drive extends SubsystemBase{
 
     // navx gyro
     private static final AHRS gyro = new AHRS(SPI.Port.kMXP);
-    
+
     private final DifferentialDriveOdometry odometry;
 
     public Drive() {
@@ -47,8 +50,8 @@ public class Drive extends SubsystemBase{
         drive.setDeadband(0.05);
         // pid
         driveController.enableContinuousInput(-180, 180);
-        driveController.setTolerance(driveTrainConstants.kDriveToleranceMeter,
-            driveTrainConstants.kDriveRateToleranceMeterPerS);
+//        driveController.setTolerance(driveTrainConstants.kDriveToleranceMeter,
+//            driveTrainConstants.kDriveRateToleranceMeterPerS);
 
         
         // config
@@ -62,7 +65,7 @@ public class Drive extends SubsystemBase{
     public void arcadeDrive(double speed, double rotation) {
         // arcade drive
         drive.arcadeDrive(speedLimiter.calculate(speed), rotation, false);
-        // drive.arcadeDrive(speedLimiter.calculate(rotation), turnLimiter.calculate(rotation), false);
+//         drive.arcadeDrive(rotation, rotation, false);
     }
 
     public void curvyDrive(double speed, double rotation, Boolean allowTurnInPlace) {
@@ -127,8 +130,10 @@ public class Drive extends SubsystemBase{
     @Override
     public void periodic() {
         // useful info
+        Shuffleboard.selectTab("debug");
         SmartDashboard.putData(drive);
         SmartDashboard.putData(gyro);
+
     }
 
     private void configureMotors() {

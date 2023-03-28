@@ -26,6 +26,11 @@ public class moveClaw extends CommandBase{
   @Override
   public boolean isFinished() {
     // am I finished?
-    return claw.getLeftEncoder() >= distance;
+    if (speed < 0) {
+      return claw.getLeftEncoder() <= distance;
+    }
+    else {
+      return claw.getLeftEncoder() >= distance;
+    }
   }
 }

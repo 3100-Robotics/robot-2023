@@ -39,7 +39,7 @@ public class driveCommand extends CommandBase{
     }
     else {
       xSpeed *= 0.5;
-      zRotation *= 0.25;
+      zRotation *= 0.27;
     }
 
     xSpeed *= 1.4 - Math.abs(elevator.GetEncoderRotation()*0.01);

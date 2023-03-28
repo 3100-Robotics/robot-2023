@@ -35,7 +35,15 @@ public final class Autos {
     return Commands.sequence(
       new MoveElevator(elevator, 0.6, 83),
       new moveArm(arm, 0.6, 56), 
-      new moveClaw(end, 0.6, 0.075));
+      new moveClaw(end, 0.6, 0.075),
+            moveArmIn(elevator, arm));
+  }
+
+  public static CommandBase scoreCube(Elevator elevator, Arm arm, Claw end) {
+    return Commands.sequence(
+            new MoveElevator(elevator, 0.6, 83),
+            new moveArm(arm, 0.6, 56),
+            new moveClaw(end, 0.6, 0.075));
   }
 
 
@@ -49,7 +57,7 @@ public final class Autos {
   public static CommandBase scoreCubeBalance(Elevator elevator, Arm arm, Claw end, Drive drive, 
       double driveSpeed, double backDistance, double forwardDistance) {
     return Commands.sequence(
-      scoreCubeStay(elevator, arm, end), 
+      scoreCube(elevator, arm, end),
       moveArmIn(elevator, arm),
       drive(drive, -driveSpeed, backDistance), 
       balance(drive, driveSpeed, forwardDistance));
@@ -59,7 +67,7 @@ public final class Autos {
   public static CommandBase scoreCubeLeave(Drive drive, Elevator elevator, Arm arm, Claw end,
         double speed, double distance) {
       return Commands.sequence(
-        scoreCubeStay(elevator, arm, end),
+        scoreCube(elevator, arm, end),
         moveArmIn(elevator, arm),
         drive(drive, speed, distance));
   }

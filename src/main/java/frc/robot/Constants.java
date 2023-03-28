@@ -37,7 +37,8 @@ public final class Constants {
     public final static double k_driveD = 0;
 
     // slew rate constant
-    public final static double driveSlewRate = 4.5;
+    public final static double driveStartSlewRate = 2.25;
+    public final static double driveStopSlewRate = -4.5;
 
     // gear reduction math
     public final static int SENSOR_UNITS_PER_ROTATION = 2048;
@@ -96,6 +97,10 @@ public final class Constants {
     // gear ratio math
     private final static double GEAR_REDUCTION = 25;
     private final static double WINCH_RADIOUS = 1.29/2;
+    public final static int kSensorUnitsPerRotation = 42;
+    public final static double kInches2Rots = 2 * Math.PI * WINCH_RADIOUS / GEAR_REDUCTION;
+    public final static double kRots2inches = 1/kInches2Rots;
+    public final static double kcircumperence = 2 * Math.PI * WINCH_RADIOUS;
 
     public final static double doubleSoftLimitRots = 20;
     public final static float rightSoftLimitRots = (float) doubleSoftLimitRots;
