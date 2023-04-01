@@ -43,7 +43,7 @@ public class RobotContainer {
   private final XboxController coDriverController =
       new XboxController(OperatorConstants.CO_DRIVER_CONTROLLER_PORT);
 
-  private EventLoop dpadLoop = new EventLoop();
+  private final EventLoop dpadLoop = new EventLoop();
 
   // buttons for commands
   private final JoystickButton driverButtonB = new JoystickButton(driverController, IOConstants.bButtonChannel);
