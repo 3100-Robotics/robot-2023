@@ -17,6 +17,7 @@ import frc.robot.commands.driveCommand;
 import frc.robot.commands.clawCommand;
 import frc.robot.commands.autoCommands.balance;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Claw;
@@ -63,6 +64,7 @@ public class RobotContainer {
   private final Arm arm = new Arm();
   private final Elevator elevator = new Elevator();
   private final Claw claw = new Claw();
+  private final ArmSubsystem armSub = new ArmSubsystem();
   // private final vision m_Vision = new vision();
 
   ///////////
