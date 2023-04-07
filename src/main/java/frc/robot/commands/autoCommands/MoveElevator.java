@@ -3,13 +3,13 @@ package frc.robot.commands.autoCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
-public class MoveElevator extends CommandBase{
+public class moveElevator extends CommandBase{
 
     // var setup
     Elevator arm;
     double distance, speed;
 
-    public MoveElevator(Elevator arm, double speed, double distance) {
+    public moveElevator(Elevator arm, double speed, double distance) {
         // typical stuff
         this.arm = arm;
         this.distance = distance;
@@ -22,12 +22,12 @@ public class MoveElevator extends CommandBase{
 
     @Override
     public void execute() {
-        arm.Run(speed);
+        arm.run(speed);
     }
 
     @Override
     public void end(boolean interrupted) {
-        arm.Stop();
+        arm.stop();
     }
 
     @Override

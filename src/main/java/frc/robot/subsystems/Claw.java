@@ -19,7 +19,7 @@ public class Claw extends SubsystemBase{
     private final RelativeEncoder RightEncoder = rightEffector.getEncoder();
 
     // are the joystick controls locked?
-    public Boolean endEffectorLock = false;
+    public boolean endEffectorLock = false;
 
     public Claw() {
         leftEffector.setInverted(false);
