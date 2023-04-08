@@ -1,0 +1,23 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Arm": "Mechanism2d",
+      "/SmartDashboard/DifferentialDrive[1]": "DifferentialDrive",
+      "/SmartDashboard/SendableChooser[0]": "String Chooser",
+      "/SmartDashboard/navX-Sensor[4]": "Gyro"
+    },
+    "windows": {
+      "/SmartDashboard/Arm": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/DifferentialDrive[1]": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  }
+}
