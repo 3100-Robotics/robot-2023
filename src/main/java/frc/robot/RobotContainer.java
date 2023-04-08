@@ -64,8 +64,6 @@ public class RobotContainer {
 
   // subsystems
   private final Drive drive = new Drive();
-  private final Arm arm = new Arm();
-  private final Elevator elevator = new Elevator();
   private final Claw claw = new Claw();
   public final ArmSubsystem armSub = new ArmSubsystem(); // Public isn't too dangerous here
   // private final vision m_Vision = new vision();
@@ -83,18 +81,18 @@ public class RobotContainer {
     // get them cameras
     CameraServer.startAutomaticCapture();
 
-    Command m_scoreCubeBalance = Autos.scoreCubeBalance(elevator, arm, claw, drive, 0.3, 17.7, 7);
+    // Command m_scoreCubeBalance = Autos.scoreCubeBalance(elevator, arm, claw, drive, 0.3, 17.7, 7); FIXME: Replace with new system
     Command m_balance = Autos.balance(drive, 0.3, 5);
-    Command m_scoreCubeLeave = Autos.scoreCubeLeave(drive, elevator, arm, claw, -0.3, 20);
-    Command m_scoreCube = Autos.scoreCubeStay(elevator, arm, claw);
+    // Command m_scoreCubeLeave = Autos.scoreCubeLeave(drive, elevator, arm, claw, -0.3, 20);
+    // Command m_scoreCube = Autos.scoreCubeStay(elevator, arm, claw);
     Command driveOutShort = Autos.drive(drive, 0.3, 6.5);
     Command driveOutMid = Autos.drive(drive, 0.3, 10);
     Command driveOutLong = Autos.drive(drive, 0.3, 15);
     Command m_noAuto = new InstantCommand();
-    chooser.setDefaultOption("score cube balance", m_scoreCubeBalance);
+    // chooser.setDefaultOption("score cube balance", m_scoreCubeBalance);
     chooser.addOption("balance", m_balance);
-    chooser.addOption("score cube leave", m_scoreCubeLeave);
-    chooser.addOption("score cube", m_scoreCube);
+    // chooser.addOption("score cube leave", m_scoreCubeLeave);
+    // chooser.addOption("score cube", m_scoreCube);
     chooser.addOption("drive out short", driveOutShort);
     chooser.addOption("drive out mid", driveOutMid);
     chooser.addOption("drive out long", driveOutLong);
@@ -103,9 +101,9 @@ public class RobotContainer {
     SmartDashboard.putData(chooser);
 
     // default commands
-    drive.setDefaultCommand(new driveCommand(drive, elevator, driverController));
-    arm.setDefaultCommand(new ArmCommand(arm, coDriverController));
-    elevator.setDefaultCommand(new ElevatorCommand(elevator, coDriverController));
+    drive.setDefaultCommand(new driveCommand(drive, driverController));
+    // arm.setDefaultCommand(new ArmCommand(arm, coDriverController));
+    // elevator.setDefaultCommand(new ElevatorCommand(elevator, coDriverController));
     claw.setDefaultCommand(new clawCommand(coDriverController, claw));
     // m_Vision.setDefaultCommand(new visionController(coDriverController, m_Vision, claw));
 

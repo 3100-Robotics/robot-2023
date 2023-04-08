@@ -6,13 +6,17 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase{
+    private static final double ENCODER_TICKS_TO_METERS = 1; // FIXME: Calculate using hardware. Use REV Hardware Client to measure ticks at top and divide by the max height of the elevator
+
     // Motors
     private final CANSparkMax leftMotor = new CANSparkMax(ElevatorConstants.LeftElevatorMotor, MotorType.kBrushless);
     private final CANSparkMax rightMotor = new CANSparkMax(ElevatorConstants.RightElevatorMotor, MotorType.kBrushless);
@@ -27,6 +31,8 @@ public class Elevator extends SubsystemBase{
     public PIDController controller;
     int setpointNum;
     double speed;
+
+    private double targetHeight;
 
     public Elevator(){
         // pid
@@ -47,18 +53,17 @@ public class Elevator extends SubsystemBase{
 
     /**
      * Set where the elevator should be positioned
-     * @param position How high the elevator should be (between 0 and 1, 0 being floor, 1 being max)
+     * @param height How high the elevator should be in meters
      */
-    public void setTargetPosition(double position) {
-        // Check that the position is valid
-        if (position > 1 || position < 0) {
-            System.out.println("Trying to set elevator to invalid position");
-            return;
-        }
+    public void setTargetHeight(double height) {
+        // TODO: Add check to make sure that it isn't trying to go too high or too low
+        targetHeight = height;
     }
 
-    public double getTargetPosition() {
-        return 0.0;
+    public double getHeightMeters() {
+        if (RobotBase.isSimulation()) { return targetHeight; } // Just feed back what it was told to do for simulation mode
+
+        return internalEncoder.getPosition() * ENCODER_TICKS_TO_METERS;
     }
 
     public boolean atSetpoint() {
@@ -66,6 +71,7 @@ public class Elevator extends SubsystemBase{
         return controller.atSetpoint();
     }
 
+    @Deprecated
     public void run(double speed) {
         // set motor speed
         leftMotor.set(limiter.calculate(speed));
@@ -76,14 +82,24 @@ public class Elevator extends SubsystemBase{
         leftMotor.stopMotor();
     }
 
+    @Deprecated
     public double GetEncoderRotation(){
         // get the pos of the elevator
         // return encoder.getPosition();
         return internalEncoder.getPosition();
     }
 
+
+
     @Override
     public void periodic() {
+        // Set output based on target and current height
+        leftMotor.set(
+            controller.calculate(
+                getHeightMeters(), 
+                targetHeight)
+        );
+
         // useful data
         Shuffleboard.selectTab("debug");
 //        SmartDashboard.putNumber("elevator pos", GetEncoderRotation());

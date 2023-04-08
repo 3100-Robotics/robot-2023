@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -15,20 +16,30 @@ public class ArmSubsystem extends SubsystemBase {
     // Arm ligaments (sections)
     private final MechanismLigament2d elevatorSim = root.append(new MechanismLigament2d("elevator", 0, 90));
     private final MechanismLigament2d forearmSim = elevatorSim.append(new MechanismLigament2d("forearm", 0, -90));
+
+    private final Elevator elevator = new Elevator();
+    private final Arm forearm = new Arm();
     
     public ArmSubsystem() {
         // Publish the arm simulation to SmartDashboard
         SmartDashboard.putData("Arm", mech);
-        elevatorSim.setLength(1.5);
-        forearmSim.setLength(0.5);
+
+        // Tell the arm to go to a safe position until another is demanded
+        setTargetPosition(new Translation2d(0.25, 0.3)); // FIXME: Set to something good
     }
 
     public void setTargetPosition(Translation2d position) {
-        elevatorSim.setLength(position.getY());
-        forearmSim.setLength(position.getY());
+        elevator.setTargetHeight(position.getY());
+        forearm.setTargetExtension(position.getX());
     }
 
     public boolean atTargetPosition() {
-        return true;
+        return (elevator.atSetpoint() && forearm.atSetpoint()) || RobotBase.isSimulation();
+    }
+
+    @Override
+    public void periodic() {
+        elevatorSim.setLength(elevator.getHeightMeters());
+        forearmSim.setLength(forearm.getExtensionMeters());
     }
 }

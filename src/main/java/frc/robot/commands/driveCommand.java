@@ -10,15 +10,13 @@ public class driveCommand extends CommandBase{
 
   // var setup
   private final Drive drive;
-  private final Elevator elevator;
   private final XboxController controller;
 
   double xSpeed, zRotation;
 
-  public driveCommand(Drive drive, Elevator elevator, XboxController controller) {
+  public driveCommand(Drive drive, XboxController controller) {
     // typical stuff
     this.drive = drive;
-    this.elevator = elevator;
     this.controller = controller;
     addRequirements(this.drive);
   }
@@ -42,7 +40,7 @@ public class driveCommand extends CommandBase{
       zRotation *= 0.27;
     }
 
-    xSpeed *= 1.4 - Math.abs(elevator.GetEncoderRotation()*0.01);
+    // xSpeed *= 1.4 - Math.abs(elevator.GetEncoderRotation()*0.01); FIXME: Replace with alternative. This seems pretty jank, there is probably a better way of doing it
 
     // drive robot
     drive.arcadeDrive(xSpeed, zRotation);
