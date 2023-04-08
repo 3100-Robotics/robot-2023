@@ -15,6 +15,7 @@ import frc.robot.commands.autoCommands.moveArmFancy;
 import frc.robot.commands.autoCommands.moveClaw;
 import frc.robot.commands.driveCommand;
 import frc.robot.commands.clawCommand;
+import frc.robot.commands.autoCommands.MoveArmToPositionCommand;
 import frc.robot.commands.autoCommands.balance;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmSubsystem;
@@ -22,6 +23,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Claw;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,6 +50,7 @@ public class RobotContainer {
 
   // buttons for commands
   private final JoystickButton driverButtonB = new JoystickButton(driverController, IOConstants.bButtonChannel);
+  private final JoystickButton driverButtonY = new JoystickButton(driverController, IOConstants.yButtonChannel);
   private final JoystickButton buttonSelect = new JoystickButton(coDriverController, IOConstants.backButtonChannel);
   private final JoystickButton buttonStart = new JoystickButton(coDriverController, IOConstants.startButtonChannel);
   private final JoystickButton buttonX = new JoystickButton(coDriverController, IOConstants.xButtonChannel);
@@ -64,7 +67,7 @@ public class RobotContainer {
   private final Arm arm = new Arm();
   private final Elevator elevator = new Elevator();
   private final Claw claw = new Claw();
-  private final ArmSubsystem armSub = new ArmSubsystem();
+  public final ArmSubsystem armSub = new ArmSubsystem(); // Public isn't too dangerous here
   // private final vision m_Vision = new vision();
 
   ///////////
@@ -113,11 +116,14 @@ public class RobotContainer {
   private void configureBindings() {
     // drivetrain commands
     driverButtonB.whileTrue(new balance(drive));
+
+    driverButtonB.whileTrue(new MoveArmToPositionCommand(this, () -> new Translation2d(1, 1)));
+    driverButtonY.whileTrue(new MoveArmToPositionCommand(this, () -> new Translation2d(0.5, 0.5)));
     
     // end affector commands
 
     // lock claw joystick movements
-    buttonDpadUp.onTrue(new moveArmFancy(arm, -0.3, 2.5));
+    // buttonDpadUp.onTrue(new moveArmFancy(arm, -0.3, 2.5));
     buttonDpadLeft.onTrue(new moveClaw(claw, -0.3, 0));
 
     buttonLeftBumper.whileTrue(new StartEndCommand(

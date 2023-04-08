@@ -13,13 +13,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase{
-    // motors
-    private final CANSparkMax LeftElevatorMotor = new CANSparkMax(ElevatorConstants.LeftElevatorMotor, MotorType.kBrushless);
-    private final CANSparkMax RightElevatorMotor = new CANSparkMax(ElevatorConstants.RightElevatorMotor, MotorType.kBrushless);
+    // Motors
+    private final CANSparkMax leftMotor = new CANSparkMax(ElevatorConstants.LeftElevatorMotor, MotorType.kBrushless);
+    private final CANSparkMax rightMotor = new CANSparkMax(ElevatorConstants.RightElevatorMotor, MotorType.kBrushless);
 
-    // encoder
-    private final RelativeEncoder internalEncoder = LeftElevatorMotor.getEncoder();
+    // Encoder
+    private final RelativeEncoder internalEncoder = leftMotor.getEncoder(); // Only use the encoder off of the left NEO
 
+    // Limiter to ensure that the arm does not accelerate too rapidly
     private final SlewRateLimiter limiter = new SlewRateLimiter(ElevatorConstants.slewRate);
 
     // pid things
@@ -32,15 +33,32 @@ public class Elevator extends SubsystemBase{
         setpointNum = 1;
         controller = new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd);
 //        controller.setSetpoint(ElevatorConstants.elevatorLevels[setpointNum - 1]);
-        // motor config
-        LeftElevatorMotor.setIdleMode(IdleMode.kBrake);
-        RightElevatorMotor.setIdleMode(IdleMode.kBrake);
-        RightElevatorMotor.follow(LeftElevatorMotor, true);
 
-        LeftElevatorMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        LeftElevatorMotor.setSoftLimit(SoftLimitDirection.kForward, 84);
-        LeftElevatorMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        LeftElevatorMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        // Configure motors
+        leftMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.follow(leftMotor, true);
+
+        leftMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        leftMotor.setSoftLimit(SoftLimitDirection.kForward, 84);
+        leftMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        leftMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    }
+
+    /**
+     * Set where the elevator should be positioned
+     * @param position How high the elevator should be (between 0 and 1, 0 being floor, 1 being max)
+     */
+    public void setTargetPosition(double position) {
+        // Check that the position is valid
+        if (position > 1 || position < 0) {
+            System.out.println("Trying to set elevator to invalid position");
+            return;
+        }
+    }
+
+    public double getTargetPosition() {
+        return 0.0;
     }
 
     public boolean atSetpoint() {
@@ -48,28 +66,14 @@ public class Elevator extends SubsystemBase{
         return controller.atSetpoint();
     }
 
-    public void setSetpoint(double setpoint) {
-        // change that setpoint
-        controller.setSetpoint(setpoint);
-    }
-
-    public double calculate(double measurement) {
-        // use the pid to get speed
-        return controller.calculate(measurement);
-    }
-
-    public double getSetpoint() {
-        return controller.getSetpoint();
-    }
-
-    public void Run(double speed) {
+    public void run(double speed) {
         // set motor speed
-        LeftElevatorMotor.set(limiter.calculate(speed));
+        leftMotor.set(limiter.calculate(speed));
     }
 
-    public void Stop(){
+    public void stop(){
         // stop elevator
-        LeftElevatorMotor.stopMotor();
+        leftMotor.stopMotor();
     }
 
     public double GetEncoderRotation(){

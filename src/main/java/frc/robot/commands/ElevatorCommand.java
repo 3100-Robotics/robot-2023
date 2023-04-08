@@ -24,7 +24,7 @@ public class ElevatorCommand extends CommandBase{
         if (speed < 0.1 && speed > -0.1) {
             speed = 0.03;
         }
-        elevator.Run(speed);
+        elevator.run(speed);
     }
 
     @Override
