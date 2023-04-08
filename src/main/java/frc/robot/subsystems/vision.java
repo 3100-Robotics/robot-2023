@@ -5,11 +5,11 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class vision extends SubsystemBase{
+public class Vision extends SubsystemBase{
     
     PhotonCamera camera = new PhotonCamera("photonvision");
 
-    public vision() {}
+    public Vision() {}
 
     public PhotonPipelineResult getCamera1Results() {
         // get results for the camera

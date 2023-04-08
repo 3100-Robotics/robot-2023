@@ -6,20 +6,25 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase{
-    // motors
-    private final CANSparkMax LeftElevatorMotor = new CANSparkMax(ElevatorConstants.LeftElevatorMotor, MotorType.kBrushless);
-    private final CANSparkMax RightElevatorMotor = new CANSparkMax(ElevatorConstants.RightElevatorMotor, MotorType.kBrushless);
+    private static final double ENCODER_TICKS_TO_METERS = 1; // FIXME: Calculate using hardware. Use REV Hardware Client to measure ticks at top and divide by the max height of the elevator
 
-    // encoder
-    private final RelativeEncoder internalEncoder = LeftElevatorMotor.getEncoder();
+    // Motors
+    private final CANSparkMax leftMotor = new CANSparkMax(ElevatorConstants.LeftElevatorMotor, MotorType.kBrushless);
+    private final CANSparkMax rightMotor = new CANSparkMax(ElevatorConstants.RightElevatorMotor, MotorType.kBrushless);
 
+    // Encoder
+    private final RelativeEncoder internalEncoder = leftMotor.getEncoder(); // Only use the encoder off of the left NEO
+
+    // Limiter to ensure that the arm does not accelerate too rapidly
     private final SlewRateLimiter limiter = new SlewRateLimiter(ElevatorConstants.slewRate);
 
     // pid things
@@ -27,20 +32,38 @@ public class Elevator extends SubsystemBase{
     int setpointNum;
     double speed;
 
+    private double targetHeight;
+
     public Elevator(){
         // pid
         setpointNum = 1;
         controller = new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd);
 //        controller.setSetpoint(ElevatorConstants.elevatorLevels[setpointNum - 1]);
-        // motor config
-        LeftElevatorMotor.setIdleMode(IdleMode.kBrake);
-        RightElevatorMotor.setIdleMode(IdleMode.kBrake);
-        RightElevatorMotor.follow(LeftElevatorMotor, true);
 
-        LeftElevatorMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        LeftElevatorMotor.setSoftLimit(SoftLimitDirection.kForward, 84);
-        LeftElevatorMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        LeftElevatorMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        // Configure motors
+        leftMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.follow(leftMotor, true);
+
+        leftMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        leftMotor.setSoftLimit(SoftLimitDirection.kForward, 84);
+        leftMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        leftMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    }
+
+    /**
+     * Set where the elevator should be positioned
+     * @param height How high the elevator should be in meters
+     */
+    public void setTargetHeight(double height) {
+        // TODO: Add check to make sure that it isn't trying to go too high or too low
+        targetHeight = height;
+    }
+
+    public double getHeightMeters() {
+        if (RobotBase.isSimulation()) { return targetHeight; } // Just feed back what it was told to do for simulation mode
+
+        return internalEncoder.getPosition() * ENCODER_TICKS_TO_METERS;
     }
 
     public boolean atSetpoint() {
@@ -48,38 +71,35 @@ public class Elevator extends SubsystemBase{
         return controller.atSetpoint();
     }
 
-    public void setSetpoint(double setpoint) {
-        // change that setpoint
-        controller.setSetpoint(setpoint);
-    }
-
-    public double calculate(double measurement) {
-        // use the pid to get speed
-        return controller.calculate(measurement);
-    }
-
-    public double getSetpoint() {
-        return controller.getSetpoint();
-    }
-
-    public void Run(double speed) {
+    @Deprecated
+    public void run(double speed) {
         // set motor speed
-        LeftElevatorMotor.set(limiter.calculate(speed));
+        leftMotor.set(limiter.calculate(speed));
     }
 
-    public void Stop(){
+    public void stop(){
         // stop elevator
-        LeftElevatorMotor.stopMotor();
+        leftMotor.stopMotor();
     }
 
+    @Deprecated
     public double GetEncoderRotation(){
         // get the pos of the elevator
         // return encoder.getPosition();
         return internalEncoder.getPosition();
     }
 
+
+
     @Override
     public void periodic() {
+        // Set output based on target and current height
+        leftMotor.set(
+            controller.calculate(
+                getHeightMeters(), 
+                targetHeight)
+        );
+
         // useful data
         Shuffleboard.selectTab("debug");
 //        SmartDashboard.putNumber("elevator pos", GetEncoderRotation());
