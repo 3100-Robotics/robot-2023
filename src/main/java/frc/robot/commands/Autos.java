@@ -4,9 +4,10 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.autoCommands.moveForward;
 import frc.robot.commands.autoCommands.moveArm;
-import frc.robot.commands.autoCommands.MoveElevator;
+import frc.robot.commands.autoCommands.moveElevator;
 import frc.robot.commands.autoCommands.balance;
 import frc.robot.commands.autoCommands.moveClaw;
 import frc.robot.subsystems.Arm;
@@ -33,7 +34,7 @@ public final class Autos {
 
   public static CommandBase scoreCubeStay(Elevator elevator, Arm arm, Claw end) {
     return Commands.sequence(
-      new MoveElevator(elevator, 0.6, 83),
+      new moveElevator(elevator, 0.6, 83),
       new moveArm(arm, 0.6, 56), 
       new moveClaw(end, 0.6, 0.075),
             moveArmIn(elevator, arm));
@@ -41,7 +42,7 @@ public final class Autos {
 
   public static CommandBase scoreCube(Elevator elevator, Arm arm, Claw end) {
     return Commands.sequence(
-            new MoveElevator(elevator, 0.6, 83),
+            new moveElevator(elevator, 0.6, 83),
             new moveArm(arm, 0.6, 56),
             new moveClaw(end, 0.6, 0.075));
   }
@@ -50,7 +51,7 @@ public final class Autos {
   public static CommandBase moveArmIn(Elevator elevator, Arm arm) {
     return Commands.sequence(
       new moveArm(arm, -0.6, 1), 
-      new MoveElevator(elevator, -0.6, 1));
+      new moveElevator(elevator, -0.6, 1));
   }
   
 
@@ -70,6 +71,10 @@ public final class Autos {
         scoreCube(elevator, arm, end),
         moveArmIn(elevator, arm),
         drive(drive, speed, distance));
+  }
+
+  public static CommandBase collect(Elevator elevator, Arm arm, Claw claw) {
+    return new InstantCommand();
   }
 
 

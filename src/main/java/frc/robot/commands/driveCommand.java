@@ -1,7 +1,8 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IOConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Drive;
@@ -11,15 +12,16 @@ public class driveCommand extends CommandBase{
   // var setup
   private final Drive drive;
   private final Elevator elevator;
-  private final XboxController controller;
+  private final CommandXboxController controller;
 
   double xSpeed, zRotation;
 
-  public driveCommand(Drive drive, Elevator elevator, XboxController controller) {
+  public driveCommand(Drive drive, Elevator elevator, CommandXboxController controller) {
     // typical stuff
     this.drive = drive;
     this.elevator = elevator;
     this.controller = controller;
+    SmartDashboard.putNumber("drive speed", 0.5);
     addRequirements(this.drive);
   }
 
@@ -33,12 +35,13 @@ public class driveCommand extends CommandBase{
 
     // apply slow mode
 
-    if (controller.getRightTriggerAxis() > 0.5) {
+    if (SmartDashboard.getBoolean("fast mode", false)) {
       xSpeed *= 1;
       zRotation *= 0.55;
     }
     else {
-      xSpeed *= 0.5;
+      xSpeed *= SmartDashboard.getNumber("drive speed", 0.25);
+//      xSpeed *= 0.5;
       zRotation *= 0.27;
     }
 

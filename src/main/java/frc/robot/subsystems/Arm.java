@@ -32,7 +32,7 @@ public class Arm extends SubsystemBase{
         // encoder.setPositionConversionFactor(ArmMotorConstants.encoderPosFactor);
 
         armMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        armMotor.setSoftLimit(SoftLimitDirection.kForward, 58);
+        armMotor.setSoftLimit(SoftLimitDirection.kForward, 50);
         armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         armMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
 

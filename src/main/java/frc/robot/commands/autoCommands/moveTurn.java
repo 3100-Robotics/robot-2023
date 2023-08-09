@@ -13,7 +13,7 @@ public class moveTurn extends CommandBase{
     // typical stuff
     this.Drive = Drive;
     this.angle = angle;
-    Drive.setSetpoint(Drive.getGyroZ() + angle);
+    Drive.setSetpoint(Drive.getGyroPitch() + angle);
   }
 
   @Override

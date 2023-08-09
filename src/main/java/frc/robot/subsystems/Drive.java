@@ -88,17 +88,17 @@ public class Drive extends SubsystemBase{
         frontRightMotor.getSensorCollection().setIntegratedSensorPosition(0, 0);
     }
 
-    public double getGyroZ() {
+    public double getGyroPitch() {
         // get that pitch
         return gyro.getPitch();
     }
 
-    public double getGyroX() {
+    public double getGyroYaw() {
         // get that yaw
         return gyro.getYaw();
     }
 
-    public double getGyroY() {
+    public double getGyroRoll() {
         // get that roll
         return gyro.getRoll();
     }

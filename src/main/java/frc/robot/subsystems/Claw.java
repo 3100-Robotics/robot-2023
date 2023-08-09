@@ -6,7 +6,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.endEffectorConstants;
 
@@ -77,10 +79,10 @@ public class Claw extends SubsystemBase{
     /**
     * @param speed the speed to move both claws to the left
     */  
-    public void runBoth(double speed) {
+    public void runBoth(double speed, double speedDiff) {
         // run both claws positive number = to the left
         leftEffector.set(speed);
-        rightEffector.set(-speed);
+        rightEffector.set(-speed-speedDiff);
     }
 
     public void stopBoth() {
@@ -102,5 +104,17 @@ public class Claw extends SubsystemBase{
     public double getCenterPos() {
         // get the center point between the claws
         return (LefEncoder.getPosition() + RightEncoder.getPosition())/2;
+    }
+
+    public Command runLeftCommand(double speed) {
+        return this.run(() -> runLeft(speed));
+    }
+
+    public Command runRightCommand(double speed) {
+        return this.run(() -> runRight(speed));
+    }
+
+    public Command runBothOut(double speed, double speedDiff) {
+        return this.run(() -> runBoth(speed, speedDiff));
     }
 }

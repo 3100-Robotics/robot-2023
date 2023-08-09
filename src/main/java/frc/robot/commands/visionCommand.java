@@ -48,10 +48,10 @@ public class visionCommand extends CommandBase{
 
                 // run the motors in the correct dir
                 if (0.247775 - Units.feetToMeters(claw.getCenterPos()* endEffectorConstants.kRots2inches)  > neededDistance) {
-                    claw.runBoth(0.3);
+                    claw.runBoth(0.3, 0.1);
                 }
                 else if (0.247775 - Units.feetToMeters(claw.getCenterPos()* endEffectorConstants.kRots2inches)  > neededDistance) {
-                    claw.runBoth(-0.3);
+                    claw.runBoth(-0.3, 0.1);
                 }
             }
         }

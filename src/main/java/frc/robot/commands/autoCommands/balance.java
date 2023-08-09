@@ -25,7 +25,7 @@ public class balance extends CommandBase{
     @Override
     public void execute() {
         // execute according to pid with speed limiting
-        gyroReading = drive.getGyroY();
+        gyroReading = drive.getGyroRoll();
         speed = controller.calculate(gyroReading);
         if (Math.abs(speed) > 0.6) {
             speed = Math.copySign(0.6, speed);

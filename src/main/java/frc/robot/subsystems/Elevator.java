@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
@@ -38,9 +39,14 @@ public class Elevator extends SubsystemBase{
         RightElevatorMotor.follow(LeftElevatorMotor, true);
 
         LeftElevatorMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        LeftElevatorMotor.setSoftLimit(SoftLimitDirection.kForward, 84);
+        LeftElevatorMotor.setSoftLimit(SoftLimitDirection.kForward, 100);
         LeftElevatorMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         LeftElevatorMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+
+        RightElevatorMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        RightElevatorMotor.setSoftLimit(SoftLimitDirection.kForward, 100);
+        RightElevatorMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        RightElevatorMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
     }
 
     public boolean atSetpoint() {
@@ -82,7 +88,7 @@ public class Elevator extends SubsystemBase{
     public void periodic() {
         // useful data
         Shuffleboard.selectTab("debug");
-//        SmartDashboard.putNumber("elevator pos", GetEncoderRotation());
+        SmartDashboard.putNumber("elevator pos", GetEncoderRotation());
 //
 //        SmartDashboard.putNumber("elevator Speed", speed);
     }

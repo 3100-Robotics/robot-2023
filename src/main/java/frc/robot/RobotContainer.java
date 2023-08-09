@@ -4,6 +4,15 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.EventMarker;
+import com.pathplanner.lib.PathPlannerTrajectory.Waypoint;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IOConstants;
@@ -25,9 +34,15 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import com.pathplanner.lib.commands.PPRamseteCommand;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,31 +53,19 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
 
   // controllers
-  private final XboxController driverController =
-      new XboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
-  private final XboxController coDriverController =
-      new XboxController(OperatorConstants.CO_DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController driverController =
+      new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController coDriverController =
+      new CommandXboxController(OperatorConstants.CO_DRIVER_CONTROLLER_PORT);
 
   private final EventLoop dpadLoop = new EventLoop();
 
-  // buttons for commands
-  private final JoystickButton driverButtonB = new JoystickButton(driverController, IOConstants.bButtonChannel);
-  private final JoystickButton buttonSelect = new JoystickButton(coDriverController, IOConstants.backButtonChannel);
-  private final JoystickButton buttonStart = new JoystickButton(coDriverController, IOConstants.startButtonChannel);
-  private final JoystickButton buttonX = new JoystickButton(coDriverController, IOConstants.xButtonChannel);
-  private final JoystickButton buttonY = new JoystickButton(coDriverController, IOConstants.yButtonChannel);
-  private final JoystickButton buttonA = new JoystickButton(coDriverController, IOConstants.aButtonChannel);
-  private final JoystickButton buttonB = new JoystickButton(coDriverController, IOConstants.bButtonChannel);
-  private final JoystickButton buttonLeftBumper = new JoystickButton(coDriverController, IOConstants.leftBumperChannel);
-  private final JoystickButton buttonRightBumper = new JoystickButton(coDriverController, IOConstants.rightBumperChannel);
-  private final Trigger buttonDpadUp = new Trigger(coDriverController.povUp(dpadLoop));
-  private final Trigger buttonDpadLeft = new Trigger(coDriverController.povLeft(dpadLoop));
 
   // subsystems
-  private final Drive drive = new Drive();
-  private final Arm arm = new Arm();
-  private final Elevator elevator = new Elevator();
-  private final Claw claw = new Claw();
+  public final Drive drive = new Drive();
+  public final Arm arm = new Arm();
+  public final Elevator elevator = new Elevator();
+  public final Claw claw = new Claw();
   // private final vision m_Vision = new vision();
 
   ///////////
@@ -86,14 +89,29 @@ public class RobotContainer {
     Command driveOutMid = Autos.drive(drive, 0.3, 10);
     Command driveOutLong = Autos.drive(drive, 0.3, 15);
     Command m_noAuto = new InstantCommand();
-    chooser.setDefaultOption("score cube balance", m_scoreCubeBalance);
-    chooser.addOption("balance", m_balance);
-    chooser.addOption("score cube leave", m_scoreCubeLeave);
-    chooser.addOption("score cube", m_scoreCube);
-    chooser.addOption("drive out short", driveOutShort);
-    chooser.addOption("drive out mid", driveOutMid);
-    chooser.addOption("drive out long", driveOutLong);
-    chooser.addOption("No Auto", m_noAuto);
+
+    List<Waypoint> waypoints = new ArrayList<>();
+
+//     List<EventMarker> eventMap = new ArrayList<>();
+// //    HashMap<String, Command> eventMap = new HashMap<>();
+// //    eventMap.put("scoreCubeHigh", Autos.scoreCubeStay(elevator, arm, claw));
+// //    eventMap.put("scoreConeHigh", Autos.scoreCubeStay(elevator, arm, claw));
+// //    eventMap.put("collect", Autos.collect(elevator, arm, claw));
+
+//     Command testAuto = new PPRamseteCommand(new PathPlannerTrajectory(waypoints, eventMap,
+//             new PathConstraints(3, 4), false, false),
+//             drive::getPose, new RamseteController(),
+//             Constants.driveTrainConstants.kinematics,
+//             (aDouble, aDouble2) -> {}, drive);
+
+//     chooser.setDefaultOption("score cube balance", m_scoreCubeBalance);
+//     chooser.addOption("balance", m_balance);
+//     chooser.addOption("score cube leave", m_scoreCubeLeave);
+//     chooser.addOption("score cube", m_scoreCube);
+//     chooser.addOption("drive out short", driveOutShort);
+//     chooser.addOption("drive out mid", driveOutMid);
+//     chooser.addOption("drive out long", driveOutLong);
+//     chooser.addOption("No Auto", m_noAuto);
 
     SmartDashboard.putData(chooser);
 
@@ -101,7 +119,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new driveCommand(drive, elevator, driverController));
     arm.setDefaultCommand(new ArmCommand(arm, coDriverController));
     elevator.setDefaultCommand(new ElevatorCommand(elevator, coDriverController));
-    claw.setDefaultCommand(new clawCommand(coDriverController, claw));
+    // claw.setDefaultCommand(new clawCommand(coDriverController, claw));
     // m_Vision.setDefaultCommand(new visionController(coDriverController, m_Vision, claw));
 
     // Configure the trigger bindings
@@ -110,21 +128,25 @@ public class RobotContainer {
 
   private void configureBindings() {
     // drivetrain commands
-    driverButtonB.whileTrue(new balance(drive));
+    // driverButtonB.whileTrue(new balance(drive));
+
     
     // end affector commands
 
     // lock claw joystick movements
-    buttonDpadUp.onTrue(new moveArmFancy(arm, -0.3, 2.5));
-    buttonDpadLeft.onTrue(new moveClaw(claw, -0.3, 0));
+    coDriverController.povUp().onTrue(new moveArmFancy(arm, -0.3, 2.5));
+    coDriverController.povDown().onTrue(new moveClaw(claw, -0.3, 0));
+    coDriverController.a().whileTrue(claw.runBothOut(0.4, 0));
+    coDriverController.b().whileTrue(claw.runBothOut(-0.4, 0));
+    
 
-    buttonLeftBumper.whileTrue(new StartEndCommand(
-      () -> claw.runBoth(0.4),
+    coDriverController.leftBumper().whileTrue(new StartEndCommand(
+      () -> claw.runBoth(0.4, 0.1),
       () -> claw.stopBoth(),
     claw));
     
-    buttonRightBumper.whileTrue(new StartEndCommand(
-      () -> claw.runBoth(-0.4),
+    coDriverController.rightBumper().whileTrue(new StartEndCommand(
+      () -> claw.runBoth(-0.4, 0.1),
       () -> claw.stopBoth(),
     claw));
 
